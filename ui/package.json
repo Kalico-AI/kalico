@@ -1,0 +1,34 @@
+{
+  "name": "foodwallah",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "local": "cp .env-local .env && next",
+    "dev": "cp .env-dev .env && next",
+    "prod": "cp .env-prod .env && next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.0",
+    "axios": "^1.2.1",
+    "firebase": "^9.15.0",
+    "hls.js": "^1.2.9",
+    "mobx": "^6.7.0",
+    "mobx-react": "^7.6.0",
+    "moment": "^2.29.4",
+    "next": "latest",
+    "notistack": "^2.0.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.35",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "typescript": "4.7.2"
+  }
+}
