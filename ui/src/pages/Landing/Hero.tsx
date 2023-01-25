@@ -11,9 +11,9 @@ function Hero() {
             <div className="col-md-12">
               <div className="banner-left text-center">
                 <h1>
-                  Create amazing articles from {' '}
+                  Give your video content another life{' '}
                   <span>
-                    video
+                    with AI
                     <svg width="225" height="16" viewBox="0 0 225 16" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -22,10 +22,8 @@ function Hero() {
                       />
                     </svg>
                   </span>
-                  {' '} with AI
                 </h1>
-                <p className="banner-para">Kalico helps you turn your existing video content into a high quality, multi-media blog post or article
-                to help drive traffic, subscribers, or sales <strong>instantly</strong></p>
+                <p className="banner-para">Instantly create high quality blog posts and articles with Kalico from your videos</p>
                 {/*<div className="form-group">*/}
                   {/*<input type="email" placeholder="Enter your email to schedule a demo"/>*/}
                   <button type="submit" className="btn btn-red">Create Account</button>

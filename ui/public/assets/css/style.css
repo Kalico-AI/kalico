@@ -3875,7 +3875,7 @@ ul li a:hover {
 .footer-software .footer-top .footer-menu h4 {
   font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .footer-payment {
@@ -4036,7 +4036,7 @@ ul li a:hover {
 .footer-top .footer-menu h4 {
   color: #fff;
   font-size: 1.125rem;
-  margin-bottom: 2.1875rem;
+  margin-bottom: 0.5rem;
 }
 .footer-top .footer-menu li + li {
   padding-top: 25px;
@@ -10245,7 +10245,7 @@ Why-choose CSS
 .footer-hrm .social-link-bg-2 {
   flex-direction: row;
   justify-content: flex-end;
-  margin-top: 1rem;
+  margin-top: 0rem;
   margin-bottom: 1rem;
 }
 @media screen and (max-width: 767px) {
@@ -19762,6 +19762,7 @@ Contact Page Two CSS
   display: flex;
   flex-direction: row;
   column-gap: 38px;
+  padding-bottom: 40px;
 }
 .process-item-1 .process-item-content .step p {
   font-size: 15px;

@@ -47,12 +47,12 @@ function HeaderNav() {
                 <li className="nav-item dropdown submenu mega-menu active">
                   <a href="/#support" className="nav-link dropdown-toggle">Support</a>
                 </li>
-                <li className="nav-item dropdown submenu mega-menu active">
-                  <a href="/about" className="nav-link dropdown-toggle">About</a>
-                </li>
-                <li className="nav-item dropdown submenu mega-menu active">
-                  <a href="/contact" className="nav-link dropdown-toggle">Contact Us</a>
-                </li>
+                {/*<li className="nav-item dropdown submenu mega-menu active">*/}
+                {/*  <a href="/about" className="nav-link dropdown-toggle">About</a>*/}
+                {/*</li>*/}
+                {/*<li className="nav-item dropdown submenu mega-menu active">*/}
+                {/*  <a href="/contact" className="nav-link dropdown-toggle">Contact Us</a>*/}
+                {/*</li>*/}
               </ul>
               <div className="right-nav">
                 {/*<a href="#" className="language-bar mr-50"><span className="active">En.</span><span>Ru</span></a>*/}

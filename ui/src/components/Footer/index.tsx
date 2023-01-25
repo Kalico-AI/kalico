@@ -21,10 +21,17 @@ function Footer() {
                   </div>
                   <div className="col-sm-6 col-md-4 wow fadeInUp" data-wow-delay="0.2s">
                     <div className="footer-menu">
-                      <h4>Useful inks</h4>
-                      <ul>
-                        <li><a href="/about">About</a></li>
-                        <li><a href="/contact">Contact</a></li>
+                      <h4>Getting in Touch</h4>
+                      <ul className="social-link-bg-2">
+                        <li>
+                          <a href="#"><i className="fab fa-facebook-f"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i className="fab fa-twitter"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i className="fab fa-instagram"></i></a>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -32,8 +39,8 @@ function Footer() {
                     <div className="footer-menu">
                       <h4>Legal</h4>
                       <ul>
-                        <li><a href="/tos">Terms of Service</a></li>
-                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/legal/tos">Terms of Service</a></li>
+                        <li><a href="/legal/privacy">Privacy Policy</a></li>
                       </ul>
                     </div>
                   </div>
