@@ -9,7 +9,7 @@ function Hero() {
         <div className="container">
           <div className="row flex-column-reverse flex-md-row align-items-center">
             <div className="col-md-12">
-              <div className="banner-left">
+              <div className="banner-left text-center">
                 <h1>
                   Create amazing articles from {' '}
                   <span>
@@ -26,10 +26,10 @@ function Hero() {
                 </h1>
                 <p className="banner-para">Kalico helps you turn your existing video content into a high quality, multi-media blog post or article
                 to help drive traffic, subscribers, or sales <strong>instantly</strong></p>
-                <form className="form-group">
-                  <input type="email" placeholder="Enter your email to schedule a demo"/>
-                  <button type="submit" className="btn btn-red">Schedule a Demo</button>
-                </form>
+                {/*<div className="form-group">*/}
+                  {/*<input type="email" placeholder="Enter your email to schedule a demo"/>*/}
+                  <button type="submit" className="btn btn-red">Create Account</button>
+                {/*</div>*/}
                 {/*<span className="sub-content">Free 14 days trial. <strong>No credit</strong> card required</span>*/}
               </div>
             </div>

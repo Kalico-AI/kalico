@@ -7,7 +7,7 @@ function HowItWorks() {
   return (
       <>
         <section className="process-area-2 overflow-hidden pt-55">
-          <div className="container">
+          <div className="container" id="how-it-works">
             <div className="row">
               <div className="col-12">
                 <h2 className="heading-3 text-center mb-90 wow fadeInUp"
@@ -21,28 +21,27 @@ function HowItWorks() {
                   <img className="line-1" src="/assets/images/process/shape11.svg" alt="Shape"/>
                   <img className="line-2" src="/assets/images/process/shape12.svg" alt="Shape"/>
                   <span className="item-number">1</span>
-                  <h3 className="item-title">Talk to Our Industry Experts</h3>
-                  <p className="item-text">An expert on our team will work with you to understand
-                    your goals, technical needs, and team dynamics.</p>
+                  <h3 className="item-title">Submit your video link</h3>
+                  <p className="item-text">Submit a link to Instagram Reel or a YouTube video. The video content must
+                  have audio or text in the description</p>
                 </div>
               </div>
               <div className="col-lg-4 col-md-6 mt-md-0 mt-5">
                 <div className="process-item-2 wow fadeInLeft" data-wow-delay="0.3s">
                   <img className="line-3" src="/assets/images/process/shape13.svg" alt="Shape"/>
                   <span className="item-number">2</span>
-                  <h3 className="item-title">Work With Selected Talent</h3>
-                  <p className="item-text">Within days, we'll introduce you to the right talent for
-                    your project. Average time to match is under 24 hours.</p>
+                  <h3 className="item-title">AI transforms content</h3>
+                  <p className="item-text">Our AI transforms the video content to text and images. It then generates a fully-formed
+                  article or blog post base on the template selected. The whole process takes a few minutes.</p>
                 </div>
               </div>
               <div className="col-lg-4 col-md-6 mt-lg-0 mt-5 mx-auto">
                 <div className="process-item-2 wow fadeInLeft" data-wow-delay="0.5s">
                   <img className="line-4" src="/assets/images/process/shape14.svg" alt="Shape"/>
                   <span className="item-number">3</span>
-                  <h3 className="item-title">The Right Fit, Guaranteed</h3>
+                  <h3 className="item-title">Review and Export</h3>
                   <p className="item-text">
-                    Work with your new team member on a trial basis (pay only if satisfied),
-                    ensuring you hire the right people for the job.
+                    Review the output and export a CSV or JSON file to use in your blogging platform such as WordPress.
                   </p>
                 </div>
               </div>

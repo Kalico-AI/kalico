@@ -6,7 +6,7 @@ function FAQ() {
   // we don't get a page without the CSS
   return (
       <section className="faq-area wow fadeInUp animate__fast">
-        <div className="container">
+        <div className="container" id="support">
           <div className="row">
             <div className="col-12">
               <div className="section-title-center">

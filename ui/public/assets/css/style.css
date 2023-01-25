@@ -13517,29 +13517,23 @@ button:hover .HoverArrow__tipPath {
   line-height: 24px;
   color: var(--black);
 }
-.cloud-team-content .tab-pane:nth-child(1n) .user-content {
+.cloud-team-content .tab-pane .user-content.one {
   background-color: #dcf5f0;
 }
-.cloud-team-content .tab-pane:nth-child(2n) .user-content {
-  background-color: #edf5dc;
-}
-.cloud-team-content .tab-pane:nth-child(3n) .user-content {
+.cloud-team-content .tab-pane .user-content.two {
   background-color: #f5dcf5;
 }
-.cloud-team-content .tab-pane:nth-child(4n) .user-content {
-  background-color: #f5e2dc;
+.cloud-team-content .tab-pane .user-content.three {
+  background-color: #dcf5e0;
 }
-.cloud-team-content .tab-pane:nth-child(5n) .user-content {
-  background-color: #dceef5;
+.cloud-team-content .tab-pane .user-content.four {
+  background-color:  #f5e2dc;
 }
-.cloud-team-content .tab-pane:nth-child(6n) .user-content {
+.cloud-team-content .tab-pane .user-content.five {
   background-color: #e4dcf5;
 }
-.cloud-team-content .tab-pane:nth-child(7n) .user-content {
+.cloud-team-content .tab-pane .user-content.six {
   background-color: #f5ebdc;
-}
-.cloud-team-content .tab-pane:nth-child(8n) .user-content {
-  background-color: #dcf5e0;
 }
 
 .cloud-apps-area {
@@ -20224,6 +20218,8 @@ Contact Page Two CSS
   background: #fff;
   box-shadow: 0px 10px 20px 0px rgba(82, 63, 105, 0.15);
   position: relative;
+  max-width: 450px;
+  margin: 0 auto;
 }
 .sign-up-box .shape {
   position: absolute;
@@ -20300,7 +20296,7 @@ Contact Page Two CSS
 }
 
 .form-wrapper {
-  padding: 90px 40px 100px 0;
+  padding: 50px 30px;
 }
 .form-wrapper .heading-text {
   color: var(--text-color-2);
@@ -20332,7 +20328,7 @@ Contact Page Two CSS
 .form-wrapper .divider:after, .form-wrapper .divider:before {
   content: "";
   position: absolute;
-  width: 172px;
+  width: 120px;
   height: 1px;
   background: #c6c6c6;
   top: 50%;

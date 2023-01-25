@@ -35,14 +35,23 @@ function HeaderNav() {
                   <a href="/" className="nav-link dropdown-toggle active">Home</a>
                 </li>
                 <li className="nav-item dropdown submenu active">
-                  <a href="#" className="nav-link dropdown-toggle">Why Kalico</a>
+                  <a href="/#why-kalico" className="nav-link dropdown-toggle">Why Kalico</a>
                 </li>
                 <li className="nav-item dropdown submenu active">
-                  <a href="#" className="nav-link dropdown-toggle">How It Works</a>
+                  <a href="/#how-it-works" className="nav-link dropdown-toggle">How It Works</a>
                 </li>
 
                 <li className="nav-item dropdown submenu mega-menu active">
-                  <a href="#" className="nav-link dropdown-toggle">Features</a>
+                  <a href="/#features" className="nav-link dropdown-toggle">Features</a>
+                </li>
+                <li className="nav-item dropdown submenu mega-menu active">
+                  <a href="/#support" className="nav-link dropdown-toggle">Support</a>
+                </li>
+                <li className="nav-item dropdown submenu mega-menu active">
+                  <a href="/about" className="nav-link dropdown-toggle">About</a>
+                </li>
+                <li className="nav-item dropdown submenu mega-menu active">
+                  <a href="/contact" className="nav-link dropdown-toggle">Contact Us</a>
                 </li>
               </ul>
               <div className="right-nav">
