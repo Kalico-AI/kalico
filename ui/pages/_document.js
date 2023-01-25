@@ -32,6 +32,9 @@ export default function Document() {
           <link rel="stylesheet" href="/assets/css/style.css" />
           {/* Responsive CSS */}
           <link rel="stylesheet" href="/assets/css/responsive.css" />
+          <link rel="stylesheet" href="/assets/css/nice-select.css" />
+          <link rel="stylesheet" href="/assets/css/slick.css" />
+          <link rel="stylesheet" href="/assets/css/slick-theme.css" />
 
 
           <script src="/assets/js/plugin/jquery-3.5.0.min.js"/>

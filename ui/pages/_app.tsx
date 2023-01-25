@@ -10,6 +10,15 @@ import { useRouter } from "next/router";
 // import "../styles/nav.css";
 // import "../styles/tail.css";
 // import "../styles/search.css";
+// import "../public/assets/css/fontawesome.min.css";
+// import "../public/assets/css/elegant-icons.min.css";
+// import "../public/assets/css/animate.min.css";
+// import "../public/assets/css/bootstrap.min.css";
+// import "../public/assets/css/swiper-bundle.min.css";
+// import "../public/assets/css/jquery.fancybox.min.css";
+// import "../public/assets/css/style.css";
+// import "../public/assets/css/responsive.css";
+
 import {RootStoreProvider} from "../store/RootStoreContext";
 import Script from 'next/script'
 import Footer from "@/components/Footer";
@@ -23,8 +32,8 @@ type NextPageWithLayout = NextPage & {
 export async function getServerSideProps() {
   return {
     props: {
-      title: "Kalico",
-      description:"",
+      title: "Kalico | Intelligent Content Repurposing",
+      description:"Kalico uses AI to transform video content into high quality articles and blog posts",
       siteImage: "https://"
     }
   }
@@ -42,11 +51,6 @@ const MyApp: FC<DefaultAppProps> = (props) => {
   const getLayout = Component.getLayout ?? ((page) => page);
   const [_isProgress, setIsProgress] = useState<boolean>(false);
   const router = useRouter();
-  const meta = {
-    title: "Kalico",
-    description:"",
-    siteImage: "https://"
-  }
 
   useEffect(() => {
     const start = () => {
@@ -84,10 +88,10 @@ const MyApp: FC<DefaultAppProps> = (props) => {
                 `}
       </Script>
       <Head>
-        <title>{meta.title}</title>
-        <meta property="og:title" content={meta.title} key="title"/>
-        <meta property="og:description" content={meta.description} key="description" />
-        <meta property="og:image:secure" content={meta.siteImage} key="image:secure"/>
+        <title>{props.title}</title>
+        <meta property="og:title" content={props.title} key="title"/>
+        <meta property="og:description" content={props.description} key="description" />
+        <meta property="og:image:secure" content={props.siteImage} key="image:secure"/>
 
 
 
