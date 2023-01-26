@@ -2494,6 +2494,10 @@ textarea:focus {
   max-width: 33.75rem;
   margin-top: 1.5625rem;
 }
+.hero-cta {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
 .form-group .btn-red {
   height: 3.5rem;
   margin-top: 1.25rem;
@@ -14151,7 +14155,7 @@ button:hover .HoverArrow__tipPath {
   border-radius: 30px;
   width: 100%;
   height: 100%;
-  background: rgba(239, 202, 113, 0.35);
+  background: rgba(195, 245, 189, 0.35);
   position: absolute;
   left: 0;
   top: 0;
