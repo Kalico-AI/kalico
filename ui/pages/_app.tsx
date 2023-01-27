@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import Head from 'next/head';
-import {FC, ReactElement, ReactNode} from "react";
+import React, {FC, ReactElement, ReactNode} from "react";
 import {NextPage} from "next";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -10,41 +10,16 @@ import Script from 'next/script'
 import Footer from "@/components/Footer";
 import HeaderNav from "@/components/Header";
 import initAuth from "@/auth/nextAuth";
+import {withAuthUser} from "next-firebase-auth";
+import {Box, CircularProgress} from "@mui/material";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-// export async function getServerSideProps() {
-//   return {
-//     props: {
-//       title: "Kalico | Intelligent Content Repurposing",
-//       description:"Kalico uses AI to transform video content into high quality articles and blog posts",
-//       siteImage: "https://"
-//     }
-//   }
-// }
 
 // Init Next Firebase Auth
 initAuth()
-
-
-// export const getServerSideProps = withSession(async function ({ req, res }) {
-//   const { user } = req.session
-//
-//   if (!user) {
-//     return {
-//       redirect: {
-//         destination: '/login',
-//         permanent: false,
-//       },
-//     }
-//   }
-//
-//   return {
-//     props: { user },
-//   }
-// })
 
 interface DefaultAppProps extends AppProps {
   Component: NextPageWithLayout;
@@ -108,6 +83,14 @@ const MyApp: FC<DefaultAppProps> = (props) => {
     </>
   );
 }
+const Loader = () => {
+  return (
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+  );
+}
 
-
-export default MyApp;
+export default withAuthUser({
+  LoaderComponent: () => <Loader/>,
+})(MyApp);

@@ -31,7 +31,7 @@ const HeaderNav: FC<any> = observer((_props) => {
       <header className="header-area">
         <nav className="navbar navbar-expand-lg menu_three sticky-nav">
           <div className="container-fluid">
-            <a className="navbar-brand header_logo" href="/">
+            <a className="navbar-brand header_logo" href={user && user.id ? PATHS.DASHBOARD : PATHS.HOME}>
               <img className="main_logo" src="/assets/images/logo.png" alt="logo"/>
             </a>
             <button
@@ -60,28 +60,29 @@ const HeaderNav: FC<any> = observer((_props) => {
               {user && user.id ? (
                   <>
                     <ul className="navbar-nav menu mx-auto">
-                      <li className="nav-item submenu mega-home active">
-                        <a href="/" className="nav-link dropdown-toggle active">Home</a>
-                      </li>
-                      <li className="nav-item dropdown submenu active">
-                        <a href="/#why-kalico" className="nav-link dropdown-toggle">Why Kalico</a>
-                      </li>
-                      <li className="nav-item dropdown submenu active">
-                        <a href="/#how-it-works" className="nav-link dropdown-toggle">How It Works</a>
-                      </li>
+                      {/*<li className="nav-item submenu mega-home active">*/}
+                      {/*  <a href="/" className="nav-link dropdown-toggle active">Home</a>*/}
+                      {/*</li>*/}
+                      {/*<li className="nav-item dropdown submenu active">*/}
+                      {/*  <a href="/#why-kalico" className="nav-link dropdown-toggle">Why Kalico</a>*/}
+                      {/*</li>*/}
+                      {/*<li className="nav-item dropdown submenu active">*/}
+                      {/*  <a href="/#how-it-works" className="nav-link dropdown-toggle">How It Works</a>*/}
+                      {/*</li>*/}
 
+                      {/*<li className="nav-item dropdown submenu mega-menu active">*/}
+                      {/*  <a href="/#features" className="nav-link dropdown-toggle">Features</a>*/}
+                      {/*</li>*/}
                       <li className="nav-item dropdown submenu mega-menu active">
-                        <a href="/#features" className="nav-link dropdown-toggle">Features</a>
-                      </li>
-                      <li className="nav-item dropdown submenu mega-menu active">
-                        <a href="/#support" className="nav-link dropdown-toggle">Support</a>
+                        <a href="/#support" className="nav-link dropdown-toggle">Upgrade</a>
                       </li>
                     </ul>
                     <div className="right-nav">
                       <Button
+                          sx={{backgroundColor: '#6c757d'}}
                           startIcon={<LogoutIcon/>}
-                          className="sign-in-button-icon"
-                          size='medium'
+                          className="sign-in-button"
+                          size='large'
                           variant='contained'
                           onClick={logout}
                       />
