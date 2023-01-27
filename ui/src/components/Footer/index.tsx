@@ -1,6 +1,15 @@
 import React from 'react';
+import {useAuthUser, withAuthUser} from "next-firebase-auth";
+import {useRouter} from "next/router";
+import {PATHS} from "@/utils/constants";
+
 
 function Footer() {
+  const user = useAuthUser()
+  const router = useRouter()
+  if (user && user.id && router.pathname.includes(PATHS.DASHBOARD)) {
+    return <></>
+  }
   return (
       <footer className="footer-pos footer-software footer-hrm bg-aqua">
         <div className="footer-top">
@@ -53,4 +62,4 @@ function Footer() {
   );
 }
 
-export default Footer;
+export default withAuthUser()(Footer);

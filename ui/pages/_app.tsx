@@ -1,43 +1,25 @@
 import type { AppProps } from "next/app";
 import Head from 'next/head';
-import {FC, ReactElement, ReactNode} from "react";
+import React, {FC, ReactElement, ReactNode} from "react";
 import {NextPage} from "next";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-// import "../styles/style.css";
-// import "../styles/video.css";
-// import "../styles/index.css";
-// import "../styles/nav.css";
-// import "../styles/tail.css";
-// import "../styles/search.css";
-// import "../public/assets/css/fontawesome.min.css";
-// import "../public/assets/css/elegant-icons.min.css";
-// import "../public/assets/css/animate.min.css";
-// import "../public/assets/css/bootstrap.min.css";
-// import "../public/assets/css/swiper-bundle.min.css";
-// import "../public/assets/css/jquery.fancybox.min.css";
-// import "../public/assets/css/style.css";
-// import "../public/assets/css/responsive.css";
 
-import {RootStoreProvider} from "../store/RootStoreContext";
+import {RootStoreProvider} from "@/store/RootStoreContext";
 import Script from 'next/script'
 import Footer from "@/components/Footer";
 import HeaderNav from "@/components/Header";
-// import Header from "@/layouts/v3/Header";
+import initAuth from "@/auth/nextAuth";
+import {withAuthUser} from "next-firebase-auth";
+import {Box, CircularProgress} from "@mui/material";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-export async function getServerSideProps() {
-  return {
-    props: {
-      title: "Kalico | Intelligent Content Repurposing",
-      description:"Kalico uses AI to transform video content into high quality articles and blog posts",
-      siteImage: "https://"
-    }
-  }
-}
+
+// Init Next Firebase Auth
+initAuth()
 
 interface DefaultAppProps extends AppProps {
   Component: NextPageWithLayout;
@@ -92,36 +74,6 @@ const MyApp: FC<DefaultAppProps> = (props) => {
         <meta property="og:title" content={props.title} key="title"/>
         <meta property="og:description" content={props.description} key="description" />
         <meta property="og:image:secure" content={props.siteImage} key="image:secure"/>
-
-
-
-
-
-
-        {/*<link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css"/>*/}
-
-        {/*/!*Themify*!/*/}
-        {/*<link rel="stylesheet" href="/plugins/themify/css/themify-icons.css"/>*/}
-        {/*<link rel="stylesheet" href="/plugins/slick-carousel/slick-theme.css"/>*/}
-        {/*<link rel="stylesheet" href="/plugins/slick-carousel/slick.css"/>*/}
-
-        {/*/!*Slick Carousel*!/*/}
-        {/*<link rel="stylesheet" href="/plugins/owl-carousel/owl.carousel.min.css"/>*/}
-        {/*<link rel="stylesheet" href="/plugins/owl-carousel/owl.theme.default.min.css"/>*/}
-        {/*<link rel="stylesheet" href="/plugins/magnific-popup/magnific-popup.css"/>*/}
-
-        {/*manin stylesheet*/}
-        {/*<link rel="stylesheet" href="/css/style.css"/>*/}
-        {/*<link rel="stylesheet" href="/css/main_styles.css"/>*/}
-
-        {/*<script src="/plugins/jquery/jquery.js"></script>*/}
-        {/*<script src="/plugins/bootstrap/js/bootstrap.min.js"></script>*/}
-        {/*<script src="/plugins/bootstrap/js/popper.min.js"></script>*/}
-        {/*<script src="/plugins/owl-carousel/owl.carousel.min.js"></script>*/}
-        {/*<script src="/plugins/slick-carousel/slick.min.js"></script>*/}
-        {/*<script src="/plugins/magnific-popup/magnific-popup.js"></script>*/}
-        {/*<script src="/js/swipe-deck.js"></script>*/}
-
       </Head>
         <RootStoreProvider>
           <HeaderNav/>
@@ -131,6 +83,14 @@ const MyApp: FC<DefaultAppProps> = (props) => {
     </>
   );
 }
+const Loader = () => {
+  return (
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+  );
+}
 
-
-export default MyApp;
+export default withAuthUser({
+  LoaderComponent: () => <Loader/>,
+})(MyApp);

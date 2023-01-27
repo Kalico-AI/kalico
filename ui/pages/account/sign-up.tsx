@@ -1,20 +1,19 @@
 import React from 'react';
 import Head from "next/head";
-import SignUp from "@/pages/SignUp";
-// import SearchBox from "@/components/v1/SearchPage";
+import SignIn from "@/pages/SignIn";
+import {SITE_IMAGE_URL} from "@/utils/constants";
+
 export async function getServerSideProps() {
   return {
     props: {
-      title: "Kalico",
-      description: "",
-      siteImage: "https://"
+      title: "Kalico | Sign Up",
+      description: "Create a new account on Kalico",
+      siteImage: SITE_IMAGE_URL
     }
   }
 }
 
 function Index(props) {
-  // Check that the DOM has loaded before rendering the page so that
-  // we don't get a page without the CSS
   return (
     <>
       <Head>
@@ -23,7 +22,7 @@ function Index(props) {
         <meta property="og:description" content={props.description} name="description" key="description"/>
         <meta property="og:image:secure" content={props.siteImage} name="image" key="image:secure"/>
       </Head>
-      <SignUp/>
+      <SignIn isSignUp={true}/>
     </>
   );
 }

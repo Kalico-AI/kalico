@@ -1,20 +1,20 @@
 import React from 'react';
 import Head from "next/head";
 import SignIn from "@/pages/SignIn";
-// import SearchBox from "@/components/v1/SearchPage";
+import {SITE_IMAGE_URL} from "@/utils/constants";
+import {AuthAction, withAuthUser} from "next-firebase-auth";
+
 export async function getServerSideProps() {
   return {
     props: {
-      title: "Kalico",
-      description: "",
-      siteImage: "https://"
+      title: "Kalico | Sign In",
+      description: "Sign in to your Kalico account",
+      siteImage: SITE_IMAGE_URL
     }
   }
 }
 
-function Index(props) {
-  // Check that the DOM has loaded before rendering the page so that
-  // we don't get a page without the CSS
+function SignInIndex(props) {
   return (
     <>
       <Head>
@@ -23,9 +23,14 @@ function Index(props) {
         <meta property="og:description" content={props.description} name="description" key="description"/>
         <meta property="og:image:secure" content={props.siteImage} name="image" key="image:secure"/>
       </Head>
-      <SignIn/>
+      <SignIn isSignUp={false}/>
     </>
   );
 }
 
-export default Index;
+
+export default withAuthUser({
+  whenAuthed: AuthAction.REDIRECT_TO_APP,
+  whenUnauthedBeforeInit: AuthAction.RETURN_NULL,
+  whenUnauthedAfterInit: AuthAction.RENDER,
+})(SignInIndex);
