@@ -1,7 +1,6 @@
 import React from 'react';
 import Head from "next/head";
 import Landing from "@/pages/Landing";
-// import SearchBox from "@/components/v1/SearchPage";
 export async function getServerSideProps() {
   return {
     props: {
@@ -13,8 +12,6 @@ export async function getServerSideProps() {
 }
 
 function Index(props) {
-  // Check that the DOM has loaded before rendering the page so that
-  // we don't get a page without the CSS
   return (
     <>
       <Head>

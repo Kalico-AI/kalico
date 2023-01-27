@@ -20226,6 +20226,20 @@ Contact Page Two CSS
   max-width: 450px;
   margin: 0 auto;
 }
+.sign-in-logo {
+  max-width: 164px;
+  margin: 0 auto 20px;
+}
+.sign-in-button-icon {
+  background: #fff;
+  box-shadow: 0px 4px 10px 0px rgb(0 0 0 / 8%);
+  border-radius: 6px;
+  width: 65px;
+  height: 65px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 .sign-up-box .shape {
   position: absolute;
   z-index: -1;
