@@ -148,9 +148,6 @@ const ForcedLayoutEditor = () => {
   return (
       <Box className="slate-editor-box">
       <Slate editor={editor} value={initialValue}>
-        {/*<Toolbar>*/}
-        {/*  <InsertImageButton />*/}
-        {/*</Toolbar>*/}
         <Editable
             renderElement={renderElement}
             placeholder="Untitled"
