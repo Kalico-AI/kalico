@@ -3250,7 +3250,7 @@ textarea:focus {
 /*----------------------------------------*/
 .header-area {
   position: relative;
-  z-index: 99999;
+  /*z-index: 99999;*/
   transition: 0.4s all ease;
 }
 
@@ -5370,7 +5370,7 @@ Client CSS
 =================================================*/
 .client-area, .app-video-area {
   position: relative;
-  z-index: 99;
+  z-index: -99;
 }
 @media screen and (min-width: 992px) {
   .client-area {
