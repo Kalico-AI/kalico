@@ -7,6 +7,7 @@ import ConfirmActionDialog from "@/pages/Dashboard/ConfirmActionDialog";
 import {useRouter} from "next/router";
 import {PATHS} from "@/utils/constants";
 import PendingJobs from "@/pages/Dashboard/PendingJobs";
+import CreateDialog from "@/pages/Dashboard/CreateDialog";
 
 export interface MyProjectsProps {
 
@@ -14,10 +15,11 @@ export interface MyProjectsProps {
 
 const MyProjects: FC<MyProjectsProps> = observer((_props) => {
   const router = useRouter()
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false)
+  const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false)
 
   const onCreate = () => {
-    // console.log("DEBUG --- onCreate clicked!!")
+    setCreateDialogOpen(true)
   }
 
   const onOpenProject = () => {
@@ -27,12 +29,15 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
     .catch(e => console.log(e))
   }
   const onDeleteProject = () => {
-    console.log("DEBUG: onDeleteProject")
-    setDialogOpen(true)
+    setDeleteDialogOpen(true)
   }
 
-  const onCloseDialog = () => {
-    setDialogOpen(false)
+  const onCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false)
+  }
+
+  const onCloseCreateDialog = () => {
+    setCreateDialogOpen(false)
   }
 
   const abridgedTitle = (title: string) => {
@@ -47,6 +52,7 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
   return (
       <Grid container className="dashboard-container">
         <Grid item sm={12} md={2} sx={{width: '100%'}}>
+          <CreateDialog open={createDialogOpen} onClose={onCloseCreateDialog}/>
           <Box className="create-project-btn-box" onClick={onCreate}>
             <Button
                 sx={{width: '30px'}}
@@ -55,7 +61,6 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
                 className="create-project-btn"
                 size='large'
                 variant='text'
-                onClick={onCreate}
             />
             <Typography variant='subtitle2' sx={{mt: 7, textAlign: 'center'}}>Create a new project</Typography>
           </Box>
@@ -69,7 +74,7 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
           <h3>Your Files</h3>
         </Grid>
         <Grid item sx={{p: 2}}>
-          <ConfirmActionDialog open={dialogOpen} onCloseDialog={onCloseDialog}/>
+          <ConfirmActionDialog open={deleteDialogOpen} onCloseDialog={onCloseDeleteDialog}/>
           <div className="my-files-folder blue">
             <Button
                 sx={{width: '20px'}}

@@ -38,17 +38,28 @@ function PendingJobs() {
       <Typography
         variant="body1"
         sx={{
-          pb: 1
+          pb: 1,
+          display: 'inline-flex'
         }}
       >
-        Processing new clips...
+        Processing project
+      </Typography>
+      {' '}
+      <Typography
+          variant="body1"
+          sx={{
+            color: 'orange',
+            display: 'inline-flex'
+          }}
+      >
+        <strong>Hello</strong>
       </Typography>
       <Typography
         color="text.primary"
         variant="h4"
         sx={{
           pr: 0.5,
-          display: 'inline-flex'
+          display: 'block'
         }}
       >
         50%

@@ -3396,6 +3396,9 @@ textarea:focus {
 .create-project-btn-box:hover {
   background: #f5ebdc
 }
+.create-dialog-textfield input {
+  text-transform: none !important;
+}
 .dashboard-pending-jobs {
   max-width: 400px;
 }
