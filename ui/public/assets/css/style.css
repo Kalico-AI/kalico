@@ -3417,7 +3417,16 @@ textarea:focus {
   margin: 10px;
 }
 .my-files-folder.blue {
-  background-image: url("../images/blue-folder.svg");
+  background-image: url("../images/folder-blue.svg");
+}
+.my-files-folder.red {
+  background-image: url("../images/folder-red.svg");
+}
+.my-files-folder.green {
+  background-image: url("../images/folder-green.svg");
+}
+.my-files-folder.yellow {
+  background-image: url("../images/folder-yellow.svg");
 }
 .create-project-btn {
   margin: 0 auto;
@@ -3438,7 +3447,16 @@ textarea:focus {
 .dashboard-container {
   padding-top: 100px;
 }
-
+.dashboard-container.editor {
+  max-width: 792px;
+  margin: 0 auto;
+}
+.dashboard-container.editor h3:focus {
+  border: none;
+}
+.slate-editor-box {
+  padding: 10px;
+}
 .menu {
   background-color: #fff;
   padding: 0.625rem;

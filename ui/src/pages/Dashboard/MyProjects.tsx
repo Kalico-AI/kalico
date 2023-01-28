@@ -77,9 +77,11 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
             <h6 onClick={onOpenProject}
                 className="folder-title">{abridgedTitle("What is the meaning of life without one's loved")}</h6>
           </div>
-          <div className="my-files-folder blue">
+          <div className="my-files-folder red">
           </div>
-          <div className="my-files-folder blue">
+          <div className="my-files-folder yellow">
+          </div>
+          <div className="my-files-folder green">
           </div>
         </Grid>
       </Grid>

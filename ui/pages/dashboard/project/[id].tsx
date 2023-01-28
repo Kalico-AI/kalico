@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from "next/head";
 import {AuthAction, withAuthUser} from "next-firebase-auth";
-import FAQ from "@/pages/Landing/FAQ";
+import Project from "@/pages/Dashboard/Project";
 
 export async function getServerSideProps() {
   return {
@@ -24,7 +24,7 @@ const ProjectByIdIndex =  (props) => {
           <meta property="og:image:secure" content={props.siteImage} name="image"
                 key="image:secure"/>
         </Head>
-        <FAQ/>
+        <Project/>
       </>
   );
 }
