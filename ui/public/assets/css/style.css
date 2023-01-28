@@ -158,7 +158,12 @@ button {
   background: transparent;
   outline: none;
   cursor: pointer;
+  text-transform: none !important;
 }
+.btn {
+  text-transform: none !important;
+}
+
 
 /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
 @media (prefers-reduced-motion: reduce) {
@@ -3366,6 +3371,72 @@ textarea:focus {
 .header_logo img.main_logo {
   display: block;
   max-width: 128px;
+}
+.dashboard-menu {
+  padding: 0px !important;
+  width: 100%;
+}
+.dashboard-menu li {
+  padding: 0px !important;
+  padding-top: 15px !important;
+}
+.files-section {
+  padding: 20px;
+}
+.create-project-btn-box {
+  border: 3px solid #ff9600;
+  max-width: 164px;
+  height: 185px;
+  border-radius: 10px;
+  margin-left: 50px;
+  cursor: pointer;
+}
+.create-project-btn-box:hover {
+  background: #f5ebdc
+}
+.folder-delete-btn {
+  position: relative;
+  bottom: 0;
+  min-width: 42px !important;
+  color: #fff;
+}
+.folder-title {
+  margin-top: 18px;
+  text-align: center;
+  color: #000;
+  font-size: 14px;
+  padding: 2px;
+  cursor: pointer;
+}
+.my-files-folder {
+  width: 153px;
+  height: 115px;
+  position: relative;
+  margin-right: 20px;
+  background-size: cover;
+  margin: 10px;
+}
+.my-files-folder.blue {
+  background-image: url("../images/blue-folder.svg");
+}
+.create-project-btn {
+  margin: 0 auto;
+  text-align: center;
+  border: 1px solid #f38a1c !important;
+  position: relative !important;
+  left: 37%;
+  top: 25%;
+  height: 35px;
+  width: 35px !important;
+  min-width: 32px !important;
+}
+
+.create-project-btn svg {
+  margin-left: 10px;
+  font-size: 32px;
+}
+.dashboard-container {
+  padding-top: 100px;
 }
 
 .menu {
