@@ -3374,7 +3374,6 @@ textarea:focus {
 }
 .dashboard-menu {
   padding: 0px !important;
-  width: 100%;
 }
 .dashboard-menu li {
   padding: 0px !important;
@@ -3400,7 +3399,7 @@ textarea:focus {
   text-transform: none !important;
 }
 .dashboard-pending-jobs {
-  max-width: 400px;
+  width: 100%;
 }
 .folder-delete-btn {
   position: relative;
@@ -3409,7 +3408,7 @@ textarea:focus {
   color: #fff;
 }
 .folder-title {
-  margin-top: 18px;
+  margin-top: 56px;
   text-align: center;
   color: #fff;
   font-size: 14px;
@@ -3417,12 +3416,11 @@ textarea:focus {
   cursor: pointer;
 }
 .my-files-folder {
-  width: 153px;
-  height: 115px;
+  width: 256px;
+  height: 200px;
   position: relative;
-  margin-right: 20px;
-  background-size: cover;
   margin: 10px;
+  background-size: cover;
 }
 .my-files-folder.blue {
   background-image: url("../images/folder-blue.svg");

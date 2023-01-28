@@ -8,8 +8,6 @@ import {useRouter} from "next/router";
 import {PATHS} from "@/utils/constants";
 import initAuth from "@/auth/nextAuth";
 import {useAuthUser, withAuthUser} from "next-firebase-auth";
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-import HomeIcon from '@mui/icons-material/Home';
 import Link from "next/link";
 
 initAuth()
@@ -65,30 +63,43 @@ const HeaderNav: FC<any> = observer((_props) => {
 
               {user && user.id ? (
                   <>
-                    <ul className="navbar-nav menu dashboard-menu">
-                      <li className="nav-item submenu mega-home">
-                        <Link href={PATHS.MY_PROJECTS} className="nav-link">
-                        <Button
-                            color="inherit"
-                            startIcon={<HomeIcon/>}
-                            className="dashboard-button"
-                            size='large'
-                            variant='text'
-                        >My Projects</Button>
-                        </Link>
-                      </li>
-                    </ul>
+                    {/*<ul className="navbar-nav menu mx-auto dashboard-menu">*/}
+                    {/*    <li className="nav-item submenu mega-home">*/}
+                    {/*  <Link href={PATHS.MY_PROJECTS} className="nav-link">*/}
+                    {/*    <Button*/}
+                    {/*        color="inherit"*/}
+                    {/*        startIcon={<HomeIcon/>}*/}
+                    {/*        className="dashboard-button"*/}
+                    {/*        size='large'*/}
+                    {/*        variant='text'*/}
+                    {/*    >My Projects</Button>*/}
+                    {/*  </Link>*/}
+                    {/*    </li>*/}
+                    {/*</ul>*/}
+                    {/*<ul className="navbar-nav menu dashboard-menu mx-auto">*/}
+                    {/*  <li className="nav-item submenu mega-home">*/}
+                    {/*    <Link href={PATHS.MY_PROJECTS} className="nav-link">*/}
+                    {/*    <Button*/}
+                    {/*        color="inherit"*/}
+                    {/*        startIcon={<HomeIcon/>}*/}
+                    {/*        className="dashboard-button"*/}
+                    {/*        size='large'*/}
+                    {/*        variant='text'*/}
+                    {/*    >My Projects</Button>*/}
+                    {/*    </Link>*/}
+                    {/*  </li>*/}
+                    {/*</ul>*/}
                     <div className="right-nav">
-                      <Box sx={{mr: 3, mb: 1, mt: 1}}>
-                      <Button
-                          color="error"
-                          startIcon={<ShoppingBasketIcon/>}
-                          className="upgrade-button"
-                          size='large'
-                          variant='contained'
-                          onClick={() => {}}
-                      >Upgrade</Button>
-                      </Box>
+                      {/*<Box sx={{mr: 3, mb: 1, mt: 1}}>*/}
+                      {/*<Button*/}
+                      {/*    color="error"*/}
+                      {/*    startIcon={<ShoppingBasketIcon/>}*/}
+                      {/*    className="upgrade-button"*/}
+                      {/*    size='large'*/}
+                      {/*    variant='contained'*/}
+                      {/*    onClick={() => {}}*/}
+                      {/*>Upgrade</Button>*/}
+                      {/*</Box>*/}
                       <Box sx={{ mb: 1, mt: 1}}>
                       <Button
                           color="inherit"
@@ -102,7 +113,8 @@ const HeaderNav: FC<any> = observer((_props) => {
                     </div>
                   </>
               ) : (
-                  <><ul className="navbar-nav menu mx-auto">
+                  <>
+                    <ul className="navbar-nav menu mx-auto">
                     <li className="nav-item submenu mega-home active">
                       <Link href="/" className="nav-link dropdown-toggle active">Home</Link>
                     </li>

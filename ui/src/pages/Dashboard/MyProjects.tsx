@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {observer} from "mobx-react";
 import {Box, Button, Grid, Typography} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
@@ -11,6 +11,18 @@ import CreateDialog from "@/pages/Dashboard/CreateDialog";
 
 export interface MyProjectsProps {
 
+}
+
+interface Project {
+  name: string,
+  id: number
+}
+
+const folderColors = {
+  BLUE: 'blue',
+  RED: 'red',
+  GREEN: 'green',
+  YELLOW: 'yellow'
 }
 
 const MyProjects: FC<MyProjectsProps> = observer((_props) => {
@@ -41,7 +53,7 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
   }
 
   const abridgedTitle = (title: string) => {
-    const maxLength = 42
+    const maxLength = 62
     if (title && title.length > maxLength) {
       const prefix = title.slice(0, maxLength)
       return prefix + '...'
@@ -49,9 +61,77 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
     return title;
   }
 
+  const getProjects = (): Project[] => {
+    const projects = []
+    const count = 12
+    projects.push(
+        {
+          name: 'My demo project',
+          id: 0
+        }
+    )
+    for (let i = 0; i < count; i++) {
+      projects.push(
+          {
+            name: i + 1 + ": What is the meaning of life without one's loved",
+            id: i + 1
+          }
+      )
+    }
+    return projects
+  }
+
+  const getProjectComponents = (projects: Project[]) => {
+    let prevClassName = ''
+    return projects.map((item, index) => {
+      const folderClass = getFolderClassName(prevClassName)
+      prevClassName = folderClass
+      return (
+          <Grid item sx={{p: 2}} sm={3} key={index}>
+            <div className={folderClass}>
+              <Button
+                  sx={{width: '30px'}}
+                  color="warning"
+                  startIcon={<DeleteIcon/>}
+                  className="folder-delete-btn"
+                  size='large'
+                  variant='text'
+                  onClick={onDeleteProject}
+              />
+              <h6 onClick={onOpenProject}
+                  className="folder-title">{abridgedTitle(item.name)}</h6>
+            </div>
+          </Grid>
+      )
+    })
+  }
+
+  const getFolderClassName = (prevColor: string): string => {
+    // Get sequential colors as follows: blue -> red -> green -> yellow
+    const name = "my-files-folder "
+    let nextColor = folderColors.BLUE
+    if (prevColor) {
+      if (prevColor.includes(folderColors.BLUE)) {
+        nextColor = folderColors.RED
+      } else  if (prevColor.includes(folderColors.RED)) {
+        nextColor = folderColors.GREEN
+      } else  if (prevColor.includes(folderColors.GREEN)) {
+        nextColor = folderColors.YELLOW
+      } else  if (prevColor.includes(folderColors.YELLOW)) {
+        nextColor = folderColors.BLUE
+      }
+    }
+    return name + nextColor
+  }
+
+  useEffect(() => {
+
+  }, [])
+
   return (
+      <>
       <Grid container className="dashboard-container">
-        <Grid item sm={12} md={2} sx={{width: '100%'}}>
+        <Grid item sm={12} md={6}>
           <CreateDialog open={createDialogOpen} onClose={onCloseCreateDialog}/>
           <Box className="create-project-btn-box" onClick={onCreate}>
             <Button
@@ -62,10 +142,10 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
                 size='large'
                 variant='text'
             />
-            <Typography variant='subtitle2' sx={{mt: 7, textAlign: 'center'}}>Create a new project</Typography>
+            <Typography variant='subtitle2' sx={{mt: 7, textAlign: 'center', p: 1}}>Create a new project</Typography>
           </Box>
         </Grid>
-        <Grid item sm={12} md={10} sx={{width: '100%'}}>
+        <Grid item sm={12} md={6} justifyContent='flex-end' sx={{display: 'flex'}}>
           <Box className="dashboard-pending-jobs">
             <PendingJobs/>
           </Box>
@@ -73,29 +153,12 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
         <Grid item sm={12} className="files-section">
           <h3>Your Files</h3>
         </Grid>
-        <Grid item sx={{p: 2}}>
-          <ConfirmActionDialog open={deleteDialogOpen} onCloseDialog={onCloseDeleteDialog}/>
-          <div className="my-files-folder blue">
-            <Button
-                sx={{width: '20px'}}
-                color="error"
-                startIcon={<DeleteIcon/>}
-                className="folder-delete-btn"
-                size='small'
-                variant='text'
-                onClick={onDeleteProject}
-            />
-            <h6 onClick={onOpenProject}
-                className="folder-title">{abridgedTitle("What is the meaning of life without one's loved")}</h6>
-          </div>
-          <div className="my-files-folder red">
-          </div>
-          <div className="my-files-folder yellow">
-          </div>
-          <div className="my-files-folder green">
-          </div>
-        </Grid>
+        {
+          getProjectComponents(getProjects())
+        }
       </Grid>
+        <ConfirmActionDialog open={deleteDialogOpen} onCloseDialog={onCloseDeleteDialog}/>
+        </>
   );
 })
 

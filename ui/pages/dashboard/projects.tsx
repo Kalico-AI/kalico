@@ -24,7 +24,11 @@ const ProjectsIndex =  (props) => {
             <meta property="og:image:secure" content={props.siteImage} name="image"
                   key="image:secure"/>
           </Head>
-         <MyProjects/>
+          <main>
+            <section className="container">
+              <MyProjects/>
+            </section>
+          </main>
         </>
     );
 }

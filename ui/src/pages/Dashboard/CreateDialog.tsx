@@ -88,7 +88,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
   return (
       <div className="create-project-dialog">
         <Dialog open={props.open} onClose={() => props.onClose()}>
-          <DialogTitle>Submit your audio or video</DialogTitle>
+          <DialogTitle>Submit Your Content</DialogTitle>
           <DialogContentText sx={{p: 2}}>
             <Typography variant='body1' sx={{fontSize: '13px', p: 0}}>
               For a video project, submit a YouTube or Instagram Reels link. For an audio project,

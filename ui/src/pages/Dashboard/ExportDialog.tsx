@@ -8,11 +8,11 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import TableRowsIcon from '@mui/icons-material/TableRows';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import DataObjectIcon from '@mui/icons-material/DataObject';
+import InputIcon from '@mui/icons-material/Input';
 import { orange } from '@mui/material/colors';
 
 const fileFormats = ['CSV', 'JSON', 'Text', 'PDF'];
@@ -36,7 +36,7 @@ function SimpleDialog(props: SimpleDialogProps) {
 
   return (
       <Dialog onClose={handleClose} open={open}>
-        <DialogTitle>Select export format</DialogTitle>
+        <DialogTitle>Select Export Format</DialogTitle>
         <List sx={{ pt: 0 }}>
           {fileFormats.map((format) => (
               <ListItem disableGutters>
@@ -83,11 +83,11 @@ const ExportDialog = () => {
   return (
       <div>
         <Button
-            color="warning"
-            startIcon={<FileDownloadIcon/>}
+            color="info"
+            startIcon={<InputIcon/>}
             onClick={handleClickOpen}
             size='large'
-            variant='outlined'>
+            variant='text'>
           Export
         </Button>
         <SimpleDialog

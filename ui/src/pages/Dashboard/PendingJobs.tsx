@@ -42,7 +42,7 @@ function PendingJobs() {
           display: 'inline-flex'
         }}
       >
-        Processing project
+        Processing
       </Typography>
       {' '}
       <Typography
@@ -66,6 +66,11 @@ function PendingJobs() {
       </Typography>
       <Box pt={2}>
         <LinearProgress value={50} color="error" variant="determinate" />
+      </Box>
+      <Box>
+        <Typography sx={{fontSize: '12px', pt: 1}}>
+          Estimated time: 2 minutes
+        </Typography>
       </Box>
     </Card>
   );
