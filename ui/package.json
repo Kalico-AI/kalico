@@ -18,6 +18,8 @@
     "firebase": "^9.15.0",
     "firebase-admin": "^11.5.0",
     "hls.js": "^1.2.9",
+    "image-extensions": "^1.1.0",
+    "is-url": "^1.2.4",
     "mobx": "^6.7.0",
     "mobx-react": "^7.6.0",
     "moment": "^2.29.4",

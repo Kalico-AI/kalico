@@ -3457,6 +3457,20 @@ textarea:focus {
 .slate-editor-box {
   padding: 10px;
 }
+.slate-editor-title {
+  padding-bottom: 2px;
+}
+.slate-editor-heading {
+  padding-top: 20px;
+}
+.slate-editor-paragraph {
+  padding: 0;
+}
+.slate-editor-img {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  max-width: 600px;
+}
 .menu {
   background-color: #fff;
   padding: 0.625rem;

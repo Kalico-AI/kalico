@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
-import { Slate, Editable, withReact } from 'slate-react'
+import {Slate, Editable, withReact, useSlateStatic} from 'slate-react'
+import isUrl from 'is-url'
 import {
   Transforms,
   createEditor,
@@ -9,8 +10,9 @@ import {
   Editor,
 } from 'slate'
 import { withHistory } from 'slate-history'
-import {ParagraphElement, TitleElement} from "@/components/SlateEditor/custom-types";
-import {Box} from "@mui/material";
+import {ImageElement, ParagraphElement, TitleElement} from "@/components/SlateEditor/custom-types";
+import {Box, Button, Icon} from "@mui/material";
+import imageExtensions from 'image-extensions'
 
 const withLayout = editor => {
   const { normalizeNode } = editor
@@ -69,15 +71,86 @@ const withLayout = editor => {
   return editor
 }
 
+const insertImage = (editor, url) => {
+  const text = { text: '' }
+  const image: ImageElement = { type: 'image', url, children: [text] }
+  Transforms.insertNodes(editor, image)
+}
+
+const isImageUrl = url => {
+  if (!url) return false
+  if (!isUrl(url)) return false
+  const ext = new URL(url).pathname.split('.').pop()
+  return imageExtensions.includes(ext)
+}
+
+// @ts-ignore
+const InsertImageButton = () => {
+  const editor = useSlateStatic()
+  return (
+      <Button
+          onMouseDown={event => {
+            event.preventDefault()
+            const url = window.prompt('Enter the URL of the image:')
+            if (url && !isImageUrl(url)) {
+              alert('URL is not an image')
+              return
+            }
+            url && insertImage(editor, url)
+          }}
+      >
+        <Icon>image</Icon>
+      </Button>
+  )
+}
+
+const withImages = editor => {
+  const { insertData, isVoid } = editor
+
+  editor.isVoid = element => {
+    return element.type === 'image' ? true : isVoid(element)
+  }
+
+  editor.insertData = data => {
+    const text = data.getData('text/plain')
+    const { files } = data
+
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const reader = new FileReader()
+        const [mime] = file.type.split('/')
+
+        if (mime === 'image') {
+          reader.addEventListener('load', () => {
+            const url = reader.result
+            insertImage(editor, url)
+          })
+
+          reader.readAsDataURL(file)
+        }
+      }
+    } else if (isImageUrl(text)) {
+      insertImage(editor, text)
+    } else {
+      insertData(data)
+    }
+  }
+
+  return editor
+}
+
 const ForcedLayoutEditor = () => {
   const renderElement = useCallback(props => <Element {...props} />, [])
   const editor = useMemo(
-      () => withLayout(withHistory(withReact(createEditor()))),
+      () => withImages(withLayout(withHistory(withReact(createEditor())))),
       []
   )
   return (
       <Box className="slate-editor-box">
       <Slate editor={editor} value={initialValue}>
+        {/*<Toolbar>*/}
+        {/*  <InsertImageButton />*/}
+        {/*</Toolbar>*/}
         <Editable
             renderElement={renderElement}
             placeholder="Untitled"
@@ -89,12 +162,17 @@ const ForcedLayoutEditor = () => {
   )
 }
 
-const Element = ({ attributes, children, element }) => {
+const Element = (props) => {
+  const { attributes, children, element } = props
   switch (element.type) {
     case 'title':
-      return <h3 {...attributes}>{children}</h3>
+      return <h3 {...attributes} className="slate-editor-title">{children}</h3>
+    case 'heading':
+      return <h5 {...attributes} className="slate-editor-heading">{children}</h5>
     case 'paragraph':
-      return <p {...attributes}>{children}</p>
+      return <p {...attributes} className="slate-editor-paragraph">{children}</p>
+    case 'image':
+      return <img {...attributes} alt={''} src={element.url} className="slate-editor-img"/>
   }
 }
 
@@ -111,6 +189,34 @@ const initialValue: Descendant[] = [
             'Enter your body text here',
       },
     ],
+  },
+  {
+    type: 'heading',
+    children: [
+      {
+        text:
+            'This is a subheading!',
+      },
+    ],
+  },
+  {
+    type: 'image',
+    url: 'https://source.unsplash.com/zOwZKwZOZq8',
+    children: [{ text: '' }],
+  },
+  {
+    type: 'paragraph',
+    children: [
+      {
+        text:
+            'Enter your body text here',
+      },
+    ],
+  },
+  {
+    type: 'image',
+    url: 'https://source.unsplash.com/zOwZKwZOZq8',
+    children: [{ text: '' }],
   },
 ]
 
