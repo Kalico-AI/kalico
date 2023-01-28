@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmActionDialog from "@/pages/Dashboard/ConfirmActionDialog";
 import {useRouter} from "next/router";
 import {PATHS} from "@/utils/constants";
+import PendingJobs from "@/pages/Dashboard/PendingJobs";
 
 export interface MyProjectsProps {
 
@@ -45,7 +46,7 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
 
   return (
       <Grid container className="dashboard-container">
-        <Grid item sm={12} sx={{width: '100%'}}>
+        <Grid item sm={12} md={2} sx={{width: '100%'}}>
           <Box className="create-project-btn-box" onClick={onCreate}>
             <Button
                 sx={{width: '30px'}}
@@ -57,6 +58,11 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
                 onClick={onCreate}
             />
             <Typography variant='subtitle2' sx={{mt: 7, textAlign: 'center'}}>Create a new project</Typography>
+          </Box>
+        </Grid>
+        <Grid item sm={12} md={10} sx={{width: '100%'}}>
+          <Box className="dashboard-pending-jobs">
+            <PendingJobs/>
           </Box>
         </Grid>
         <Grid item sm={12} className="files-section">
