@@ -36,7 +36,7 @@ public class FirebaseServiceIntegrationTest extends AbstractTestNGSpringContextT
     @Autowired
     private FirebaseService firebaseService;
 
-    private final String demoUserEmail = UUID.randomUUID() + "@foodwallah.ai";
+    private final String demoUserEmail = UUID.randomUUID() + "@kalico.ai";
     private final String demoUserDisplayName = "Recipe Man";
 
     @BeforeClass
