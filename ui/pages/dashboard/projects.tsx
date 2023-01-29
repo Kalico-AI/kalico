@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from "next/head";
 import {AuthAction, withAuthUser} from "next-firebase-auth";
-import FAQ from "@/pages/Landing/FAQ";
+import MyProjects from "@/pages/Dashboard/MyProjects";
 
 export async function getServerSideProps() {
     return {
@@ -13,7 +13,7 @@ export async function getServerSideProps() {
     }
 }
 
-const DashboardIndex =  (props) => {
+const ProjectsIndex =  (props) => {
     return (
         <>
           <Head>
@@ -24,7 +24,11 @@ const DashboardIndex =  (props) => {
             <meta property="og:image:secure" content={props.siteImage} name="image"
                   key="image:secure"/>
           </Head>
-         <FAQ/>
+          <main>
+            <section className="container">
+              <MyProjects/>
+            </section>
+          </main>
         </>
     );
 }
@@ -33,4 +37,4 @@ export default withAuthUser({
   whenAuthed: AuthAction.RENDER,
   whenUnauthedBeforeInit: AuthAction.RETURN_NULL,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN
-})(DashboardIndex);
+})(ProjectsIndex);

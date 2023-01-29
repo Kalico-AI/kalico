@@ -3,5 +3,7 @@ export const PATHS = {
   HOME: '/',
   LOGIN: '/account/sign-in',
   SIGN_UP: '/account/sign-up',
-  DASHBOARD: '/dashboard'
+  DASHBOARD: '/dashboard',
+  MY_PROJECTS: '/dashboard/projects',
+  PROJECT: '/dashboard/project'
 }

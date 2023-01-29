@@ -158,7 +158,12 @@ button {
   background: transparent;
   outline: none;
   cursor: pointer;
+  text-transform: none !important;
 }
+.btn {
+  text-transform: none !important;
+}
+
 
 /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
 @media (prefers-reduced-motion: reduce) {
@@ -3245,7 +3250,7 @@ textarea:focus {
 /*----------------------------------------*/
 .header-area {
   position: relative;
-  z-index: 99999;
+  /*z-index: 99999;*/
   transition: 0.4s all ease;
 }
 
@@ -3367,7 +3372,111 @@ textarea:focus {
   display: block;
   max-width: 128px;
 }
+.dashboard-menu {
+  padding: 0px !important;
+}
+.dashboard-menu li {
+  padding: 0px !important;
+  padding-top: 15px !important;
+}
+.files-section {
+  padding: 20px;
+}
+.create-project-btn-box {
+  border: 3px solid #ff9600;
+  max-width: 164px;
+  height: 185px;
+  border-radius: 10px;
+  margin-left: 15px;
+  cursor: pointer;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.create-project-btn-box:hover {
+  background: #f5ebdc
+}
+.create-dialog-textfield input {
+  text-transform: none !important;
+}
+.dashboard-pending-jobs {
+  width: 100%;
+}
+.folder-delete-btn {
+  position: relative;
+  bottom: 0;
+  min-width: 42px !important;
+  color: #fff;
+}
+.folder-title {
+  margin-top: 56px;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  padding: 2px;
+  cursor: pointer;
+}
+.my-files-folder {
+  width: 256px;
+  height: 200px;
+  position: relative;
+  margin: 10px;
+  background-size: cover;
+}
+.my-files-folder.blue {
+  background-image: url("../images/folder-blue.svg");
+}
+.my-files-folder.red {
+  background-image: url("../images/folder-red.svg");
+}
+.my-files-folder.green {
+  background-image: url("../images/folder-green.svg");
+}
+.my-files-folder.yellow {
+  background-image: url("../images/folder-yellow.svg");
+}
+.create-project-btn {
+  margin: 0 auto;
+  text-align: center;
+  border: 1px solid #f38a1c !important;
+  position: relative !important;
+  left: 37%;
+  top: 25%;
+  height: 35px;
+  width: 35px !important;
+  min-width: 32px !important;
+}
 
+.create-project-btn svg {
+  margin-left: 10px;
+  font-size: 32px;
+}
+.dashboard-container {
+  padding-top: 100px;
+}
+.dashboard-container.editor {
+  max-width: 792px;
+  margin: 0 auto;
+}
+.dashboard-container.editor h3:focus {
+  border: none;
+}
+.slate-editor-box {
+  padding: 10px;
+}
+.slate-editor-title {
+  padding-bottom: 2px;
+}
+.slate-editor-heading {
+  padding-top: 20px;
+}
+.slate-editor-paragraph {
+  padding: 0;
+}
+.slate-editor-img {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  max-width: 600px;
+}
 .menu {
   background-color: #fff;
   padding: 0.625rem;
@@ -5259,7 +5368,7 @@ Client CSS
 =================================================*/
 .client-area, .app-video-area {
   position: relative;
-  z-index: 99;
+  z-index: -99;
 }
 @media screen and (min-width: 992px) {
   .client-area {

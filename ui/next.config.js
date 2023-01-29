@@ -13,5 +13,19 @@ module.exports = {
   },
   typescript: {
     ignoreBuildErrors: true
-  }
+  },
+  async redirects() {
+    return [
+      {
+        source: '/dashboard',
+        destination: '/dashboard/projects',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/project',
+        destination: '/dashboard/projects',
+        permanent: true,
+      },
+    ]
+  },
 };

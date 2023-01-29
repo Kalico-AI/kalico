@@ -8,7 +8,7 @@ import {useRouter} from "next/router";
 import {PATHS} from "@/utils/constants";
 import initAuth from "@/auth/nextAuth";
 import {useAuthUser, withAuthUser} from "next-firebase-auth";
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import Link from "next/link";
 
 initAuth()
 
@@ -19,7 +19,6 @@ const HeaderNav: FC<any> = observer((_props) => {
 
   const logout = () => {
     auth.signOut().then(_ => {
-      console.log("Logout success!")
       store.sessionDataStore.setUser(undefined)
       router.push({
         pathname: PATHS.LOGIN,
@@ -36,9 +35,9 @@ const HeaderNav: FC<any> = observer((_props) => {
       <header className="header-area">
         <nav className="navbar navbar-expand-lg menu_three sticky-nav">
           <div className={navbarClasses}>
-            <a className="navbar-brand header_logo" href={user && user.id ? PATHS.DASHBOARD : PATHS.HOME}>
+            <Link className="navbar-brand header_logo" href={user && user.id ? PATHS.DASHBOARD : PATHS.HOME}>
               <img className="main_logo" src="/assets/images/logo.png" alt="logo"/>
-            </a>
+            </Link>
             <button
                 className="navbar-toggler collapsed"
                 type="button"
@@ -64,70 +63,79 @@ const HeaderNav: FC<any> = observer((_props) => {
 
               {user && user.id ? (
                   <>
-                    <ul className="navbar-nav menu mx-auto">
-                      {/*<li className="nav-item submenu mega-home active">*/}
-                      {/*  <a href="/" className="nav-link dropdown-toggle active">Home</a>*/}
-                      {/*</li>*/}
-                      {/*<li className="nav-item dropdown submenu active">*/}
-                      {/*  <a href="/#why-kalico" className="nav-link dropdown-toggle">Why Kalico</a>*/}
-                      {/*</li>*/}
-                      {/*<li className="nav-item dropdown submenu active">*/}
-                      {/*  <a href="/#how-it-works" className="nav-link dropdown-toggle">How It Works</a>*/}
-                      {/*</li>*/}
-
-                      {/*<li className="nav-item dropdown submenu mega-menu active">*/}
-                      {/*  <a href="/#features" className="nav-link dropdown-toggle">Features</a>*/}
-                      {/*</li>*/}
-                      {/*<li className="nav-item dropdown submenu mega-menu active">*/}
-                      {/*  <a href="/#support" className="nav-link dropdown-toggle">Upgrade</a>*/}
-                      {/*</li>*/}
-                    </ul>
+                    {/*<ul className="navbar-nav menu mx-auto dashboard-menu">*/}
+                    {/*    <li className="nav-item submenu mega-home">*/}
+                    {/*  <Link href={PATHS.MY_PROJECTS} className="nav-link">*/}
+                    {/*    <Button*/}
+                    {/*        color="inherit"*/}
+                    {/*        startIcon={<HomeIcon/>}*/}
+                    {/*        className="dashboard-button"*/}
+                    {/*        size='large'*/}
+                    {/*        variant='text'*/}
+                    {/*    >My Projects</Button>*/}
+                    {/*  </Link>*/}
+                    {/*    </li>*/}
+                    {/*</ul>*/}
+                    {/*<ul className="navbar-nav menu dashboard-menu mx-auto">*/}
+                    {/*  <li className="nav-item submenu mega-home">*/}
+                    {/*    <Link href={PATHS.MY_PROJECTS} className="nav-link">*/}
+                    {/*    <Button*/}
+                    {/*        color="inherit"*/}
+                    {/*        startIcon={<HomeIcon/>}*/}
+                    {/*        className="dashboard-button"*/}
+                    {/*        size='large'*/}
+                    {/*        variant='text'*/}
+                    {/*    >My Projects</Button>*/}
+                    {/*    </Link>*/}
+                    {/*  </li>*/}
+                    {/*</ul>*/}
                     <div className="right-nav">
-                      <Box sx={{mr: 3, mb: 1, mt: 1}}>
-                      <Button
-                          color="error"
-                          startIcon={<ShoppingBasketIcon/>}
-                          className="upgrade-button"
-                          size='large'
-                          variant='contained'
-                          onClick={logout}
-                      >Upgrade</Button>
-                      </Box>
+                      {/*<Box sx={{mr: 3, mb: 1, mt: 1}}>*/}
+                      {/*<Button*/}
+                      {/*    color="error"*/}
+                      {/*    startIcon={<ShoppingBasketIcon/>}*/}
+                      {/*    className="upgrade-button"*/}
+                      {/*    size='large'*/}
+                      {/*    variant='contained'*/}
+                      {/*    onClick={() => {}}*/}
+                      {/*>Upgrade</Button>*/}
+                      {/*</Box>*/}
                       <Box sx={{ mb: 1, mt: 1}}>
                       <Button
-                          color="warning"
+                          color="inherit"
                           startIcon={<LogoutIcon/>}
                           className="sign-in-button"
                           size='large'
-                          variant='outlined'
+                          variant='text'
                           onClick={logout}
                       />
                       </Box>
                     </div>
                   </>
               ) : (
-                  <><ul className="navbar-nav menu mx-auto">
+                  <>
+                    <ul className="navbar-nav menu mx-auto">
                     <li className="nav-item submenu mega-home active">
-                      <a href="/" className="nav-link dropdown-toggle active">Home</a>
+                      <Link href="/" className="nav-link dropdown-toggle active">Home</Link>
                     </li>
                     <li className="nav-item dropdown submenu active">
-                      <a href="/#why-kalico" className="nav-link dropdown-toggle">Why Kalico</a>
+                      <Link href="/#why-kalico" className="nav-link dropdown-toggle">Why Kalico</Link>
                     </li>
                     <li className="nav-item dropdown submenu active">
-                      <a href="/#how-it-works" className="nav-link dropdown-toggle">How It Works</a>
+                      <Link href="/#how-it-works" className="nav-link dropdown-toggle">How It Works</Link>
                     </li>
 
                     <li className="nav-item dropdown submenu mega-menu active">
-                      <a href="/#features" className="nav-link dropdown-toggle">Features</a>
+                      <Link href="/#features" className="nav-link dropdown-toggle">Features</Link>
                     </li>
                     <li className="nav-item dropdown submenu mega-menu active">
-                      <a href="/#support" className="nav-link dropdown-toggle">Support</a>
+                      <Link href="/#support" className="nav-link dropdown-toggle">Support</Link>
                     </li>
                   </ul>
                     <div className="right-nav">
                       {/*<a href="#" className="language-bar mr-50"><span className="active">En.</span><span>Ru</span></a>*/}
-                      <a href={PATHS.LOGIN}>Sign in</a>
-                      <a className="btn btn-red" href={PATHS.SIGN_UP}>Sign Up</a>
+                      <Link href={PATHS.LOGIN}>Sign in</Link>
+                      <Link className="btn btn-red" href={PATHS.SIGN_UP}>Sign Up</Link>
                     </div>
                   </>
                  )}

@@ -12,6 +12,7 @@ import HeaderNav from "@/components/Header";
 import initAuth from "@/auth/nextAuth";
 import {withAuthUser} from "next-firebase-auth";
 import {Box, CircularProgress} from "@mui/material";
+import 'react-toastify/dist/ReactToastify.css';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
