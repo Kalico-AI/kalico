@@ -1,0 +1,1 @@
+ALTER TABLE public.video_content ADD UNIQUE (blog_post_id);
