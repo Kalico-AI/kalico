@@ -1,6 +1,7 @@
 package ai.kalico.api.service.utils;
 
 import java.io.File;
+import java.util.Random;
 import lombok.SneakyThrows;
 
 /**
@@ -17,4 +18,20 @@ public class KALUtils {
     return cPath;
   }
 
+  public static String generateUid() {
+    StringBuilder builder = new StringBuilder();
+    // An ID length of N gives 62^N unique IDs
+    int contentIdLength = 8;
+    for (int i = 0; i < contentIdLength; i++) {
+      builder.append(getRandomCharacter());
+    }
+    return builder.toString();
+  }
+
+  public static Character getRandomCharacter() {
+    Random random = new Random();
+    String uidAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnoqprstuvwxyz0123456789";
+    int index = random.nextInt(uidAlphabet.length());
+    return uidAlphabet.charAt(index);
+  }
 }

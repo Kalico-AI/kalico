@@ -63,7 +63,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GenericResponse"
+                  "$ref": "#/components/schemas/CreateProjectResponse"
                 }
               }
             }
@@ -270,6 +270,21 @@
       }
     },
     "schemas": {
+      "CreateProjectResponse": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
       "CreateProjectRequest": {
         "type": "object",
         "properties": {

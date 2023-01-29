@@ -1,5 +1,6 @@
 package ai.kalico.api.service.utils;
 
+import ai.kalico.api.service.av.AVServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ai.kalico.api.data.postgres.entity.ProjectEntity;
@@ -35,7 +36,7 @@ import org.springframework.util.FileCopyUtils;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class Seed {
+public class SeedData {
   private final ProjectRepo projectRepo;
   private final MediaContentRepo mediaContentRepo;
   private final SampledImageRepo sampledImageRepo;
@@ -44,12 +45,14 @@ public class Seed {
   private final ObjectMapper objectMapper;
   private final AWSProps awsProps;
 
-  public void seed() {
+  public void seed(String userId) {
     if (projectProps.getSeedDb() != null && projectProps.getSeedDb()) {
       int numRecords = 5;
       if (projectRepo.count() != numRecords) {
         try {
-          String userId = createUserAccounts();
+          if (userId == null) {
+            userId = createUserAccounts();
+          }
           List<ProjectEntity> projectEntities = createProject(numRecords, userId);
           
           List<Long> projectIds = projectEntities.stream()
@@ -90,23 +93,30 @@ public class Seed {
       entity.setEmbedImages(false);
       entity.setUserId(userId);
       entity.setProjectName("Demo Project " + i);
+      projectEntities.add(entity);
     }
     projectRepo.saveAll(projectEntities);
     return projectEntities;
   }
 
-  @SneakyThrows
+
   private void createMediaContent(List<Long> projectIds) {
-    TypeReference<List<MediaContentEntity>> typeRef = new TypeReference<>() {};
-    List<MediaContentEntity> contentEntities = objectMapper.readValue(
-        loadFromFile("mr_public_video_content.json"), typeRef);
+    String onScreenTest = "<br>0002.jpg<br>----------<br> <br>   <br><br>WVIAMS OeInt Mnlinestel<br><br>*<br>\f<br>0003.jpg<br>----------<br>Eien part thinly sliced<br><br> <br>\f<br>0005.jpg<br>----------<br>oS<br>©<br>&<br><br>S<br>q<br>@<br>><br>©<br>©)<br>Bo)<br>TS<br>©<br>fo)<br>Ke)<br><br> <br>\f<br>0006.jpg<br>----------<br>2 eggs and set aside<br><br> <br>\f<br>0008.jpg<br>----------<br>1-2 tosp red chilli flakes<br><br> <br>\f<br>0009.jpg<br>----------<br>Stir fry on high flame<br><br> <br>\f<br>0010.jpg<br>----------<br>a)<br>@<br>&<br>©<br>®<br>—<br>iS<br>i)<br>=<br>=<br>Ne<br>S<br>o)<br>eS<br>RS<br>(ep)<br>)<br>©<br>=y<br>oy<br>co<br>ie<br>ie<br><¢<br><br> <br>\f<br>0011.jpg<br>----------<br>Add sauces (check written recipe)<br><br> <br>\f<br>0014.jpg<br>----------<br>Switch off the flame and mix<br><br> <br>\f<br>";
+    String description = "Spicy egg fried rice \uD83D\uDD25 Recipe \uD83D\uDC47<br><br>INGREDIENTS:<br>5-6 green onions<br>6 cloves of garlic<br>1-2 tbsp crushed chilli flakes (add based on spice tolerance)<br>2 servings cold rice<br>2 eggs<br>Cooking oil as needed<br>—Sauce—<br>1 tbsp light/regular soy sauce<br>1 tbsp dark soy sauce<br>1 tbsp water<br>1 tsp sugar<br>Note: Add salt if needed<br><br>PROCESS:<br>1. Clean and trim 5-6 green onions. Mince the white parts and thinly slice the green parts for garnish<br>2. Mince 6 cloves of garlic. Add more or less depending on size of the cloves or taste<br>3. Take 2 servings of cold, day old rice in a bowl and separate the clumps. This helps in even stir frying. Cold, slightly dried out rice is essential for the perfect fried rice texture<br>4. Mix the sauce ingredients in a bowl and set aside<br>5. To a heated wok/pan add some oil and scramble 2 eggs with a pinch of salt. Set aside<br>6. Set flame to medium and add 2 tbsp neutral cooking oil. When the oil is hot, sauté the garlic and green onion for 30 seconds<br>7. Reduce flame to low and sauté 1-2 tbsp crushed red chilli flakes for 30 seconds or until fragrant. Chilli flakes will burn if the flame is too high<br>8. Increase flame to medium high, add rice and stir fry until mixed well with the aromatics<br>9. Add the prepared sauce and stir fry for 2-3 minutes. The rice needs to fry well so keep tossing and turning<br>10. When the rice is fried well, add the previously scrambled eggs. Mix everything well and adjust salt if needed<br>11. Add the green part of green onions and switch off the flame. You don’t want to overcook them<br>12. Serve the spicy egg fried rice with a crispy fried egg, a side of your choice or on its own<br><br>#easyrecipes #asmrcooking #recipes #friedrice";
+    String transcript = "WEBVTT<br><br>00:00.000 --> 00:16.480<br>Wuhan<br><br>00:16.480 --> 00:16.980<br>Okay, now add the<br><br>00:16.980 --> 00:23.920<br>finely chopped onion<br><br>";
+    List<MediaContentEntity> contentEntities = new ArrayList<>();
     for (Long projectId : projectIds) {
-      for (MediaContentEntity contentEntity : contentEntities) {
-        contentEntity.setId(null);
-        contentEntity.setProjectId(projectId);
-      }
-      mediaContentRepo.saveAll(contentEntities);
+      MediaContentEntity contentEntity = new MediaContentEntity();
+      contentEntity.setMediaId(KALUtils.generateUid());
+      contentEntity.setScrapedDescription(description);
+      contentEntity.setScrapedTitle("Spicy egg fried rice");
+      contentEntity.setRawTranscript(transcript);
+      contentEntity.setOnScreenText(onScreenTest);
+      contentEntity.setPermalink("https://www.instagram.com/reel/CmywGx6MYso/?igshid=YmMyMTA2M2Y=");
+      contentEntity.setProjectId(projectId);
+      contentEntities.add(contentEntity);
     }
+    mediaContentRepo.saveAll(contentEntities);
   }
 
   @SneakyThrows

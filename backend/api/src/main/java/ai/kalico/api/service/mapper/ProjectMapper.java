@@ -49,10 +49,11 @@ public interface ProjectMapper {
     TypeReference<List<ContentItem>> typeRef = new TypeReference<>() {};
     ProjectDetail detail = new ProjectDetail();
     detail.setId(projectEntity.getId());
+    detail.setName(JsonNullable.of(projectEntity.getProjectName()));
     detail.setDateCreated(projectEntity.getCreatedAt().toEpochSecond(ZoneOffset.UTC));
     if (projectEntity.getContent() != null) {
       try {
-        detail.setContent(objectMapper.readValue(projectEntity.getContent(), typeRef));
+        detail.setContent(objectMapper.readValue(projectEntity.getContent().toString(), typeRef));
       } catch (JsonProcessingException e) {
         e.printStackTrace();
       }

@@ -128,7 +128,7 @@ public class AVAsyncHelper {
       }
       if (sampledImageEntities.size() > 0) {
         // Delete any existing images
-        List<SampledImageEntity> toDelete = sampledImageRepo.findByBlogPostIdOrderByImageKeyAsc(
+        List<SampledImageEntity> toDelete = sampledImageRepo.findByProjectIdOrderByImageKeyAsc(
             mediaContentEntity.getProjectId());
         if (toDelete.size() > 0) {
           sampledImageRepo.deleteAll(toDelete);

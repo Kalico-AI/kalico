@@ -1,6 +1,7 @@
 package ai.kalico.api.service.project;
 
 import com.kalico.model.CreateProjectRequest;
+import com.kalico.model.CreateProjectResponse;
 import com.kalico.model.GenericResponse;
 import com.kalico.model.GifRequest;
 import com.kalico.model.GifResponse;
@@ -21,7 +22,7 @@ public interface ProjectService {
    * @param createProjectRequest project metadata and an optional uploaded media content
    * @return
    */
-  GenericResponse createProject(CreateProjectRequest createProjectRequest);
+  CreateProjectResponse createProject(CreateProjectRequest createProjectRequest);
   GenericResponse deleteProject(Long id);
   PageableResponse getAllProjects();
   ProjectDetail getProjectById(Long id);
@@ -33,7 +34,7 @@ public interface ProjectService {
 
   GifResponse generateGif(GifRequest gifRequest);
 
-  List<String> getSampledImages(Long docId);
+  List<String> getSampledImages(Long projectId);
 
   MediaContent getMediaContent(Long projectId);
 

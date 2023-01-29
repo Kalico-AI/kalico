@@ -15,6 +15,7 @@ import ai.kalico.api.utils.security.firebase.SecurityFilter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.CreateProjectRequest;
+import com.kalico.model.CreateProjectResponse;
 import com.kalico.model.GenericResponse;
 import com.kalico.model.GifRequest;
 import com.kalico.model.GifResponse;
@@ -53,24 +54,32 @@ public class ProjectServiceImpl implements ProjectService {
   private final ProjectProps projectProps;
 
   @Override
-  public GenericResponse createProject(CreateProjectRequest createProjectRequest) {
+  public CreateProjectResponse createProject(CreateProjectRequest createProjectRequest) {
     if (createProjectRequest != null) {
       // If a url is provided, then use that instead of any uploaded content. Otherwise, use
       // the uploaded content
-      String url = createProjectRequest.getContentLink().get();
-      String file = createProjectRequest.getFile().get();
-      String ext = createProjectRequest.getFileExtension().get();
-      boolean doContinue = false;
+      String url = null;
+      String file = null;
+      String ext = null;
+      if (createProjectRequest.getContentLink().isPresent()) {
+        url = createProjectRequest.getContentLink().get();
+      }
+      if (createProjectRequest.getFile().isPresent()) {
+        file = createProjectRequest.getFile().get();
+      }
+      if (createProjectRequest.getFileExtension().isPresent()) {
+        ext = createProjectRequest.getFileExtension().get();
+      }
       if (!ObjectUtils.isEmpty(url)) {
-        if (isSupportedUrl(url)) {
-          return new GenericResponse().error("The link provided is not yet supported");
+        if (!isSupportedUrl(url)) {
+          return new CreateProjectResponse().error("The link provided is not yet supported");
         }
         file = null;
         ext = null;
       } else if (!ObjectUtils.isEmpty(file) &&  !ObjectUtils.isEmpty(ext)) {
         url = null;
       } else {
-        return new GenericResponse().error("Please provide a link or upload a file");
+        return new CreateProjectResponse().error("Please provide a link or upload a file");
       }
       String userId = securityFilter.getUser().getFirebaseId();
       ProjectEntity entity = new ProjectEntity();
@@ -86,12 +95,15 @@ public class ProjectServiceImpl implements ProjectService {
       entity.setContentLink(url);
       projectRepo.save(entity);
       avService.processMedia(url, entity.getId(), file, ext);
-      return new GenericResponse().status("OK");
+      return new CreateProjectResponse()
+          .status("OK")
+          .projectId(entity.getId());
     }
-    return new GenericResponse().error("Encountered an error while creating the project");
+    return new CreateProjectResponse().error("Encountered an error while creating the project");
   }
   @Override
   public GenericResponse deleteProject(Long id) {
+    // TODO: remove the corresponding media files from S3
     if (id != null && id > 0) {
       projectRepo.deleteById(id);
       return new GenericResponse().status("OK");
@@ -137,6 +149,7 @@ public class ProjectServiceImpl implements ProjectService {
         } else {
           entity.setContent(null);
         }
+        projectRepo.save(entity);
         return new GenericResponse().status("OK");
       }
     }
@@ -183,8 +196,8 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public List<String> getSampledImages(Long docId) {
-    List<SampledImageEntity> entities = sampledImageRepo.findByBlogPostIdOrderByImageKeyAsc(docId);
+  public List<String> getSampledImages(Long projectId) {
+    List<SampledImageEntity> entities = sampledImageRepo.findByProjectIdOrderByImageKeyAsc(projectId);
     List<String> imageUrls = new ArrayList<>();
     if (!ObjectUtils.isEmpty(entities)) {
       return entities
@@ -197,7 +210,7 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public MediaContent getMediaContent(Long projectId) {
-    return projectMapper.mapMediaContent(
+     return projectMapper.mapMediaContent(
         mediaContentRepo.findByProjectId(projectId));
   }
 

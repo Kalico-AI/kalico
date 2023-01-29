@@ -16,7 +16,7 @@ import java.util.List;
 @Primary
 @Getter @Setter
 @Configuration
-@ConfigurationProperties(prefix = "blog")
+@ConfigurationProperties(prefix = "project")
 public class ProjectProps {
     private Boolean seedDb;
     private List<String> supportedDomains;

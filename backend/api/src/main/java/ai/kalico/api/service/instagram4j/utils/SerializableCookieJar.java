@@ -92,7 +92,7 @@ public class SerializableCookieJar implements CookieJar, Serializable {
             if (allCookies.containsKey(c.name())) {
                 CookieJarEntity existingCookie = allCookies.get(c.name());
                 mapCookieToEntity(url, existingCookie, c);
-                existingCookie.setUpdatedDt(LocalDateTime.now(ZoneId.of("UTC")));
+                existingCookie.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
             } else {
                 CookieJarEntity jarEntity = new CookieJarEntity();
                 mapCookieToEntity(url, jarEntity, c);

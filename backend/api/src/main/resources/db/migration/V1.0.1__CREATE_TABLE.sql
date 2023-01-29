@@ -39,16 +39,15 @@ comment on table public.user is 'Basic user information';
 
 CREATE TABLE IF NOT EXISTS public.project (
     id BIGSERIAL NOT NULL constraint project_id_fk primary key,
-    user_id bigint not null constraint user_id_fk foreign key (user_id) references public.user (firebase_id),
-    content json,
+    user_id varchar(255) not null constraint user_id_fk references public.user (firebase_id),
+    content varchar,
     project_name varchar not null default 'Untitled',
     content_link varchar,
     paraphrase boolean not null default false,
     embed_images boolean not null default false,
-    content_type varchar (255)
+    content_type varchar(255),
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ALTER TABLE public.project OWNER TO root;
 comment on table public.project is 'User project';
@@ -56,7 +55,7 @@ comment on table public.project is 'User project';
 
 CREATE TABLE IF NOT EXISTS public.sampled_image (
   id BIGSERIAL NOT NULL,
-  project_id bigint not null constraint project_id_fk references public.project (id),
+  project_id bigint not null constraint project_id_fk references public.project (id) on delete cascade,
   image_key varchar(255),
   updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -66,7 +65,7 @@ comment on table public.sampled_image is 'Image sampled from video frames';
 
 CREATE TABLE IF NOT EXISTS public.media_content (
     id BIGSERIAL NOT NULL,
-    project_id bigint not null constraint project_id_fk references public.project (id),
+    project_id bigint not null constraint project_id_fk references public.project (id) on delete cascade,
     media_id varchar(255) not null,
     scraped_title varchar,
     scraped_description varchar,
@@ -95,8 +94,8 @@ CREATE TABLE IF NOT EXISTS public.cookie_jar (
      c_persistent boolean,
      c_secure boolean,
      c_expires_at bigint,
-     updated_dt timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     created_dt timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ALTER TABLE public.cookie_jar OWNER TO root;
 comment on table public.cookie_jar is 'Persists request cookies';

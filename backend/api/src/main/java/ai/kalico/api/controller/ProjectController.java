@@ -3,6 +3,7 @@ package ai.kalico.api.controller;
 import ai.kalico.api.ProjectApi;
 import ai.kalico.api.service.project.ProjectService;
 import com.kalico.model.CreateProjectRequest;
+import com.kalico.model.CreateProjectResponse;
 import com.kalico.model.GenericResponse;
 import com.kalico.model.MediaContent;
 import com.kalico.model.PageableResponse;
@@ -25,7 +26,7 @@ public class ProjectController implements ProjectApi {
   private final ProjectService projectService;
 
   @Override
-  public ResponseEntity<GenericResponse> createProject(CreateProjectRequest createProjectRequest) {
+  public ResponseEntity<CreateProjectResponse> createProject(CreateProjectRequest createProjectRequest) {
     return ResponseEntity.ok(projectService.createProject(createProjectRequest));
   }
 

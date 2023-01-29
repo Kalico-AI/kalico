@@ -7,6 +7,7 @@ import ai.kalico.api.props.ProjectProps;
 import ai.kalico.api.service.download.DownloadService;
 import ai.kalico.api.service.parser.InstagramParser;
 import ai.kalico.api.service.utils.AVAsyncHelper;
+import ai.kalico.api.service.utils.KALUtils;
 import ai.kalico.api.service.youtubej.YoutubeDownloader;
 import ai.kalico.api.service.youtubej.downloader.request.RequestVideoFileDownload;
 import ai.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
@@ -106,7 +107,7 @@ public class AVServiceImpl implements AVService {
 
   private String createMediaContentFromUpload(Long projectId) {
     MediaContentEntity mediaContent = new MediaContentEntity();
-    mediaContent.setMediaId(generateUid());
+    mediaContent.setMediaId(KALUtils.generateUid());
     mediaContent.setProjectId(projectId);
     mediaContentRepo.save(mediaContent);
     return mediaContent.getMediaId();
@@ -155,7 +156,7 @@ public class AVServiceImpl implements AVService {
              videoInfoDto.setUrl(url);
            }
         } else if (platform == Platform.INSTAGRAM) {
-        videoInfoDto = instagramParser.getMediaMetadata(url, generateUid());
+        videoInfoDto = instagramParser.getMediaMetadata(url, KALUtils.generateUid());
       }
       if (videoInfoDto != null) {
         videoInfoDto.setPermalink(url);
@@ -289,22 +290,5 @@ public class AVServiceImpl implements AVService {
       }
     }
     return Platform.INSTAGRAM;
-  }
-
-  public String generateUid() {
-    StringBuilder builder = new StringBuilder();
-    // An ID length of N gives 62^N unique IDs
-    int contentIdLength = 8;
-    for (int i = 0; i < contentIdLength; i++) {
-      builder.append(getRandomCharacter());
-    }
-    return builder.toString();
-  }
-
-  public Character getRandomCharacter() {
-    Random random = new Random();
-    String uidAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnoqprstuvwxyz0123456789";
-    int index = random.nextInt(uidAlphabet.length());
-    return uidAlphabet.charAt(index);
   }
 }
