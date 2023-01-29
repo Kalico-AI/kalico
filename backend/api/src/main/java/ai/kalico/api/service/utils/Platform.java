@@ -1,4 +1,4 @@
-package com.kalico.api.service.utils;
+package ai.kalico.api.service.utils;
 
 /**
  * @author Bizuwork Melesse

@@ -1,8 +1,8 @@
-package com.kalico.api.service.youtubej.model.videos.formats;
+package ai.kalico.api.service.youtubej.model.videos.formats;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.kalico.api.service.youtubej.model.videos.quality.AudioQuality;
+import ai.kalico.api.service.youtubej.model.videos.quality.AudioQuality;
 
 public class AudioFormat extends Format {
 

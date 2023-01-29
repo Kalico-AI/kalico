@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.igtv;
+package ai.kalico.api.service.instagram4j.requests.igtv;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.requests.IGPaginatedRequest;
-import com.kalico.api.service.instagram4j.responses.igtv.IgtvBrowseFeedResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.requests.IGPaginatedRequest;
+import ai.kalico.api.service.instagram4j.responses.igtv.IgtvBrowseFeedResponse;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

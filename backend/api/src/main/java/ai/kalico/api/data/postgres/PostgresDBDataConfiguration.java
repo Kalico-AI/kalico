@@ -1,8 +1,8 @@
-package com.kalico.api.data.postgres;
+package ai.kalico.api.data.postgres;
 
 
-import com.kalico.api.props.PostgresDataSourceProps;
-import com.kalico.api.props.PropConfiguration;
+import ai.kalico.api.props.PostgresDataSourceProps;
+import ai.kalico.api.props.PropConfiguration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -32,7 +32,7 @@ import java.util.Map;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "entityManagerFactory",
         transactionManagerRef = "transactionManager",
-        basePackages = { "com.kalico.api.data.postgres.repo" }
+        basePackages = { "ai.kalico.api.data.postgres.repo" }
 )
 @EnableTransactionManagement
 @Import(PropConfiguration.class)
@@ -47,7 +47,7 @@ public class PostgresDBDataConfiguration {
             Environment env, @Qualifier("postgresDbSource") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan(new String[]{"com.kalico.api.data.postgres.entity"});
+        em.setPackagesToScan(new String[]{"ai.kalico.api.data.postgres.entity"});
         em.setPersistenceUnitName("mrDb");
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();

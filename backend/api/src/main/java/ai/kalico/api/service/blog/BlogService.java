@@ -1,7 +1,7 @@
-package com.kalico.api.service.blog;
+package ai.kalico.api.service.blog;
 
-import com.kalico.api.data.postgres.repo.BlogPostRepo;
-import com.kalico.api.dto.VideoInfoDto;
+import ai.kalico.api.data.postgres.repo.BlogPostRepo;
+import ai.kalico.api.dto.VideoInfoDto;
 import com.kalico.model.*;
 
 import java.util.List;

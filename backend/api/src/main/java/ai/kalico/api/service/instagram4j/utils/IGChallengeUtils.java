@@ -1,14 +1,14 @@
-package com.kalico.api.service.instagram4j.utils;
+package ai.kalico.api.service.instagram4j.utils;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.exceptions.IGResponseException.IGFailedResponse;
-import com.kalico.api.service.instagram4j.requests.challenge.ChallengeResetRequest;
-import com.kalico.api.service.instagram4j.requests.challenge.ChallengeSelectVerifyMethodRequest;
-import com.kalico.api.service.instagram4j.requests.challenge.ChallengeSendCodeRequest;
-import com.kalico.api.service.instagram4j.requests.challenge.ChallengeStateGetRequest;
-import com.kalico.api.service.instagram4j.responses.accounts.LoginResponse;
-import com.kalico.api.service.instagram4j.responses.challenge.Challenge;
-import com.kalico.api.service.instagram4j.responses.challenge.ChallengeStateResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.exceptions.IGResponseException.IGFailedResponse;
+import ai.kalico.api.service.instagram4j.requests.challenge.ChallengeResetRequest;
+import ai.kalico.api.service.instagram4j.requests.challenge.ChallengeSelectVerifyMethodRequest;
+import ai.kalico.api.service.instagram4j.requests.challenge.ChallengeSendCodeRequest;
+import ai.kalico.api.service.instagram4j.requests.challenge.ChallengeStateGetRequest;
+import ai.kalico.api.service.instagram4j.responses.accounts.LoginResponse;
+import ai.kalico.api.service.instagram4j.responses.challenge.Challenge;
+import ai.kalico.api.service.instagram4j.responses.challenge.ChallengeStateResponse;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import lombok.NonNull;

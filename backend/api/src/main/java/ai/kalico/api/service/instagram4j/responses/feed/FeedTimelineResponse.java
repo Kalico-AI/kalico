@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.responses.feed;
+package ai.kalico.api.service.instagram4j.responses.feed;
 
-import com.kalico.api.service.instagram4j.models.media.timeline.TimelineMedia;
-import com.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.models.media.timeline.TimelineMedia;
+import ai.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import java.util.List;

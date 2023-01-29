@@ -1,10 +1,10 @@
-package com.kalico.api.utils.security.firebase;
+package ai.kalico.api.utils.security.firebase;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
-import com.kalico.api.utils.firebase.FirebaseService;
-import com.kalico.api.utils.security.Credentials;
+import ai.kalico.api.utils.firebase.FirebaseService;
+import ai.kalico.api.utils.security.Credentials;
 import com.kalico.model.UserProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

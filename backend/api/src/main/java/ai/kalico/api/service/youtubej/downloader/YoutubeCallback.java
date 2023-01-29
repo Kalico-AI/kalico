@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.downloader;
+package ai.kalico.api.service.youtubej.downloader;
 
 public interface YoutubeCallback<T> {
 

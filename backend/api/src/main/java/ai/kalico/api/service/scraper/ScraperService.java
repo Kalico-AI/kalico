@@ -1,6 +1,6 @@
-package com.kalico.api.service.scraper;
+package ai.kalico.api.service.scraper;
 
-import com.kalico.api.dto.VideoInfoDto;
+import ai.kalico.api.dto.VideoInfoDto;
 
 /**
  * @author Bizuwork Melesse

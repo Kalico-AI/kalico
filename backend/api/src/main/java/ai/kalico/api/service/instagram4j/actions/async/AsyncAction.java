@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.actions.async;
+package ai.kalico.api.service.instagram4j.actions.async;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGRequest;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGRequest;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;

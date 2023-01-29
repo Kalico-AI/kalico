@@ -1,7 +1,7 @@
-package com.kalico.api.service.youtubej.model.search.query;
+package ai.kalico.api.service.youtubej.model.search.query;
 
 import com.alibaba.fastjson.JSONObject;
-import com.kalico.api.service.youtubej.model.Utils;
+import ai.kalico.api.service.youtubej.model.Utils;
 
 public class QuerySuggestion extends Searchable implements QueryElement {
 

@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.live;
+package ai.kalico.api.service.instagram4j.requests.live;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.requests.IGPostRequest;
-import com.kalico.api.service.instagram4j.responses.live.LiveBroadcastCommentResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.requests.IGPostRequest;
+import ai.kalico.api.service.instagram4j.responses.live.LiveBroadcastCommentResponse;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NonNull;

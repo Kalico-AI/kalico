@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.models.location;
+package ai.kalico.api.service.instagram4j.models.location;
 
-import com.kalico.api.service.instagram4j.models.IGBaseModel;
+import ai.kalico.api.service.instagram4j.models.IGBaseModel;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

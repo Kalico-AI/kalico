@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.challenge;
+package ai.kalico.api.service.instagram4j.requests.challenge;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.requests.IGPostRequest;
-import com.kalico.api.service.instagram4j.responses.challenge.ChallengeStateResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.requests.IGPostRequest;
+import ai.kalico.api.service.instagram4j.responses.challenge.ChallengeStateResponse;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

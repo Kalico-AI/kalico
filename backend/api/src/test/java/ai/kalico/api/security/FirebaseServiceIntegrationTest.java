@@ -1,11 +1,11 @@
-package com.kalico.api.security;
+package ai.kalico.api.security;
 
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserRecord;
-import com.kalico.api.utils.firebase.FirebaseSDKConfig;
-import com.kalico.api.utils.firebase.FirebaseService;
+import ai.kalico.api.utils.firebase.FirebaseSDKConfig;
+import ai.kalico.api.utils.firebase.FirebaseService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class FirebaseServiceIntegrationTest extends AbstractTestNGSpringContextT
     @Autowired
     private FirebaseService firebaseService;
 
-    private final String demoUserEmail = UUID.randomUUID() + "@foodwallah.com";
+    private final String demoUserEmail = UUID.randomUUID() + "@foodwallah.ai";
     private final String demoUserDisplayName = "Recipe Man";
 
     @BeforeClass

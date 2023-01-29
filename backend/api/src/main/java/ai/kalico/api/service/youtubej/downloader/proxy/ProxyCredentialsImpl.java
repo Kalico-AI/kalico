@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.downloader.proxy;
+package ai.kalico.api.service.youtubej.downloader.proxy;
 
 import java.net.PasswordAuthentication;
 import java.util.Map;

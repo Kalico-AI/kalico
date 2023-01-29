@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.models.media.reel.item;
+package ai.kalico.api.service.instagram4j.models.media.reel.item;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

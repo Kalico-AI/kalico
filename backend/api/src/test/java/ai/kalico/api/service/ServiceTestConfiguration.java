@@ -1,11 +1,11 @@
-package com.kalico.api.service;
+package ai.kalico.api.service;
 
 
-import com.kalico.api.data.DataConfiguration;
-import com.kalico.api.props.PropConfiguration;
-import com.kalico.api.utils.TestUtilConfiguration;
-import com.kalico.api.utils.mapper.ObjectMapperConfiguration;
-import com.kalico.api.utils.migration.FlywayMigrationConfiguration;
+import ai.kalico.api.data.DataConfiguration;
+import ai.kalico.api.props.PropConfiguration;
+import ai.kalico.api.utils.TestUtilConfiguration;
+import ai.kalico.api.utils.mapper.ObjectMapperConfiguration;
+import ai.kalico.api.utils.migration.FlywayMigrationConfiguration;
 import com.kalico.model.UserProfile;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

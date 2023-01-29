@@ -1,6 +1,6 @@
-package com.kalico.api.service.youtubej.downloader.request;
+package ai.kalico.api.service.youtubej.downloader.request;
 
-import com.kalico.api.service.youtubej.model.playlist.PlaylistInfo;
+import ai.kalico.api.service.youtubej.model.playlist.PlaylistInfo;
 
 public class RequestPlaylistInfo extends Request<RequestPlaylistInfo, PlaylistInfo> {
 

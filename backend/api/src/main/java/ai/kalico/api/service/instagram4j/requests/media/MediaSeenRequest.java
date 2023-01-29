@@ -1,10 +1,10 @@
-package com.kalico.api.service.instagram4j.requests.media;
+package ai.kalico.api.service.instagram4j.requests.media;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.models.media.reel.ReelMedia;
-import com.kalico.api.service.instagram4j.requests.IGPostRequest;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.models.media.reel.ReelMedia;
+import ai.kalico.api.service.instagram4j.requests.IGPostRequest;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

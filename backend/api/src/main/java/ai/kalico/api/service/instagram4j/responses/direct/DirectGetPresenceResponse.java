@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.responses.direct;
+package ai.kalico.api.service.instagram4j.responses.direct;
 
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import lombok.Getter;

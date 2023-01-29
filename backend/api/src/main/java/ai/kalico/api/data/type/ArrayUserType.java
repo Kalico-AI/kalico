@@ -1,4 +1,4 @@
-package com.kalico.api.data.type;
+package ai.kalico.api.data.type;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;

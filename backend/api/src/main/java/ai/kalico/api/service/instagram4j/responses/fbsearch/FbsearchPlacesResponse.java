@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.responses.fbsearch;
+package ai.kalico.api.service.instagram4j.responses.fbsearch;
 
-import com.kalico.api.service.instagram4j.responses.IGPageRankTokenResponse;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.responses.IGPageRankTokenResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

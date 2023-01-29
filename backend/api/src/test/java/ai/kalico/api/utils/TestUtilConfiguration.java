@@ -1,4 +1,4 @@
-package com.kalico.api.utils;
+package ai.kalico.api.utils;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

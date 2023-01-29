@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.responses.highlights;
+package ai.kalico.api.service.instagram4j.responses.highlights;
 
-import com.kalico.api.service.instagram4j.models.highlights.Highlight;
-import com.kalico.api.service.instagram4j.models.igtv.Channel;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.highlights.Highlight;
+import ai.kalico.api.service.instagram4j.models.igtv.Channel;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
-package com.kalico.api.data.postgres.repo;
+package ai.kalico.api.data.postgres.repo;
 
-import com.kalico.api.data.postgres.entity.CookieJarEntity;
+import ai.kalico.api.data.postgres.entity.CookieJarEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

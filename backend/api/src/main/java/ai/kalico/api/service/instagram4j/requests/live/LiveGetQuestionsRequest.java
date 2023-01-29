@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.requests.live;
+package ai.kalico.api.service.instagram4j.requests.live;
 
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 
 public class LiveGetQuestionsRequest extends IGGetRequest<IGResponse> {
 

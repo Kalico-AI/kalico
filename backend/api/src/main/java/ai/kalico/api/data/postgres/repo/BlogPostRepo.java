@@ -1,6 +1,6 @@
-package com.kalico.api.data.postgres.repo;
+package ai.kalico.api.data.postgres.repo;
 
-import com.kalico.api.data.postgres.entity.BlogPostEntity;
+import ai.kalico.api.data.postgres.entity.BlogPostEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

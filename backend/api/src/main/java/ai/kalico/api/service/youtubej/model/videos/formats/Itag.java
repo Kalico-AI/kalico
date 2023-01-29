@@ -1,9 +1,9 @@
-package com.kalico.api.service.youtubej.model.videos.formats;
+package ai.kalico.api.service.youtubej.model.videos.formats;
 
 
 
-import com.kalico.api.service.youtubej.model.videos.quality.AudioQuality;
-import com.kalico.api.service.youtubej.model.videos.quality.VideoQuality;
+import ai.kalico.api.service.youtubej.model.videos.quality.AudioQuality;
+import ai.kalico.api.service.youtubej.model.videos.quality.VideoQuality;
 
 public enum Itag {
 

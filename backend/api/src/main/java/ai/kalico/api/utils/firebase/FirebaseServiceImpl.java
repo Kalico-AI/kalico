@@ -1,4 +1,4 @@
-package com.kalico.api.utils.firebase;
+package ai.kalico.api.utils.firebase;
 
 
 
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
-import com.kalico.api.props.FirebaseProps;
+import ai.kalico.api.props.FirebaseProps;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

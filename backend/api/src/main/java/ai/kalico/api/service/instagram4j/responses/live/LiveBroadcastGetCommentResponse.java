@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.responses.live;
+package ai.kalico.api.service.instagram4j.responses.live;
 
-import com.kalico.api.service.instagram4j.models.media.timeline.Comment;
-import com.kalico.api.service.instagram4j.models.media.timeline.Comment.Caption;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.media.timeline.Comment;
+import ai.kalico.api.service.instagram4j.models.media.timeline.Comment.Caption;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.kalico.api.utils.migration;
+package ai.kalico.api.utils.migration;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

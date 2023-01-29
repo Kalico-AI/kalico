@@ -1,10 +1,10 @@
-package com.kalico.api.service.youtubej.model.videos.formats;
+package ai.kalico.api.service.youtubej.model.videos.formats;
 
 
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.kalico.api.service.youtubej.model.videos.quality.VideoQuality;
+import ai.kalico.api.service.youtubej.model.videos.quality.VideoQuality;
 
 public class VideoFormat extends Format {
 

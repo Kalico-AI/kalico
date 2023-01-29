@@ -1,4 +1,4 @@
-package com.kalico.api.utils.mapper;
+package ai.kalico.api.utils.mapper;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

@@ -1,10 +1,10 @@
-package com.kalico.api.service.instagram4j.requests;
+package ai.kalico.api.service.instagram4j.requests;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGBaseModel;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGBaseModel;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.Request;

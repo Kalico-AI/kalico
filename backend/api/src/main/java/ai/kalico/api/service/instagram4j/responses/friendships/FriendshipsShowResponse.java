@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.responses.friendships;
+package ai.kalico.api.service.instagram4j.responses.friendships;
 
-import com.kalico.api.service.instagram4j.models.friendships.Friendship;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.friendships.Friendship;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Getter;
 import lombok.Setter;

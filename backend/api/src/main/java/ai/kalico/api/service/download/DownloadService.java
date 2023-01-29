@@ -1,4 +1,4 @@
-package com.kalico.api.service.download;
+package ai.kalico.api.service.download;
 
 /**
  * @author Biz Melesse created on 12/24/22

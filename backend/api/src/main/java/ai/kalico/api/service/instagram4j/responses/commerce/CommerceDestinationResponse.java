@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.responses.commerce;
+package ai.kalico.api.service.instagram4j.responses.commerce;
 
-import com.kalico.api.service.instagram4j.models.discover.SectionalMediaGridItem;
-import com.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.discover.SectionalMediaGridItem;
+import ai.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

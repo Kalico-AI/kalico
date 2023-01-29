@@ -1,4 +1,4 @@
-package com.kalico.api.service.ocr;
+package ai.kalico.api.service.ocr;
 
 /**
  * @author Biz Melesse created on 11/27/22

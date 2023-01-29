@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.exceptions;
+package ai.kalico.api.service.instagram4j.exceptions;
 
-import com.kalico.api.service.instagram4j.exceptions.IGResponseException.IGFailedResponse;
+import ai.kalico.api.service.instagram4j.exceptions.IGResponseException.IGFailedResponse;
 
 public interface ExceptionallyHandler {
 

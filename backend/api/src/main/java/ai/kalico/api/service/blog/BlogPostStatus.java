@@ -1,4 +1,4 @@
-package com.kalico.api.service.blog;
+package ai.kalico.api.service.blog;
 
 /**
  * @author Biz Melesse created on 12/30/22

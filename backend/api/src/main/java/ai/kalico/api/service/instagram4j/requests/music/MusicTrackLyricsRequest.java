@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.requests.music;
+package ai.kalico.api.service.instagram4j.requests.music;
 
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.music.MusicTrackLyricsResponse;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.music.MusicTrackLyricsResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

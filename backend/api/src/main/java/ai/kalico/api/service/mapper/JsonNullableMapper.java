@@ -1,4 +1,4 @@
-package com.kalico.api.service.mapper;
+package ai.kalico.api.service.mapper;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;

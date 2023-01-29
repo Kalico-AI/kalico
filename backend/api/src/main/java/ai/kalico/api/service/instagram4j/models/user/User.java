@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.models.user;
+package ai.kalico.api.service.instagram4j.models.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package com.kalico.api.service.user;
+package ai.kalico.api.service.user;
 
 
 import com.kalico.model.UserProfile;

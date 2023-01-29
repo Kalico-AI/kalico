@@ -1,10 +1,10 @@
-package com.kalico.api.service.instagram4j.requests.accounts;
+package ai.kalico.api.service.instagram4j.requests.accounts;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.requests.IGPostRequest;
-import com.kalico.api.service.instagram4j.requests.accounts.AccountsLoginRequest.LoginPayload;
-import com.kalico.api.service.instagram4j.responses.accounts.LoginResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.requests.IGPostRequest;
+import ai.kalico.api.service.instagram4j.requests.accounts.AccountsLoginRequest.LoginPayload;
+import ai.kalico.api.service.instagram4j.responses.accounts.LoginResponse;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

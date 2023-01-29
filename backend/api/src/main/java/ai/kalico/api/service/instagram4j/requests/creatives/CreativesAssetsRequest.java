@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.creatives;
+package ai.kalico.api.service.instagram4j.requests.creatives;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.requests.IGPostRequest;
-import com.kalico.api.service.instagram4j.responses.creatives.CreativesAssetsResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.requests.IGPostRequest;
+import ai.kalico.api.service.instagram4j.responses.creatives.CreativesAssetsResponse;
 import lombok.Getter;
 import lombok.Setter;
 

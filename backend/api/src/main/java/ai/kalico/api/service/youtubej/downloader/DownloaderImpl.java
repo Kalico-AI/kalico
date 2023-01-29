@@ -1,16 +1,16 @@
-package com.kalico.api.service.youtubej.downloader;
+package ai.kalico.api.service.youtubej.downloader;
 
-import com.kalico.api.service.youtubej.Config;
-import com.kalico.api.service.youtubej.YoutubeException;
-import com.kalico.api.service.youtubej.downloader.request.*;
-import com.kalico.api.service.youtubej.downloader.request.Request;
-import com.kalico.api.service.youtubej.downloader.request.RequestVideoFileDownload;
-import com.kalico.api.service.youtubej.downloader.request.RequestVideoStreamDownload;
-import com.kalico.api.service.youtubej.downloader.request.RequestWebpage;
-import com.kalico.api.service.youtubej.downloader.response.ResponseImpl;
-import com.kalico.api.service.youtubej.model.videos.formats.Format;
+import ai.kalico.api.service.youtubej.Config;
+import ai.kalico.api.service.youtubej.YoutubeException;
+import ai.kalico.api.service.youtubej.downloader.request.*;
+import ai.kalico.api.service.youtubej.downloader.request.Request;
+import ai.kalico.api.service.youtubej.downloader.request.RequestVideoFileDownload;
+import ai.kalico.api.service.youtubej.downloader.request.RequestVideoStreamDownload;
+import ai.kalico.api.service.youtubej.downloader.request.RequestWebpage;
+import ai.kalico.api.service.youtubej.downloader.response.ResponseImpl;
+import ai.kalico.api.service.youtubej.model.videos.formats.Format;
 
-import com.kalico.api.service.youtubej.model.Utils;
+import ai.kalico.api.service.youtubej.model.Utils;
 import java.io.*;
 import java.net.*;
 import java.util.Map;

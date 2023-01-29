@@ -1,7 +1,7 @@
-package com.kalico.api.controller;
+package ai.kalico.api.controller;
 
-import com.kalico.api.BlogApi;
-import com.kalico.api.service.blog.BlogService;
+import ai.kalico.api.BlogApi;
+import ai.kalico.api.service.blog.BlogService;
 import com.kalico.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

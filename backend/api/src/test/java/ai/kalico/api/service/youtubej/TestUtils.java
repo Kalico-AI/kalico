@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej;
+package ai.kalico.api.service.youtubej;
 
 import java.io.File;
 import java.io.IOException;

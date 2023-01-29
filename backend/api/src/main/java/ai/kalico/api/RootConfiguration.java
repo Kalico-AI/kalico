@@ -1,14 +1,14 @@
-package com.kalico.api;
+package ai.kalico.api;
 
-import com.kalico.api.controller.ControllerConfiguration;
-import com.kalico.api.data.DataConfiguration;
-import com.kalico.api.props.PropConfiguration;
-import com.kalico.api.service.ServiceConfiguration;
-import com.kalico.api.service.cms.CmsService;
-import com.kalico.api.utils.mapper.OffsetDateTimeDeserializer;
-import com.kalico.api.utils.mapper.OffsetDateTimeSerializer;
-import com.kalico.api.utils.migration.FlywayMigration;
-import com.kalico.api.utils.migration.FlywayMigrationConfiguration;
+import ai.kalico.api.controller.ControllerConfiguration;
+import ai.kalico.api.data.DataConfiguration;
+import ai.kalico.api.props.PropConfiguration;
+import ai.kalico.api.service.ServiceConfiguration;
+import ai.kalico.api.service.cms.CmsService;
+import ai.kalico.api.utils.mapper.OffsetDateTimeDeserializer;
+import ai.kalico.api.utils.mapper.OffsetDateTimeSerializer;
+import ai.kalico.api.utils.migration.FlywayMigration;
+import ai.kalico.api.utils.migration.FlywayMigrationConfiguration;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

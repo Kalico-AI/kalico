@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.responses.creatives;
+package ai.kalico.api.service.instagram4j.responses.creatives;
 
-import com.kalico.api.service.instagram4j.models.creatives.StaticSticker;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.creatives.StaticSticker;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

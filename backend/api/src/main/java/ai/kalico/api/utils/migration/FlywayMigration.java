@@ -1,8 +1,8 @@
-package com.kalico.api.utils.migration;
+package ai.kalico.api.utils.migration;
 
-import com.kalico.api.props.FlywayProps;
-import com.kalico.api.props.PostgresDataSourceProps;
-import com.kalico.api.props.SourceProps;
+import ai.kalico.api.props.FlywayProps;
+import ai.kalico.api.props.PostgresDataSourceProps;
+import ai.kalico.api.props.SourceProps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;

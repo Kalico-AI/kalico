@@ -1,8 +1,8 @@
-package com.kalico.api.service.youtubej.model.subtitles;
+package ai.kalico.api.service.youtubej.model.subtitles;
 
 
 
-import com.kalico.api.service.youtubej.model.Extension;
+import ai.kalico.api.service.youtubej.model.Extension;
 
 
 public class Subtitles {

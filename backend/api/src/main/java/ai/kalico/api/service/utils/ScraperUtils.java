@@ -1,10 +1,10 @@
-package com.kalico.api.service.utils;
+package ai.kalico.api.service.utils;
 
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.util.Cookie;
-import com.kalico.api.props.InstagramProps;
-import com.kalico.api.service.scraper.ErrorListener;
+import ai.kalico.api.props.InstagramProps;
+import ai.kalico.api.service.scraper.ErrorListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

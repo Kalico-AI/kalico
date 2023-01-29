@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.requests.accounts;
+package ai.kalico.api.service.instagram4j.requests.accounts;
 
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.accounts.AccountsUserResponse;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.accounts.AccountsUserResponse;
 
 public class AccountsCurrentUserRequest extends IGGetRequest<AccountsUserResponse> {
 

@@ -1,4 +1,4 @@
-package com.kalico.api.data.postgres.entity;
+package ai.kalico.api.data.postgres.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

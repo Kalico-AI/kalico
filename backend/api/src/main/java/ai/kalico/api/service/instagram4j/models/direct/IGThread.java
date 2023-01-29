@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.models.direct;
+package ai.kalico.api.service.instagram4j.models.direct;
 
-import com.kalico.api.service.instagram4j.models.IGBaseModel;
-import com.kalico.api.service.instagram4j.models.direct.item.ThreadItem;
-import com.kalico.api.service.instagram4j.models.user.Profile;
+import ai.kalico.api.service.instagram4j.models.IGBaseModel;
+import ai.kalico.api.service.instagram4j.models.direct.item.ThreadItem;
+import ai.kalico.api.service.instagram4j.models.user.Profile;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;

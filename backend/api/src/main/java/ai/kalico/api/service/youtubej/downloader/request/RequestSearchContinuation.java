@@ -1,9 +1,9 @@
-package com.kalico.api.service.youtubej.downloader.request;
+package ai.kalico.api.service.youtubej.downloader.request;
 
-import com.kalico.api.service.youtubej.model.search.*;
-import com.kalico.api.service.youtubej.model.search.ContinuatedSearchResult;
-import com.kalico.api.service.youtubej.model.search.SearchContinuation;
-import com.kalico.api.service.youtubej.model.search.SearchResult;
+import ai.kalico.api.service.youtubej.model.search.*;
+import ai.kalico.api.service.youtubej.model.search.ContinuatedSearchResult;
+import ai.kalico.api.service.youtubej.model.search.SearchContinuation;
+import ai.kalico.api.service.youtubej.model.search.SearchResult;
 
 public class RequestSearchContinuation extends Request<RequestSearchContinuation, SearchResult> {
 

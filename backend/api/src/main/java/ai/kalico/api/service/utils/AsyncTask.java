@@ -1,6 +1,6 @@
-package com.kalico.api.service.utils;
+package ai.kalico.api.service.utils;
 
-import com.kalico.api.RootConfiguration;
+import ai.kalico.api.RootConfiguration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;

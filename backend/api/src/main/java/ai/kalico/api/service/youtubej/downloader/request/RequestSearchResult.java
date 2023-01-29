@@ -1,17 +1,17 @@
-package com.kalico.api.service.youtubej.downloader.request;
+package ai.kalico.api.service.youtubej.downloader.request;
 
-import com.kalico.api.service.youtubej.base64.Base64Encoder;
-import com.kalico.api.service.youtubej.model.search.SearchResult;
-import com.kalico.api.service.youtubej.model.search.field.DurationField;
-import com.kalico.api.service.youtubej.model.search.field.FeatureField;
-import com.kalico.api.service.youtubej.model.search.field.FormatField;
-import com.kalico.api.service.youtubej.model.search.field.SearchField;
-import com.kalico.api.service.youtubej.model.search.field.SortField;
-import com.kalico.api.service.youtubej.model.search.field.TypeField;
-import com.kalico.api.service.youtubej.model.search.field.UploadDateField;
+import ai.kalico.api.service.youtubej.base64.Base64Encoder;
+import ai.kalico.api.service.youtubej.model.search.SearchResult;
+import ai.kalico.api.service.youtubej.model.search.field.DurationField;
+import ai.kalico.api.service.youtubej.model.search.field.FeatureField;
+import ai.kalico.api.service.youtubej.model.search.field.FormatField;
+import ai.kalico.api.service.youtubej.model.search.field.SearchField;
+import ai.kalico.api.service.youtubej.model.search.field.SortField;
+import ai.kalico.api.service.youtubej.model.search.field.TypeField;
+import ai.kalico.api.service.youtubej.model.search.field.UploadDateField;
 import java.util.*;
 
-import com.kalico.api.service.youtubej.model.search.field.*;
+import ai.kalico.api.service.youtubej.model.search.field.*;
 
 public class RequestSearchResult extends Request<RequestSearchResult, SearchResult> {
 

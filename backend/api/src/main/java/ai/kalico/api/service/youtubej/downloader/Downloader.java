@@ -1,9 +1,9 @@
-package com.kalico.api.service.youtubej.downloader;
+package ai.kalico.api.service.youtubej.downloader;
 
-import com.kalico.api.service.youtubej.downloader.request.RequestVideoFileDownload;
-import com.kalico.api.service.youtubej.downloader.request.RequestVideoStreamDownload;
-import com.kalico.api.service.youtubej.downloader.request.RequestWebpage;
-import com.kalico.api.service.youtubej.downloader.response.Response;
+import ai.kalico.api.service.youtubej.downloader.request.RequestVideoFileDownload;
+import ai.kalico.api.service.youtubej.downloader.request.RequestVideoStreamDownload;
+import ai.kalico.api.service.youtubej.downloader.request.RequestWebpage;
+import ai.kalico.api.service.youtubej.downloader.response.Response;
 
 import java.io.File;
 

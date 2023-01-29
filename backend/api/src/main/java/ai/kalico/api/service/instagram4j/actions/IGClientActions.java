@@ -1,15 +1,15 @@
-package com.kalico.api.service.instagram4j.actions;
+package ai.kalico.api.service.instagram4j.actions;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.actions.account.AccountAction;
-import com.kalico.api.service.instagram4j.actions.igtv.IgtvAction;
-import com.kalico.api.service.instagram4j.actions.search.SearchAction;
-import com.kalico.api.service.instagram4j.actions.simulate.SimulateAction;
-import com.kalico.api.service.instagram4j.actions.status.StatusAction;
-import com.kalico.api.service.instagram4j.actions.story.StoryAction;
-import com.kalico.api.service.instagram4j.actions.timeline.TimelineAction;
-import com.kalico.api.service.instagram4j.actions.upload.UploadAction;
-import com.kalico.api.service.instagram4j.actions.users.UsersAction;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.actions.account.AccountAction;
+import ai.kalico.api.service.instagram4j.actions.igtv.IgtvAction;
+import ai.kalico.api.service.instagram4j.actions.search.SearchAction;
+import ai.kalico.api.service.instagram4j.actions.simulate.SimulateAction;
+import ai.kalico.api.service.instagram4j.actions.status.StatusAction;
+import ai.kalico.api.service.instagram4j.actions.story.StoryAction;
+import ai.kalico.api.service.instagram4j.actions.timeline.TimelineAction;
+import ai.kalico.api.service.instagram4j.actions.upload.UploadAction;
+import ai.kalico.api.service.instagram4j.actions.users.UsersAction;
 import java.lang.reflect.Field;
 import lombok.Getter;
 import lombok.SneakyThrows;

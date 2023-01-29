@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.models.direct.item;
+package ai.kalico.api.service.instagram4j.models.direct.item;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;

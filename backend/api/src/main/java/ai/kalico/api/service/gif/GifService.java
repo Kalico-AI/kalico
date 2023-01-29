@@ -1,4 +1,4 @@
-package com.kalico.api.service.gif;
+package ai.kalico.api.service.gif;
 
 /**
  * @author Biz Melesse created on 1/12/23

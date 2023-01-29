@@ -1,17 +1,17 @@
-package com.kalico.api.service.youtubej;
+package ai.kalico.api.service.youtubej;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import com.kalico.api.service.ServiceTestConfiguration;
-import com.kalico.api.service.youtubej.downloader.request.RequestChannelUploads;
-import com.kalico.api.service.youtubej.downloader.request.RequestPlaylistInfo;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
-import com.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
-import com.kalico.api.service.youtubej.model.search.SearchResult;
+import ai.kalico.api.service.ServiceTestConfiguration;
+import ai.kalico.api.service.youtubej.downloader.request.RequestChannelUploads;
+import ai.kalico.api.service.youtubej.downloader.request.RequestPlaylistInfo;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
+import ai.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
+import ai.kalico.api.service.youtubej.model.search.SearchResult;
 import lombok.extern.slf4j.Slf4j;
 
-import com.kalico.api.service.youtubej.downloader.request.*;
+import ai.kalico.api.service.youtubej.downloader.request.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;

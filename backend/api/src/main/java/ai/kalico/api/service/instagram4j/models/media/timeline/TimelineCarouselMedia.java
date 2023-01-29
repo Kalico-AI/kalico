@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.models.media.timeline;
+package ai.kalico.api.service.instagram4j.models.media.timeline;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;

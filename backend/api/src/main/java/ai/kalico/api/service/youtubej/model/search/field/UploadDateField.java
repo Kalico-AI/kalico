@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.model.search.field;
+package ai.kalico.api.service.youtubej.model.search.field;
 
 public enum UploadDateField implements SearchField {
 

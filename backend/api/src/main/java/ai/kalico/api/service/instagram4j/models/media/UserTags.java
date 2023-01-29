@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.models.media;
+package ai.kalico.api.service.instagram4j.models.media;
 
-import com.kalico.api.service.instagram4j.models.IGBaseModel;
-import com.kalico.api.service.instagram4j.models.user.Profile;
+import ai.kalico.api.service.instagram4j.models.IGBaseModel;
+import ai.kalico.api.service.instagram4j.models.user.Profile;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

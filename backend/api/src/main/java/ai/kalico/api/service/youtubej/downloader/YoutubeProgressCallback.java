@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.downloader;
+package ai.kalico.api.service.youtubej.downloader;
 
 public interface YoutubeProgressCallback<T> extends YoutubeCallback<T> {
 

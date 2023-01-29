@@ -1,4 +1,4 @@
-package com.kalico.api.service.aws;
+package ai.kalico.api.service.aws;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
@@ -8,9 +8,9 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.kalico.api.dto.Pair;
-import com.kalico.api.props.AWSProps;
-import com.kalico.api.service.utils.AsyncTask;
+import ai.kalico.api.dto.Pair;
+import ai.kalico.api.props.AWSProps;
+import ai.kalico.api.service.utils.AsyncTask;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

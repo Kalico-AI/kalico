@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.models.media;
+package ai.kalico.api.service.instagram4j.models.media;
 
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Builder;

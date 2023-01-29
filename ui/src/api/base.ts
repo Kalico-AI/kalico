@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Foodwallah API
- * REST API for Foodwallah backend services
+ * Kalico API
+ * REST API for Kalico backend services
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -18,7 +18,7 @@ import { Configuration } from "./configuration";
 // @ts-ignore
 import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 
-// export const BASE_PATH = "https://api.foodwallah.com";
+// export const BASE_PATH = "https://api.kalico.ai";
 export const BASE_PATH = "http://localhost:8080";
 /**
  *

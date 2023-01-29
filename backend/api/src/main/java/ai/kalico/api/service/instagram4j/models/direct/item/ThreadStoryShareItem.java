@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.models.direct.item;
+package ai.kalico.api.service.instagram4j.models.direct.item;
 
-import com.kalico.api.service.instagram4j.models.media.reel.ReelMedia;
+import ai.kalico.api.service.instagram4j.models.media.reel.ReelMedia;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;

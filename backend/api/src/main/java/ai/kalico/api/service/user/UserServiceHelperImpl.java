@@ -1,7 +1,7 @@
-package com.kalico.api.service.user;
+package ai.kalico.api.service.user;
 
-import com.kalico.api.data.postgres.entity.UserEntity;
-import com.kalico.api.data.postgres.repo.UserRepo;
+import ai.kalico.api.data.postgres.entity.UserEntity;
+import ai.kalico.api.data.postgres.repo.UserRepo;
 import com.kalico.model.UserProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-mainClassName = 'com.kalico.api.Application'
+mainClassName = 'ai.kalico.api.Application'
 
 
 configurations {

@@ -1,4 +1,4 @@
-package com.kalico.api.utils.firebase;
+package ai.kalico.api.utils.firebase;
 
 import com.google.firebase.auth.UserRecord;
 

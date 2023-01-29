@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.requests.direct;
+package ai.kalico.api.service.instagram4j.requests.direct;
 
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.direct.DirectGetPresenceResponse;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.direct.DirectGetPresenceResponse;
 
 public class DirectGetPresenceRequest extends IGGetRequest<DirectGetPresenceResponse> {
 

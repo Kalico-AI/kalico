@@ -1,13 +1,13 @@
-package com.kalico.api.service.youtubej;
+package ai.kalico.api.service.youtubej;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.kalico.api.service.ServiceTestConfiguration;
-import com.kalico.api.service.youtubej.downloader.request.RequestPlaylistInfo;
-import com.kalico.api.service.youtubej.downloader.response.Response;
-import com.kalico.api.service.youtubej.model.playlist.PlaylistDetails;
-import com.kalico.api.service.youtubej.model.playlist.PlaylistInfo;
-import com.kalico.api.service.youtubej.model.playlist.PlaylistVideoDetails;
+import ai.kalico.api.service.ServiceTestConfiguration;
+import ai.kalico.api.service.youtubej.downloader.request.RequestPlaylistInfo;
+import ai.kalico.api.service.youtubej.downloader.response.Response;
+import ai.kalico.api.service.youtubej.model.playlist.PlaylistDetails;
+import ai.kalico.api.service.youtubej.model.playlist.PlaylistInfo;
+import ai.kalico.api.service.youtubej.model.playlist.PlaylistVideoDetails;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.test.context.SpringBootTest;

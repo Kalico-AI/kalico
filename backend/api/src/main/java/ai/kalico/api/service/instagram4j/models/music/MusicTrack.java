@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.models.music;
+package ai.kalico.api.service.instagram4j.models.music;
 
-import com.kalico.api.service.instagram4j.models.IGBaseModel;
+import ai.kalico.api.service.instagram4j.models.IGBaseModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.utils;
+package ai.kalico.api.service.instagram4j.utils;
 
 import java.io.File;
 import java.io.FileInputStream;

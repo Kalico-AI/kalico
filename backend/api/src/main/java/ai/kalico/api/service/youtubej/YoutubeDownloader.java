@@ -1,35 +1,35 @@
-package com.kalico.api.service.youtubej;
+package ai.kalico.api.service.youtubej;
 
 
 
-import com.kalico.api.service.youtubej.cipher.CachedCipherFactory;
-import com.kalico.api.service.youtubej.downloader.request.RequestChannelUploads;
-import com.kalico.api.service.youtubej.downloader.request.RequestPlaylistInfo;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchable;
-import com.kalico.api.service.youtubej.downloader.request.RequestSubtitlesInfo;
-import com.kalico.api.service.youtubej.downloader.request.RequestVideoFileDownload;
-import com.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
-import com.kalico.api.service.youtubej.downloader.request.RequestVideoStreamDownload;
-import com.kalico.api.service.youtubej.downloader.request.RequestWebpage;
-import com.kalico.api.service.youtubej.model.Utils;
+import ai.kalico.api.service.youtubej.cipher.CachedCipherFactory;
+import ai.kalico.api.service.youtubej.downloader.request.RequestChannelUploads;
+import ai.kalico.api.service.youtubej.downloader.request.RequestPlaylistInfo;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchable;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSubtitlesInfo;
+import ai.kalico.api.service.youtubej.downloader.request.RequestVideoFileDownload;
+import ai.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
+import ai.kalico.api.service.youtubej.downloader.request.RequestVideoStreamDownload;
+import ai.kalico.api.service.youtubej.downloader.request.RequestWebpage;
+import ai.kalico.api.service.youtubej.model.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import com.kalico.api.service.youtubej.downloader.Downloader;
-import com.kalico.api.service.youtubej.downloader.DownloaderImpl;
-import com.kalico.api.service.youtubej.downloader.request.*;
-import com.kalico.api.service.youtubej.downloader.response.Response;
-import com.kalico.api.service.youtubej.downloader.response.ResponseImpl;
-import com.kalico.api.service.youtubej.extractor.ExtractorImpl;
-import com.kalico.api.service.youtubej.model.playlist.PlaylistInfo;
-import com.kalico.api.service.youtubej.model.search.SearchResult;
-import com.kalico.api.service.youtubej.model.subtitles.SubtitlesInfo;
-import com.kalico.api.service.youtubej.model.videos.VideoInfo;
-import com.kalico.api.service.youtubej.parser.Parser;
-import com.kalico.api.service.youtubej.parser.ParserImpl;
+import ai.kalico.api.service.youtubej.downloader.Downloader;
+import ai.kalico.api.service.youtubej.downloader.DownloaderImpl;
+import ai.kalico.api.service.youtubej.downloader.request.*;
+import ai.kalico.api.service.youtubej.downloader.response.Response;
+import ai.kalico.api.service.youtubej.downloader.response.ResponseImpl;
+import ai.kalico.api.service.youtubej.extractor.ExtractorImpl;
+import ai.kalico.api.service.youtubej.model.playlist.PlaylistInfo;
+import ai.kalico.api.service.youtubej.model.search.SearchResult;
+import ai.kalico.api.service.youtubej.model.subtitles.SubtitlesInfo;
+import ai.kalico.api.service.youtubej.model.videos.VideoInfo;
+import ai.kalico.api.service.youtubej.parser.Parser;
+import ai.kalico.api.service.youtubej.parser.ParserImpl;
 
 public class YoutubeDownloader {
 

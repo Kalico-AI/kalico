@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.music;
+package ai.kalico.api.service.instagram4j.requests.music;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.requests.IGPostRequest;
-import com.kalico.api.service.instagram4j.responses.music.MusicBrowseResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.requests.IGPostRequest;
+import ai.kalico.api.service.instagram4j.responses.music.MusicBrowseResponse;
 import lombok.Getter;
 
 public class MusicBrowseRequest extends IGPostRequest<MusicBrowseResponse> {

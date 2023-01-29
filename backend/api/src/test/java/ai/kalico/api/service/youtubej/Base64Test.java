@@ -1,12 +1,12 @@
-package com.kalico.api.service.youtubej;
+package ai.kalico.api.service.youtubej;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.kalico.api.service.youtubej.base64.Base64EncoderImpl;
+import ai.kalico.api.service.youtubej.base64.Base64EncoderImpl;
 import java.util.Base64;
 import java.util.Random;
 
-import com.kalico.api.service.ServiceTestConfiguration;
+import ai.kalico.api.service.ServiceTestConfiguration;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.test.context.SpringBootTest;

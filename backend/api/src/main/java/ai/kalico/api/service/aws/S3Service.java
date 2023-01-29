@@ -1,8 +1,8 @@
-package com.kalico.api.service.aws;
+package ai.kalico.api.service.aws;
 
 
 import com.amazonaws.services.s3.model.CopyObjectResult;
-import com.kalico.api.dto.Pair;
+import ai.kalico.api.dto.Pair;
 import java.io.InputStream;
 import java.util.List;
 

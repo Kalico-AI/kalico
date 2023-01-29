@@ -1,4 +1,4 @@
-package com.kalico.api.utils.security.firewall;
+package ai.kalico.api.utils.security.firewall;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

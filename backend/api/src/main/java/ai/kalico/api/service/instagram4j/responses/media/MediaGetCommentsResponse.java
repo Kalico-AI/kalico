@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.responses.media;
+package ai.kalico.api.service.instagram4j.responses.media;
 
-import com.kalico.api.service.instagram4j.models.media.timeline.Comment;
-import com.kalico.api.service.instagram4j.models.media.timeline.Comment.Caption;
-import com.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.media.timeline.Comment;
+import ai.kalico.api.service.instagram4j.models.media.timeline.Comment.Caption;
+import ai.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

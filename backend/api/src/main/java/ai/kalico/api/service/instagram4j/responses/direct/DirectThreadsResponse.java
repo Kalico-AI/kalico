@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.responses.direct;
+package ai.kalico.api.service.instagram4j.responses.direct;
 
-import com.kalico.api.service.instagram4j.models.direct.IGThread;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.direct.IGThread;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import lombok.Getter;
 import lombok.Setter;
 

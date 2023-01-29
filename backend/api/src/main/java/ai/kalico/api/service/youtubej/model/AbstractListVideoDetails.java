@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.model;
+package ai.kalico.api.service.youtubej.model;
 
 import com.alibaba.fastjson.JSONObject;
 

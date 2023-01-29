@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.requests.friendships;
+package ai.kalico.api.service.instagram4j.requests.friendships;
 
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.friendships.FriendshipsShowResponse;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.friendships.FriendshipsShowResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

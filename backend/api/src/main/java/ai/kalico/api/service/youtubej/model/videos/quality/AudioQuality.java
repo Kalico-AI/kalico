@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.model.videos.quality;
+package ai.kalico.api.service.youtubej.model.videos.quality;
 
 
 

@@ -1,13 +1,13 @@
-package com.kalico.api.service.av;
+package ai.kalico.api.service.av;
 
 
-import com.kalico.api.dto.VideoInfoDto;
-import com.kalico.api.service.ServiceTestConfiguration;
-import com.kalico.api.service.user.UserService;
-import com.kalico.api.service.utils.AVAsyncHelper;
-import com.kalico.api.service.utils.CookieHelper;
-import com.kalico.api.utils.ServiceTestHelper;
-import com.kalico.api.utils.migration.FlywayMigration;
+import ai.kalico.api.dto.VideoInfoDto;
+import ai.kalico.api.service.ServiceTestConfiguration;
+import ai.kalico.api.service.user.UserService;
+import ai.kalico.api.service.utils.AVAsyncHelper;
+import ai.kalico.api.service.utils.CookieHelper;
+import ai.kalico.api.utils.ServiceTestHelper;
+import ai.kalico.api.utils.migration.FlywayMigration;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.UUID;

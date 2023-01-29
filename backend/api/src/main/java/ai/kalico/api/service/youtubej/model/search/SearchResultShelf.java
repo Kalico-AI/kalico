@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.model.search;
+package ai.kalico.api.service.youtubej.model.search;
 
 import java.util.ArrayList;
 import java.util.List;

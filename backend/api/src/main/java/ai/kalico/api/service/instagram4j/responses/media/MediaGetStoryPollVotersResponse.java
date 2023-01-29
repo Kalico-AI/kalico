@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.responses.media;
+package ai.kalico.api.service.instagram4j.responses.media;
 
-import com.kalico.api.service.instagram4j.models.media.reel.VoterInfo;
-import com.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.media.reel.VoterInfo;
+import ai.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.requests.highlights;
+package ai.kalico.api.service.instagram4j.requests.highlights;
 
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.highlights.HighlightsUserTrayResponse;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.highlights.HighlightsUserTrayResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

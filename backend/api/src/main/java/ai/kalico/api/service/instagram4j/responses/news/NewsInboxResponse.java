@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.responses.news;
+package ai.kalico.api.service.instagram4j.responses.news;
 
-import com.kalico.api.service.instagram4j.models.news.NewsStory;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.news.NewsStory;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.kalico.api.service.scraper;
+package ai.kalico.api.service.scraper;
 
 import com.gargoylesoftware.htmlunit.ScriptException;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;

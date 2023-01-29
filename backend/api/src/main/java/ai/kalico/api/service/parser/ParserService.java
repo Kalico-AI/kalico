@@ -1,7 +1,7 @@
-package com.kalico.api.service.parser;
+package ai.kalico.api.service.parser;
 
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.kalico.api.dto.VideoInfoDto;
+import ai.kalico.api.dto.VideoInfoDto;
 
 /**
  * @author Bizuwork Melesse

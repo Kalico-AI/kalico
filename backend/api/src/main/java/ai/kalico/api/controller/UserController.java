@@ -1,7 +1,7 @@
-package com.kalico.api.controller;
+package ai.kalico.api.controller;
 
-import com.kalico.api.UserApi;
-import com.kalico.api.service.user.UserService;
+import ai.kalico.api.UserApi;
+import ai.kalico.api.service.user.UserService;
 import com.kalico.model.UserProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

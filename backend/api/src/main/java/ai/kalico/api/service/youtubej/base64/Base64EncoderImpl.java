@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.base64;
+package ai.kalico.api.service.youtubej.base64;
 
 public class Base64EncoderImpl implements Base64Encoder {
 

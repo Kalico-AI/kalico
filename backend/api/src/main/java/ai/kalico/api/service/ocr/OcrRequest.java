@@ -1,4 +1,4 @@
-package com.kalico.api.service.ocr;
+package ai.kalico.api.service.ocr;
 
 import lombok.Getter;
 import lombok.Setter;

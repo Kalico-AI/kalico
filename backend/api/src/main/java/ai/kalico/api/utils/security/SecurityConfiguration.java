@@ -1,6 +1,6 @@
-package com.kalico.api.utils.security;
+package ai.kalico.api.utils.security;
 
-import com.kalico.api.utils.security.firebase.FirebaseSecurityConfiguration;
+import ai.kalico.api.utils.security.firebase.FirebaseSecurityConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 

@@ -1,11 +1,11 @@
-package com.kalico.api.service.utils;
+package ai.kalico.api.service.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kalico.api.data.postgres.entity.CookieJarEntity;
-import com.kalico.api.data.postgres.repo.CookieJarRepo;
-import com.kalico.api.props.InstagramProps;
+import ai.kalico.api.data.postgres.entity.CookieJarEntity;
+import ai.kalico.api.data.postgres.repo.CookieJarRepo;
+import ai.kalico.api.props.InstagramProps;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

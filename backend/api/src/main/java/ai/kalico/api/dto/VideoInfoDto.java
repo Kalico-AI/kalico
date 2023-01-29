@@ -1,8 +1,8 @@
-package com.kalico.api.dto;
+package ai.kalico.api.dto;
 
-import com.kalico.api.service.youtubej.model.videos.VideoInfo;
-import com.kalico.api.service.youtubej.model.videos.formats.Format;
-import com.kalico.api.service.utils.Platform;
+import ai.kalico.api.service.youtubej.model.videos.VideoInfo;
+import ai.kalico.api.service.youtubej.model.videos.formats.Format;
+import ai.kalico.api.service.utils.Platform;
 import lombok.Getter;
 import lombok.Setter;
 

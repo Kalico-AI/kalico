@@ -1,14 +1,14 @@
-package com.kalico.api.service.youtubej.model.videos;
+package ai.kalico.api.service.youtubej.model.videos;
 
 
 
 
-import com.kalico.api.service.youtubej.model.Filter;
-import com.kalico.api.service.youtubej.model.videos.formats.AudioFormat;
-import com.kalico.api.service.youtubej.model.videos.formats.VideoWithAudioFormat;
-import com.kalico.api.service.youtubej.model.videos.formats.Format;
-import com.kalico.api.service.youtubej.model.videos.formats.VideoFormat;
-import com.kalico.api.service.youtubej.model.subtitles.SubtitlesInfo;
+import ai.kalico.api.service.youtubej.model.Filter;
+import ai.kalico.api.service.youtubej.model.videos.formats.AudioFormat;
+import ai.kalico.api.service.youtubej.model.videos.formats.VideoWithAudioFormat;
+import ai.kalico.api.service.youtubej.model.videos.formats.Format;
+import ai.kalico.api.service.youtubej.model.videos.formats.VideoFormat;
+import ai.kalico.api.service.youtubej.model.subtitles.SubtitlesInfo;
 
 import java.util.LinkedList;
 import java.util.List;

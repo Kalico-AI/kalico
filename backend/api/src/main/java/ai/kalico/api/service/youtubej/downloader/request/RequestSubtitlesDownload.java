@@ -1,7 +1,7 @@
-package com.kalico.api.service.youtubej.downloader.request;
+package ai.kalico.api.service.youtubej.downloader.request;
 
-import com.kalico.api.service.youtubej.model.Extension;
-import com.kalico.api.service.youtubej.model.subtitles.SubtitlesInfo;
+import ai.kalico.api.service.youtubej.model.Extension;
+import ai.kalico.api.service.youtubej.model.subtitles.SubtitlesInfo;
 
 public class RequestSubtitlesDownload extends RequestWebpage {
 

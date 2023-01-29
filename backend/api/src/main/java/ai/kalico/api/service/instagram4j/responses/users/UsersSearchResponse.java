@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.responses.users;
+package ai.kalico.api.service.instagram4j.responses.users;
 
-import com.kalico.api.service.instagram4j.models.friendships.Friendship;
-import com.kalico.api.service.instagram4j.models.user.Profile;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.friendships.Friendship;
+import ai.kalico.api.service.instagram4j.models.user.Profile;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.requests.archive;
+package ai.kalico.api.service.instagram4j.requests.archive;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 
 public class ArchiveReelRequest extends IGGetRequest<IGResponse> {
 

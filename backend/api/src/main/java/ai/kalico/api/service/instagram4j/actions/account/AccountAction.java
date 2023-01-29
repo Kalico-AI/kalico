@@ -1,13 +1,13 @@
-package com.kalico.api.service.instagram4j.actions.account;
+package ai.kalico.api.service.instagram4j.actions.account;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.accounts.AccountsActionRequest;
-import com.kalico.api.service.instagram4j.requests.accounts.AccountsActionRequest.AccountsAction;
-import com.kalico.api.service.instagram4j.requests.accounts.AccountsChangeProfilePictureRequest;
-import com.kalico.api.service.instagram4j.requests.accounts.AccountsCurrentUserRequest;
-import com.kalico.api.service.instagram4j.requests.accounts.AccountsSetBiographyRequest;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
-import com.kalico.api.service.instagram4j.responses.accounts.AccountsUserResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.accounts.AccountsActionRequest;
+import ai.kalico.api.service.instagram4j.requests.accounts.AccountsActionRequest.AccountsAction;
+import ai.kalico.api.service.instagram4j.requests.accounts.AccountsChangeProfilePictureRequest;
+import ai.kalico.api.service.instagram4j.requests.accounts.AccountsCurrentUserRequest;
+import ai.kalico.api.service.instagram4j.requests.accounts.AccountsSetBiographyRequest;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.responses.accounts.AccountsUserResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;

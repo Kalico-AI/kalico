@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.utils;
+package ai.kalico.api.service.instagram4j.utils;
 
-import com.kalico.api.service.instagram4j.IGConstants;
+import ai.kalico.api.service.instagram4j.IGConstants;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

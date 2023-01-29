@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.responses.igtv;
+package ai.kalico.api.service.instagram4j.responses.igtv;
 
-import com.kalico.api.service.instagram4j.models.igtv.Channel;
-import com.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.igtv.Channel;
+import ai.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;

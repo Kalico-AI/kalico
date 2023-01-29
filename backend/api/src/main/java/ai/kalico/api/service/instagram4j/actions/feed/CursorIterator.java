@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.actions.feed;
+package ai.kalico.api.service.instagram4j.actions.feed;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGRequest;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGRequest;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.Iterator;
 import java.util.function.BiConsumer;
 import java.util.function.Function;

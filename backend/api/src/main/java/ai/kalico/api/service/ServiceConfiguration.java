@@ -1,21 +1,21 @@
-package com.kalico.api.service;
+package ai.kalico.api.service;
 
 
-import com.kalico.api.data.DataConfiguration;
-import com.kalico.api.props.AWSProps;
+import ai.kalico.api.data.DataConfiguration;
+import ai.kalico.api.props.AWSProps;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.kalico.api.props.InstagramProps;
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
-import com.kalico.api.service.instagram4j.utils.SerializableCookieJar;
-import com.kalico.api.service.mapper.MapperConfiguration;
-import com.kalico.api.service.utils.Seed;
-import com.kalico.api.utils.migration.FlywayMigration;
-import com.kalico.api.utils.migration.FlywayMigrationConfiguration;
+import ai.kalico.api.props.InstagramProps;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.utils.SerializableCookieJar;
+import ai.kalico.api.service.mapper.MapperConfiguration;
+import ai.kalico.api.service.utils.Seed;
+import ai.kalico.api.utils.migration.FlywayMigration;
+import ai.kalico.api.utils.migration.FlywayMigrationConfiguration;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

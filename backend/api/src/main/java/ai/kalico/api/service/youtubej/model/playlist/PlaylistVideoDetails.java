@@ -1,7 +1,7 @@
-package com.kalico.api.service.youtubej.model.playlist;
+package ai.kalico.api.service.youtubej.model.playlist;
 
 import com.alibaba.fastjson.JSONObject;
-import com.kalico.api.service.youtubej.model.AbstractListVideoDetails;
+import ai.kalico.api.service.youtubej.model.AbstractListVideoDetails;
 
 public class PlaylistVideoDetails extends AbstractListVideoDetails {
 

@@ -1,10 +1,10 @@
-package com.kalico.api.service.scraper;
+package ai.kalico.api.service.scraper;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.kalico.api.dto.VideoInfoDto;
-import com.kalico.api.service.parser.InstagramParser;
-import com.kalico.api.service.utils.ScraperUtils;
+import ai.kalico.api.dto.VideoInfoDto;
+import ai.kalico.api.service.parser.InstagramParser;
+import ai.kalico.api.service.utils.ScraperUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 import lombok.RequiredArgsConstructor;

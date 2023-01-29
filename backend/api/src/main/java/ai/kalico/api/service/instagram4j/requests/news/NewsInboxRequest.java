@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.requests.news;
+package ai.kalico.api.service.instagram4j.requests.news;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.news.NewsInboxResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.news.NewsInboxResponse;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 

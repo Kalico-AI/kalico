@@ -1,4 +1,4 @@
-package com.kalico.api.service.stt;
+package ai.kalico.api.service.stt;
 
 import lombok.Getter;
 import lombok.Setter;

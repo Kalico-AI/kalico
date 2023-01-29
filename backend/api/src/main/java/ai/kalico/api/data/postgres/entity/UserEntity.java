@@ -1,4 +1,4 @@
-package com.kalico.api.data.postgres.entity;
+package ai.kalico.api.data.postgres.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -41,7 +41,7 @@ public class UserEntity {
     @Column(name = "email")
     private String email;
 
-    @Type(type = "com.kalico.api.data.type.ArrayUserType")
+    @Type(type = "ai.kalico.api.data.type.ArrayUserType")
     @Column(name = "roles", columnDefinition = "text[]")
     Object[] roles;
 

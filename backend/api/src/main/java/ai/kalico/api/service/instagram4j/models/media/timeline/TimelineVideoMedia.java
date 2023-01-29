@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.models.media.timeline;
+package ai.kalico.api.service.instagram4j.models.media.timeline;
 
-import com.kalico.api.service.instagram4j.models.media.ImageVersions;
-import com.kalico.api.service.instagram4j.models.media.VideoVersionsMeta;
+import ai.kalico.api.service.instagram4j.models.media.ImageVersions;
+import ai.kalico.api.service.instagram4j.models.media.VideoVersionsMeta;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 import lombok.Getter;

@@ -1,11 +1,11 @@
-package com.kalico.api.service.instagram4j.requests.upload;
+package ai.kalico.api.service.instagram4j.requests.upload;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.models.media.UploadParameters;
-import com.kalico.api.service.instagram4j.requests.IGPostRequest;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.models.media.UploadParameters;
+import ai.kalico.api.service.instagram4j.requests.IGPostRequest;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 import java.util.concurrent.ThreadLocalRandom;
 import okhttp3.MediaType;
 import okhttp3.Request;

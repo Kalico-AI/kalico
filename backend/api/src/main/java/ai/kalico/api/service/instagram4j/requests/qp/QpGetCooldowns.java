@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.qp;
+package ai.kalico.api.service.instagram4j.requests.qp;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 
 public class QpGetCooldowns extends IGGetRequest<IGResponse> {
 

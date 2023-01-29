@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.model.playlist;
+package ai.kalico.api.service.youtubej.model.playlist;
 
 
 public class PlaylistDetails {

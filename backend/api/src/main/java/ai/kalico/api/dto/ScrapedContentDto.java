@@ -1,4 +1,4 @@
-package com.kalico.api.dto;
+package ai.kalico.api.dto;
 
 import lombok.Getter;
 import lombok.Setter;

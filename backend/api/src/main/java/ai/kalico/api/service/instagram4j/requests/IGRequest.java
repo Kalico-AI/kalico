@@ -1,11 +1,11 @@
-package com.kalico.api.service.instagram4j.requests;
+package ai.kalico.api.service.instagram4j.requests;
 
-import com.kalico.api.dto.Pair;
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.IGConstants;
-import com.kalico.api.service.instagram4j.exceptions.IGResponseException;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.dto.Pair;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.IGConstants;
+import ai.kalico.api.service.instagram4j.exceptions.IGResponseException;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.net.URLEncoder;

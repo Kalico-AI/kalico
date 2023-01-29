@@ -1,10 +1,10 @@
-package com.kalico.api.service.youtubej.extractor;
+package ai.kalico.api.service.youtubej.extractor;
 
 
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.kalico.api.service.youtubej.YoutubeException;
+import ai.kalico.api.service.youtubej.YoutubeException;
 
 import java.util.List;
 

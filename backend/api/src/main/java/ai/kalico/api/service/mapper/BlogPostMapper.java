@@ -1,11 +1,11 @@
-package com.kalico.api.service.mapper;
+package ai.kalico.api.service.mapper;
 
 
-import com.kalico.api.data.postgres.entity.BlogPostEntity;
-import com.kalico.api.data.postgres.entity.IngredientEntity;
-import com.kalico.api.data.postgres.entity.RecipeStepEntity;
-import com.kalico.api.data.postgres.entity.VideoContentEntity;
-import com.kalico.api.service.blog.BlogPostStatus;
+import ai.kalico.api.data.postgres.entity.BlogPostEntity;
+import ai.kalico.api.data.postgres.entity.IngredientEntity;
+import ai.kalico.api.data.postgres.entity.RecipeStepEntity;
+import ai.kalico.api.data.postgres.entity.VideoContentEntity;
+import ai.kalico.api.service.blog.BlogPostStatus;
 import com.kalico.model.*;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;

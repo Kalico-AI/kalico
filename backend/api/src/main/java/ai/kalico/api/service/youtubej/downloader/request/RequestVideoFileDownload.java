@@ -1,8 +1,8 @@
-package com.kalico.api.service.youtubej.downloader.request;
+package ai.kalico.api.service.youtubej.downloader.request;
 
-import com.kalico.api.service.youtubej.model.videos.formats.Format;
+import ai.kalico.api.service.youtubej.model.videos.formats.Format;
 
-import com.kalico.api.service.youtubej.model.Utils;
+import ai.kalico.api.service.youtubej.model.Utils;
 import java.io.File;
 import java.util.UUID;
 

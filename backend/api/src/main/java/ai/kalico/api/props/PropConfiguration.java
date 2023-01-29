@@ -1,4 +1,4 @@
-package com.kalico.api.props;
+package ai.kalico.api.props;
 
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

@@ -1,10 +1,10 @@
-package com.kalico.api.service.instagram4j.requests.highlights;
+package ai.kalico.api.service.instagram4j.requests.highlights;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.requests.IGPostRequest;
-import com.kalico.api.service.instagram4j.responses.highlights.HighlightsCreateReelResponse;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.requests.IGPostRequest;
+import ai.kalico.api.service.instagram4j.responses.highlights.HighlightsCreateReelResponse;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

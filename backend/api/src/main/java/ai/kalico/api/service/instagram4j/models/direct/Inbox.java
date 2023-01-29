@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.models.direct;
+package ai.kalico.api.service.instagram4j.models.direct;
 
 import java.util.List;
 import lombok.Getter;

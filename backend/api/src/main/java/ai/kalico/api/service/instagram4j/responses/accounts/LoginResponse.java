@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.responses.accounts;
+package ai.kalico.api.service.instagram4j.responses.accounts;
 
-import com.kalico.api.service.instagram4j.models.user.User;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
-import com.kalico.api.service.instagram4j.responses.challenge.Challenge;
+import ai.kalico.api.service.instagram4j.models.user.User;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.responses.challenge.Challenge;
 import lombok.Getter;
 import lombok.Setter;
 

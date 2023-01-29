@@ -1,14 +1,14 @@
-package com.kalico.api.service.instagram4j.actions.story;
+package ai.kalico.api.service.instagram4j.actions.story;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.media.UploadParameters;
-import com.kalico.api.service.instagram4j.models.media.reel.item.ReelMetadataItem;
-import com.kalico.api.service.instagram4j.requests.feed.FeedReelsTrayRequest;
-import com.kalico.api.service.instagram4j.requests.feed.FeedUserStoryRequest;
-import com.kalico.api.service.instagram4j.requests.media.MediaConfigureToStoryRequest;
-import com.kalico.api.service.instagram4j.responses.feed.FeedReelsTrayResponse;
-import com.kalico.api.service.instagram4j.responses.feed.FeedUserStoryResponse;
-import com.kalico.api.service.instagram4j.responses.media.MediaResponse.MediaConfigureToStoryResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.media.UploadParameters;
+import ai.kalico.api.service.instagram4j.models.media.reel.item.ReelMetadataItem;
+import ai.kalico.api.service.instagram4j.requests.feed.FeedReelsTrayRequest;
+import ai.kalico.api.service.instagram4j.requests.feed.FeedUserStoryRequest;
+import ai.kalico.api.service.instagram4j.requests.media.MediaConfigureToStoryRequest;
+import ai.kalico.api.service.instagram4j.responses.feed.FeedReelsTrayResponse;
+import ai.kalico.api.service.instagram4j.responses.feed.FeedUserStoryResponse;
+import ai.kalico.api.service.instagram4j.responses.media.MediaResponse.MediaConfigureToStoryResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;

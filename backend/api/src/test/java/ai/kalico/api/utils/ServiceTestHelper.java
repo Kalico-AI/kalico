@@ -1,4 +1,4 @@
-package com.kalico.api.utils;
+package ai.kalico.api.utils;
 
 import com.kalico.model.UserProfile;
 import java.util.UUID;

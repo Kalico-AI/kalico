@@ -1,7 +1,7 @@
-package com.kalico.api.service.youtubej.model.playlist;
+package ai.kalico.api.service.youtubej.model.playlist;
 
 
-import com.kalico.api.service.youtubej.model.Filter;
+import ai.kalico.api.service.youtubej.model.Filter;
 import java.util.List;
 
 public class PlaylistInfo {

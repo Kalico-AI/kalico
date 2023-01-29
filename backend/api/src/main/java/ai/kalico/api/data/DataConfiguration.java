@@ -1,8 +1,8 @@
-package com.kalico.api.data;
+package ai.kalico.api.data;
 
 
-import com.kalico.api.data.postgres.PostgresDBDataConfiguration;
-import com.kalico.api.props.PropConfiguration;
+import ai.kalico.api.data.postgres.PostgresDBDataConfiguration;
+import ai.kalico.api.props.PropConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

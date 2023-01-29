@@ -1,6 +1,6 @@
-package com.kalico.api.service.youtubej.model.search.query;
+package ai.kalico.api.service.youtubej.model.search.query;
 
-import com.kalico.api.service.youtubej.model.Utils;
+import ai.kalico.api.service.youtubej.model.Utils;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;

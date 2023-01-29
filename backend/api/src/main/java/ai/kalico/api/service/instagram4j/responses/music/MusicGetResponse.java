@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.responses.music;
+package ai.kalico.api.service.instagram4j.responses.music;
 
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.util.StdConverter;

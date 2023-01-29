@@ -1,7 +1,7 @@
-package com.kalico.api.service.youtubej.model.videos;
+package ai.kalico.api.service.youtubej.model.videos;
 
 
-import com.kalico.api.service.youtubej.model.AbstractVideoDetails;
+import ai.kalico.api.service.youtubej.model.AbstractVideoDetails;
 import java.util.ArrayList;
 import java.util.List;
 

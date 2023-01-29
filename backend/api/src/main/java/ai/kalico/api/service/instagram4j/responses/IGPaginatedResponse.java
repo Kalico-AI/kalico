@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.responses;
+package ai.kalico.api.service.instagram4j.responses;
 
 public interface IGPaginatedResponse {
     String getNext_max_id();

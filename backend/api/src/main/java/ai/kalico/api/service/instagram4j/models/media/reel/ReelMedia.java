@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.models.media.reel;
+package ai.kalico.api.service.instagram4j.models.media.reel;
 
-import com.kalico.api.service.instagram4j.models.media.Media;
-import com.kalico.api.service.instagram4j.models.media.Viewer;
+import ai.kalico.api.service.instagram4j.models.media.Media;
+import ai.kalico.api.service.instagram4j.models.media.Viewer;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.List;

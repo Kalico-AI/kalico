@@ -1,4 +1,4 @@
-package com.kalico.api.service.scraper;
+package ai.kalico.api.service.scraper;
 
 /**
  * @author Bizuwork Melesse

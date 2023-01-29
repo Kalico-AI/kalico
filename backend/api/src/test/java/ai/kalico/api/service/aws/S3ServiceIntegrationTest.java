@@ -1,11 +1,11 @@
-//package com.kalico.api.service.aws;
+//package ai.kalico.api.service.aws;
 //
 //
 //import com.amazonaws.services.s3.model.PutObjectResult;
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.kalico.api.props.AWSProps;
-//import com.kalico.api.service.ServiceTestConfiguration;
+//import ai.kalico.api.props.AWSProps;
+//import ai.kalico.api.service.ServiceTestConfiguration;
 //import com.kalico.model.MRUserPrincipal;
 //import lombok.SneakyThrows;
 //import lombok.extern.slf4j.Slf4j;

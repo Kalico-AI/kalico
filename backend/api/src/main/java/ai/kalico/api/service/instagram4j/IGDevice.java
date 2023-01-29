@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j;
+package ai.kalico.api.service.instagram4j;
 
 import java.io.Serializable;
 import java.util.Map;

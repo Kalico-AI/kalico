@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.utils;
+package ai.kalico.api.service.instagram4j.utils;
 
-import com.kalico.api.data.postgres.entity.CookieJarEntity;
-import com.kalico.api.data.postgres.repo.CookieJarRepo;
-import com.kalico.api.props.InstagramProps;
+import ai.kalico.api.data.postgres.entity.CookieJarEntity;
+import ai.kalico.api.data.postgres.repo.CookieJarRepo;
+import ai.kalico.api.props.InstagramProps;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

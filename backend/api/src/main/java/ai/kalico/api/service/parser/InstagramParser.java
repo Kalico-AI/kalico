@@ -1,19 +1,19 @@
-package com.kalico.api.service.parser;
+package ai.kalico.api.service.parser;
 
 
-import static com.kalico.api.service.download.DownloadServiceImpl.VIDEO;
+import static ai.kalico.api.service.download.DownloadServiceImpl.VIDEO;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.kalico.api.dto.VideoInfoDto;
-import com.kalico.api.props.ZenRowsProps;
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.actions.media.MediaAction;
-import com.kalico.api.service.instagram4j.models.media.timeline.TimelineVideoMedia;
-import com.kalico.api.service.instagram4j.responses.media.MediaInfoResponse;
-import com.kalico.api.service.utils.Platform;
+import ai.kalico.api.dto.VideoInfoDto;
+import ai.kalico.api.props.ZenRowsProps;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.actions.media.MediaAction;
+import ai.kalico.api.service.instagram4j.models.media.timeline.TimelineVideoMedia;
+import ai.kalico.api.service.instagram4j.responses.media.MediaInfoResponse;
+import ai.kalico.api.service.utils.Platform;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;

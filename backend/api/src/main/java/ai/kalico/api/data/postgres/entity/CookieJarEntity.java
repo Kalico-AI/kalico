@@ -1,4 +1,4 @@
-package com.kalico.api.data.postgres.entity;
+package ai.kalico.api.data.postgres.entity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

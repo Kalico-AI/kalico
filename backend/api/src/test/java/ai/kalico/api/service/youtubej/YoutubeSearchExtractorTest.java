@@ -1,26 +1,26 @@
-package com.kalico.api.service.youtubej;
+package ai.kalico.api.service.youtubej;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.kalico.api.service.ServiceTestConfiguration;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchable;
-import com.kalico.api.service.youtubej.downloader.response.Response;
-import com.kalico.api.service.youtubej.model.search.SearchResult;
-import com.kalico.api.service.youtubej.model.search.SearchResultItem;
-import com.kalico.api.service.youtubej.model.search.SearchResultItemType;
-import com.kalico.api.service.youtubej.model.search.SearchResultVideoDetails;
-import com.kalico.api.service.youtubej.model.search.field.SortField;
-import com.kalico.api.service.youtubej.model.search.field.TypeField;
-import com.kalico.api.service.youtubej.model.search.query.QueryRefinementList;
-import com.kalico.api.service.youtubej.model.search.query.QuerySuggestion;
-import com.kalico.api.service.youtubej.model.search.query.Searchable;
+import ai.kalico.api.service.ServiceTestConfiguration;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchable;
+import ai.kalico.api.service.youtubej.downloader.response.Response;
+import ai.kalico.api.service.youtubej.model.search.SearchResult;
+import ai.kalico.api.service.youtubej.model.search.SearchResultItem;
+import ai.kalico.api.service.youtubej.model.search.SearchResultItemType;
+import ai.kalico.api.service.youtubej.model.search.SearchResultVideoDetails;
+import ai.kalico.api.service.youtubej.model.search.field.SortField;
+import ai.kalico.api.service.youtubej.model.search.field.TypeField;
+import ai.kalico.api.service.youtubej.model.search.query.QueryRefinementList;
+import ai.kalico.api.service.youtubej.model.search.query.QuerySuggestion;
+import ai.kalico.api.service.youtubej.model.search.query.Searchable;
 import lombok.extern.slf4j.Slf4j;
 
-import com.kalico.api.service.youtubej.downloader.request.*;
-import com.kalico.api.service.youtubej.model.search.*;
-import com.kalico.api.service.youtubej.model.search.query.*;
+import ai.kalico.api.service.youtubej.downloader.request.*;
+import ai.kalico.api.service.youtubej.model.search.*;
+import ai.kalico.api.service.youtubej.model.search.query.*;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;

@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.exceptions;
+package ai.kalico.api.service.instagram4j.exceptions;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.responses.accounts.LoginResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.responses.accounts.LoginResponse;
 import lombok.Getter;
 
 @Getter

@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.models.direct;
+package ai.kalico.api.service.instagram4j.models.direct;
 
-import com.kalico.api.service.instagram4j.models.direct.item.ThreadRavenMediaItem;
+import ai.kalico.api.service.instagram4j.models.direct.item.ThreadRavenMediaItem;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

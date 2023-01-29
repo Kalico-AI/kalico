@@ -1,4 +1,4 @@
-package com.kalico.api.service.cms;
+package ai.kalico.api.service.cms;
 
 import com.kalico.model.*;
 

@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.responses.challenge;
+package ai.kalico.api.service.instagram4j.responses.challenge;
 
 import lombok.Getter;
 import lombok.Setter;

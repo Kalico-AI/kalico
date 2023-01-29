@@ -1,7 +1,7 @@
-package com.kalico.api.utils.security.firebase;
+package ai.kalico.api.utils.security.firebase;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kalico.api.utils.security.firewall.FirewallConfiguration;
+import ai.kalico.api.utils.security.firewall.FirewallConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +61,7 @@ import java.util.Map;
 })
 @ConditionalOnProperty(value = "security.firebaseEnabled")
 @Import(FirewallConfiguration.class)
-@ComponentScan(basePackages = {"com.kalico.api.utils.security.firebase"})
+@ComponentScan(basePackages = {"ai.kalico.api.utils.security.firebase"})
 @RequiredArgsConstructor
 public class CustomSecurityConfiguration extends WebSecurityConfigurerAdapter {
 

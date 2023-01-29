@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.friendships;
+package ai.kalico.api.service.instagram4j.requests.friendships;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.requests.IGPostRequest;
-import com.kalico.api.service.instagram4j.responses.friendships.FriendshipsShowManyResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.requests.IGPostRequest;
+import ai.kalico.api.service.instagram4j.responses.friendships.FriendshipsShowManyResponse;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;

@@ -1,8 +1,8 @@
-package com.kalico.api.service.youtubej.downloader.request;
+package ai.kalico.api.service.youtubej.downloader.request;
 
-import com.kalico.api.service.youtubej.downloader.YoutubeCallback;
-import com.kalico.api.service.youtubej.downloader.proxy.ProxyAuthenticator;
-import com.kalico.api.service.youtubej.downloader.proxy.ProxyCredentialsImpl;
+import ai.kalico.api.service.youtubej.downloader.YoutubeCallback;
+import ai.kalico.api.service.youtubej.downloader.proxy.ProxyAuthenticator;
+import ai.kalico.api.service.youtubej.downloader.proxy.ProxyCredentialsImpl;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;

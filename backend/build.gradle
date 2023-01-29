@@ -26,7 +26,7 @@ bootJar {
 ext {
   set('springCloudVersion', "2020.0.3")
   set('awsSDKVersion', '1.12.65')
-  set("apiPackageName", "com.kalico.api")
+  set("apiPackageName", "ai.kalico.api")
   set("modelPackageName", "com.kalico.model")
   set("openApiSpecPath", "src/main/resources/openapi/openapi.json")
   set("generatedDirSpring", "generated/openapi/spring")

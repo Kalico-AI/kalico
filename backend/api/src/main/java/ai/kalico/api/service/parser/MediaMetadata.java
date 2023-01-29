@@ -1,4 +1,4 @@
-package com.kalico.api.service.parser;
+package ai.kalico.api.service.parser;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

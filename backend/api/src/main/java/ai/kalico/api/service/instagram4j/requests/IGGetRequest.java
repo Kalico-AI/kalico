@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.requests;
+package ai.kalico.api.service.instagram4j.requests;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import okhttp3.Request;
 
 public abstract class IGGetRequest<T extends IGResponse> extends IGRequest<T> {

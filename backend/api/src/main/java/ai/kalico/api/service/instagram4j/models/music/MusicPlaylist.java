@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.models.music;
+package ai.kalico.api.service.instagram4j.models.music;
 
-import com.kalico.api.service.instagram4j.models.IGBaseModel;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.models.IGBaseModel;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import java.util.List;

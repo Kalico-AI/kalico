@@ -1,8 +1,8 @@
-package com.kalico.api.service.stt;
+package ai.kalico.api.service.stt;
 
-import com.kalico.api.props.DockerImageProps;
-import com.kalico.api.service.utils.FWUtils;
-import com.kalico.api.service.utils.ShellService;
+import ai.kalico.api.props.DockerImageProps;
+import ai.kalico.api.service.utils.FWUtils;
+import ai.kalico.api.service.utils.ShellService;
 import java.io.File;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.models.news;
+package ai.kalico.api.service.instagram4j.models.news;
 
-import com.kalico.api.service.instagram4j.models.IGBaseModel;
+import ai.kalico.api.service.instagram4j.models.IGBaseModel;
 import lombok.Getter;
 import lombok.Setter;
 

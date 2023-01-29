@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.responses.igtv;
+package ai.kalico.api.service.instagram4j.responses.igtv;
 
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import lombok.Getter;
 import lombok.Setter;
 

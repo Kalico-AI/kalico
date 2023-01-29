@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.downloader.request;
+package ai.kalico.api.service.youtubej.downloader.request;
 
 
 public class RequestWebpage extends RequestRaw<RequestWebpage> {

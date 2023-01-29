@@ -1,4 +1,4 @@
-package com.kalico.api.service.youtubej.cipher;
+package ai.kalico.api.service.youtubej.cipher;
 
 
 public class JsFunction {

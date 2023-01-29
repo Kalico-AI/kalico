@@ -1,7 +1,7 @@
-package com.kalico.api.service.youtubej.cipher;
+package ai.kalico.api.service.youtubej.cipher;
 
 
-import com.kalico.api.service.youtubej.YoutubeException;
+import ai.kalico.api.service.youtubej.YoutubeException;
 
 public interface CipherFactory {
 

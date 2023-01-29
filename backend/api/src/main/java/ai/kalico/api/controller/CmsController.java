@@ -1,7 +1,7 @@
-package com.kalico.api.controller;
+package ai.kalico.api.controller;
 
-import com.kalico.api.CmsApi;
-import com.kalico.api.service.cms.CmsService;
+import ai.kalico.api.CmsApi;
+import ai.kalico.api.service.cms.CmsService;
 import com.kalico.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,14 +1,18 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Foodwallah API",
-    "description": "REST API for Foodwallah backend services",
+    "title": "Kalico API",
+    "description": "REST API for Kalico backend services",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://api.foodwallah.com",
+      "url": "https://api.kalico.ai",
       "description": "Prod"
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": "Dev"
     }
   ],
   "paths": {

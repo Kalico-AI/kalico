@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.responses.feed;
+package ai.kalico.api.service.instagram4j.responses.feed;
 
-import com.kalico.api.service.instagram4j.models.feed.Reel;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.feed.Reel;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.responses;
+package ai.kalico.api.service.instagram4j.responses;
 
-import com.kalico.api.service.instagram4j.models.IGBaseModel;
+import ai.kalico.api.service.instagram4j.models.IGBaseModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;

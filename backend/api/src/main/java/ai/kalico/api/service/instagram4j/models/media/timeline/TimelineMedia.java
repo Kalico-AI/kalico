@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.models.media.timeline;
+package ai.kalico.api.service.instagram4j.models.media.timeline;
 
-import com.kalico.api.service.instagram4j.models.location.Location;
-import com.kalico.api.service.instagram4j.models.media.Media;
-import com.kalico.api.service.instagram4j.models.media.UserTags;
+import ai.kalico.api.service.instagram4j.models.location.Location;
+import ai.kalico.api.service.instagram4j.models.media.Media;
+import ai.kalico.api.service.instagram4j.models.media.UserTags;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.List;

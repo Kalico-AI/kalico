@@ -1,10 +1,10 @@
-package com.kalico.api.service.youtubej.cipher;
+package ai.kalico.api.service.youtubej.cipher;
 
 
-import com.kalico.api.service.youtubej.YoutubeException;
-import com.kalico.api.service.youtubej.downloader.Downloader;
-import com.kalico.api.service.youtubej.downloader.request.RequestWebpage;
-import com.kalico.api.service.youtubej.downloader.response.Response;
+import ai.kalico.api.service.youtubej.YoutubeException;
+import ai.kalico.api.service.youtubej.downloader.Downloader;
+import ai.kalico.api.service.youtubej.downloader.request.RequestWebpage;
+import ai.kalico.api.service.youtubej.downloader.response.Response;
 
 import java.util.*;
 import java.util.regex.Matcher;

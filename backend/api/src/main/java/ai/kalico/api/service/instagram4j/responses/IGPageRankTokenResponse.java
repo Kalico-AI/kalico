@@ -1,6 +1,6 @@
-package com.kalico.api.service.instagram4j.responses;
+package ai.kalico.api.service.instagram4j.responses;
 
-import com.kalico.api.service.instagram4j.requests.IGPageRankTokenRequest;
+import ai.kalico.api.service.instagram4j.requests.IGPageRankTokenRequest;
 
 public interface IGPageRankTokenResponse {
     String getRank_token();

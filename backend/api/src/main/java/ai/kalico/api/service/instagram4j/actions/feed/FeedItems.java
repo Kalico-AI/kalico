@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.actions.feed;
+package ai.kalico.api.service.instagram4j.actions.feed;
 
 import java.util.Collection;
 import java.util.stream.Stream;

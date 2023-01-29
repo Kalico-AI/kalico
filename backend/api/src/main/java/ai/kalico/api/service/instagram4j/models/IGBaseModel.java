@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.models;
+package ai.kalico.api.service.instagram4j.models;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;

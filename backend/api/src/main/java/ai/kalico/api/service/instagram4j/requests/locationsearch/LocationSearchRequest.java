@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.requests.locationsearch;
+package ai.kalico.api.service.instagram4j.requests.locationsearch;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.locationsearch.LocationSearchResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.locationsearch.LocationSearchResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

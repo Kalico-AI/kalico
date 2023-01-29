@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.responses.music;
+package ai.kalico.api.service.instagram4j.responses.music;
 
-import com.kalico.api.service.instagram4j.models.music.MusicPlaylist.BeanToTrackConverter;
-import com.kalico.api.service.instagram4j.models.music.MusicTrack;
-import com.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.music.MusicPlaylist.BeanToTrackConverter;
+import ai.kalico.api.service.instagram4j.models.music.MusicTrack;
+import ai.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import lombok.Getter;

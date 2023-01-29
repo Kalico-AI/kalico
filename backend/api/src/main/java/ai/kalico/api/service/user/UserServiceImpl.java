@@ -1,7 +1,7 @@
-package com.kalico.api.service.user;
+package ai.kalico.api.service.user;
 
-import com.kalico.api.props.AuthorizedUserProps;
-import com.kalico.api.utils.security.firebase.SecurityFilter;
+import ai.kalico.api.props.AuthorizedUserProps;
+import ai.kalico.api.utils.security.firebase.SecurityFilter;
 import com.kalico.model.UserProfile;
 import com.kalico.model.UserProfileResponse;
 import lombok.RequiredArgsConstructor;

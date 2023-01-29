@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.friendships;
+package ai.kalico.api.service.instagram4j.requests.friendships;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.requests.IGPaginatedRequest;
-import com.kalico.api.service.instagram4j.responses.feed.FeedUsersResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.requests.IGPaginatedRequest;
+import ai.kalico.api.service.instagram4j.responses.feed.FeedUsersResponse;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

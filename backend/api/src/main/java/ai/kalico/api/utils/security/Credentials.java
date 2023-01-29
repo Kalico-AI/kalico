@@ -1,4 +1,4 @@
-package com.kalico.api.utils.security;
+package ai.kalico.api.utils.security;
 
 import com.google.firebase.auth.FirebaseToken;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.kalico.api.service.utils;
+package ai.kalico.api.service.utils;
 
 import java.io.File;
 import lombok.SneakyThrows;

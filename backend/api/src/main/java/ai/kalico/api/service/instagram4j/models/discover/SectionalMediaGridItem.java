@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.models.discover;
+package ai.kalico.api.service.instagram4j.models.discover;
 
-import com.kalico.api.service.instagram4j.models.media.timeline.TimelineMedia;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.models.media.timeline.TimelineMedia;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

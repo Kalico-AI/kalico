@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.models.igtv;
+package ai.kalico.api.service.instagram4j.models.igtv;
 
-import com.kalico.api.service.instagram4j.models.IGBaseModel;
-import com.kalico.api.service.instagram4j.models.media.timeline.TimelineVideoMedia;
-import com.kalico.api.service.instagram4j.models.user.User;
+import ai.kalico.api.service.instagram4j.models.IGBaseModel;
+import ai.kalico.api.service.instagram4j.models.media.timeline.TimelineVideoMedia;
+import ai.kalico.api.service.instagram4j.models.user.User;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

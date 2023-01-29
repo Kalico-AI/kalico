@@ -1,7 +1,7 @@
-package com.kalico.api.service.av;
+package ai.kalico.api.service.av;
 
 
-import com.kalico.api.dto.VideoInfoDto;
+import ai.kalico.api.dto.VideoInfoDto;
 import com.kalico.model.GenericResponse;
 import java.util.function.Function;
 

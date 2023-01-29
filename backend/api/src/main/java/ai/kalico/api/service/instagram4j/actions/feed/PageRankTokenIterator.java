@@ -1,10 +1,10 @@
-package com.kalico.api.service.instagram4j.actions.feed;
+package ai.kalico.api.service.instagram4j.actions.feed;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGPageRankTokenRequest;
-import com.kalico.api.service.instagram4j.requests.IGRequest;
-import com.kalico.api.service.instagram4j.responses.IGPageRankTokenResponse;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGPageRankTokenRequest;
+import ai.kalico.api.service.instagram4j.requests.IGRequest;
+import ai.kalico.api.service.instagram4j.responses.IGPageRankTokenResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 
 public class PageRankTokenIterator<T extends IGRequest<R> & IGPageRankTokenRequest, R extends IGResponse & IGPageRankTokenResponse>
         extends CursorIterator<IGRequest<R>, R> {

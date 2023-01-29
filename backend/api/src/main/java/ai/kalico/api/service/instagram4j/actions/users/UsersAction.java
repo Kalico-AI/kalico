@@ -1,12 +1,12 @@
-package com.kalico.api.service.instagram4j.actions.users;
+package ai.kalico.api.service.instagram4j.actions.users;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.user.User;
-import com.kalico.api.service.instagram4j.requests.users.UsersInfoRequest;
-import com.kalico.api.service.instagram4j.requests.users.UsersSearchRequest;
-import com.kalico.api.service.instagram4j.requests.users.UsersUsernameInfoRequest;
-import com.kalico.api.service.instagram4j.responses.users.UserResponse;
-import com.kalico.api.service.instagram4j.responses.users.UsersSearchResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.user.User;
+import ai.kalico.api.service.instagram4j.requests.users.UsersInfoRequest;
+import ai.kalico.api.service.instagram4j.requests.users.UsersSearchRequest;
+import ai.kalico.api.service.instagram4j.requests.users.UsersUsernameInfoRequest;
+import ai.kalico.api.service.instagram4j.responses.users.UserResponse;
+import ai.kalico.api.service.instagram4j.responses.users.UsersSearchResponse;
 import java.util.concurrent.CompletableFuture;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

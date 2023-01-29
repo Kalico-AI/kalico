@@ -1,11 +1,11 @@
-package com.kalico.api.service.user;
+package ai.kalico.api.service.user;
 
 
-import com.kalico.api.data.postgres.entity.UserEntity;
-import com.kalico.api.data.postgres.repo.UserRepo;
-import com.kalico.api.service.ServiceTestConfiguration;
-import com.kalico.api.utils.ServiceTestHelper;
-import com.kalico.api.utils.migration.FlywayMigration;
+import ai.kalico.api.data.postgres.entity.UserEntity;
+import ai.kalico.api.data.postgres.repo.UserRepo;
+import ai.kalico.api.service.ServiceTestConfiguration;
+import ai.kalico.api.utils.ServiceTestHelper;
+import ai.kalico.api.utils.migration.FlywayMigration;
 import com.kalico.model.UserProfileResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

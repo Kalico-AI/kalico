@@ -1,7 +1,7 @@
-package com.kalico.api.service.youtubej.downloader.request;
+package ai.kalico.api.service.youtubej.downloader.request;
 
-import com.kalico.api.service.youtubej.model.search.SearchResult;
-import com.kalico.api.service.youtubej.model.search.query.Searchable;
+import ai.kalico.api.service.youtubej.model.search.SearchResult;
+import ai.kalico.api.service.youtubej.model.search.query.Searchable;
 
 public class RequestSearchable extends Request<RequestSearchable, SearchResult> {
 

@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.feed;
+package ai.kalico.api.service.instagram4j.requests.feed;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.IGPayload;
-import com.kalico.api.service.instagram4j.requests.IGPostRequest;
-import com.kalico.api.service.instagram4j.responses.feed.FeedReelsMediaResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.IGPayload;
+import ai.kalico.api.service.instagram4j.requests.IGPostRequest;
+import ai.kalico.api.service.instagram4j.responses.feed.FeedReelsMediaResponse;
 import java.util.stream.Stream;
 import lombok.Getter;
 

@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.actions.status;
+package ai.kalico.api.service.instagram4j.actions.status;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.status.StatusSetStatusRequest;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.status.StatusSetStatusRequest;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.concurrent.CompletableFuture;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

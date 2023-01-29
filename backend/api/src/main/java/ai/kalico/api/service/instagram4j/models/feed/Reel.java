@@ -1,8 +1,8 @@
-package com.kalico.api.service.instagram4j.models.feed;
+package ai.kalico.api.service.instagram4j.models.feed;
 
-import com.kalico.api.service.instagram4j.models.IGBaseModel;
-import com.kalico.api.service.instagram4j.models.media.reel.ReelMedia;
-import com.kalico.api.service.instagram4j.models.user.User;
+import ai.kalico.api.service.instagram4j.models.IGBaseModel;
+import ai.kalico.api.service.instagram4j.models.media.reel.ReelMedia;
+import ai.kalico.api.service.instagram4j.models.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;

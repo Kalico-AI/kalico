@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.responses.discover;
+package ai.kalico.api.service.instagram4j.responses.discover;
 
-import com.kalico.api.service.instagram4j.models.discover.Cluster;
-import com.kalico.api.service.instagram4j.models.discover.SectionalItem;
-import com.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.models.discover.Cluster;
+import ai.kalico.api.service.instagram4j.models.discover.SectionalItem;
+import ai.kalico.api.service.instagram4j.responses.IGPaginatedResponse;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,20 +1,20 @@
-package com.kalico.api.service.youtubej;
+package ai.kalico.api.service.youtubej;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.kalico.api.service.youtubej.downloader.DownloaderImpl;
-import com.kalico.api.service.youtubej.downloader.YoutubeProgressCallback;
-import com.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
-import com.kalico.api.service.youtubej.downloader.response.Response;
-import com.kalico.api.service.youtubej.model.videos.VideoInfo;
+import ai.kalico.api.service.youtubej.downloader.DownloaderImpl;
+import ai.kalico.api.service.youtubej.downloader.YoutubeProgressCallback;
+import ai.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
+import ai.kalico.api.service.youtubej.downloader.response.Response;
+import ai.kalico.api.service.youtubej.model.videos.VideoInfo;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.kalico.api.service.ServiceTestConfiguration;
+import ai.kalico.api.service.ServiceTestConfiguration;
 import lombok.extern.slf4j.Slf4j;
 
-import com.kalico.api.service.youtubej.model.videos.formats.Format;
+import ai.kalico.api.service.youtubej.model.videos.formats.Format;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.AfterMethod;

@@ -1,15 +1,15 @@
-package com.kalico.api.service.instagram4j.actions.upload;
+package ai.kalico.api.service.instagram4j.actions.upload;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.models.media.UploadParameters;
-import com.kalico.api.service.instagram4j.requests.upload.MediaUploadFinishRequest;
-import com.kalico.api.service.instagram4j.requests.upload.RuploadPhotoRequest;
-import com.kalico.api.service.instagram4j.requests.upload.RuploadSegmentVideoGetRequest;
-import com.kalico.api.service.instagram4j.requests.upload.RuploadSegmentVideoPhaseRequest;
-import com.kalico.api.service.instagram4j.requests.upload.RuploadSegmentVideoPhaseRequest.Phase;
-import com.kalico.api.service.instagram4j.requests.upload.RuploadVideoRequest;
-import com.kalico.api.service.instagram4j.responses.IGResponse;
-import com.kalico.api.service.instagram4j.responses.media.RuploadPhotoResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.models.media.UploadParameters;
+import ai.kalico.api.service.instagram4j.requests.upload.MediaUploadFinishRequest;
+import ai.kalico.api.service.instagram4j.requests.upload.RuploadPhotoRequest;
+import ai.kalico.api.service.instagram4j.requests.upload.RuploadSegmentVideoGetRequest;
+import ai.kalico.api.service.instagram4j.requests.upload.RuploadSegmentVideoPhaseRequest;
+import ai.kalico.api.service.instagram4j.requests.upload.RuploadSegmentVideoPhaseRequest.Phase;
+import ai.kalico.api.service.instagram4j.requests.upload.RuploadVideoRequest;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.responses.media.RuploadPhotoResponse;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import lombok.NonNull;

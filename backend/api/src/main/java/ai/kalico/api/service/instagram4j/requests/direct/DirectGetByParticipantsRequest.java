@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.direct;
+package ai.kalico.api.service.instagram4j.requests.direct;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.direct.DirectThreadsResponse;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.direct.DirectThreadsResponse;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 
 public class DirectGetByParticipantsRequest extends IGGetRequest<DirectThreadsResponse> {
     private Long[] _participants;

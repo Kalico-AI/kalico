@@ -1,4 +1,4 @@
-package com.kalico.api.service.instagram4j.models.media;
+package ai.kalico.api.service.instagram4j.models.media;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

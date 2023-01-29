@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.requests.media;
+package ai.kalico.api.service.instagram4j.requests.media;
 
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.responses.feed.FeedUsersResponse;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.responses.feed.FeedUsersResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

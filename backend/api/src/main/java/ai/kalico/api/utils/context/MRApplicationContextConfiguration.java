@@ -1,4 +1,4 @@
-package com.kalico.api.utils.context;
+package ai.kalico.api.utils.context;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;

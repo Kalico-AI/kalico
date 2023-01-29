@@ -1,7 +1,7 @@
-package com.kalico.api.service.instagram4j.exceptions;
+package ai.kalico.api.service.instagram4j.exceptions;
 
-import com.kalico.api.service.instagram4j.responses.IGResponse;
-import com.kalico.api.service.instagram4j.utils.IGUtils;
+import ai.kalico.api.service.instagram4j.responses.IGResponse;
+import ai.kalico.api.service.instagram4j.utils.IGUtils;
 import java.io.IOException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

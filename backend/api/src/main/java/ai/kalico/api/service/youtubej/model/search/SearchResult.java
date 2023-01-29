@@ -1,13 +1,13 @@
-package com.kalico.api.service.youtubej.model.search;
+package ai.kalico.api.service.youtubej.model.search;
 
-import com.kalico.api.service.youtubej.model.search.query.QueryAutoCorrection;
-import com.kalico.api.service.youtubej.model.search.query.QueryElement;
-import com.kalico.api.service.youtubej.model.search.query.QueryElementType;
-import com.kalico.api.service.youtubej.model.search.query.QueryRefinementList;
-import com.kalico.api.service.youtubej.model.search.query.QuerySuggestion;
+import ai.kalico.api.service.youtubej.model.search.query.QueryAutoCorrection;
+import ai.kalico.api.service.youtubej.model.search.query.QueryElement;
+import ai.kalico.api.service.youtubej.model.search.query.QueryElementType;
+import ai.kalico.api.service.youtubej.model.search.query.QueryRefinementList;
+import ai.kalico.api.service.youtubej.model.search.query.QuerySuggestion;
 import java.util.*;
 
-import com.kalico.api.service.youtubej.model.search.query.*;
+import ai.kalico.api.service.youtubej.model.search.query.*;
 
 public class SearchResult {
 

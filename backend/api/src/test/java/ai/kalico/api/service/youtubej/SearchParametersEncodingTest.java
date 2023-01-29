@@ -1,19 +1,19 @@
-package com.kalico.api.service.youtubej;
+package ai.kalico.api.service.youtubej;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.kalico.api.service.ServiceTestConfiguration;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
-import com.kalico.api.service.youtubej.model.search.field.DurationField;
-import com.kalico.api.service.youtubej.model.search.field.FeatureField;
-import com.kalico.api.service.youtubej.model.search.field.FormatField;
-import com.kalico.api.service.youtubej.model.search.field.SearchField;
-import com.kalico.api.service.youtubej.model.search.field.SortField;
-import com.kalico.api.service.youtubej.model.search.field.TypeField;
-import com.kalico.api.service.youtubej.model.search.field.UploadDateField;
+import ai.kalico.api.service.ServiceTestConfiguration;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
+import ai.kalico.api.service.youtubej.model.search.field.DurationField;
+import ai.kalico.api.service.youtubej.model.search.field.FeatureField;
+import ai.kalico.api.service.youtubej.model.search.field.FormatField;
+import ai.kalico.api.service.youtubej.model.search.field.SearchField;
+import ai.kalico.api.service.youtubej.model.search.field.SortField;
+import ai.kalico.api.service.youtubej.model.search.field.TypeField;
+import ai.kalico.api.service.youtubej.model.search.field.UploadDateField;
 import lombok.extern.slf4j.Slf4j;
 
-import com.kalico.api.service.youtubej.model.search.field.*;
+import ai.kalico.api.service.youtubej.model.search.field.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;

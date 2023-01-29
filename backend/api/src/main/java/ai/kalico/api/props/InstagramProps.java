@@ -1,4 +1,4 @@
-package com.kalico.api.props;
+package ai.kalico.api.props;
 
 import java.util.Base64;
 import lombok.Getter;

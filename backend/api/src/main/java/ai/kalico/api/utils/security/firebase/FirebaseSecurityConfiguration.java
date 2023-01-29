@@ -1,7 +1,7 @@
-package com.kalico.api.utils.security.firebase;
+package ai.kalico.api.utils.security.firebase;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kalico.api.utils.security.firewall.FirewallConfiguration;
+import ai.kalico.api.utils.security.firewall.FirewallConfiguration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.ReactiveManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

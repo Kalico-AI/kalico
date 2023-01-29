@@ -1,20 +1,20 @@
-package com.kalico.api.service.youtubej.parser;
+package ai.kalico.api.service.youtubej.parser;
 
-import com.kalico.api.service.youtubej.downloader.request.RequestChannelUploads;
-import com.kalico.api.service.youtubej.downloader.request.RequestPlaylistInfo;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
-import com.kalico.api.service.youtubej.downloader.request.RequestSearchable;
-import com.kalico.api.service.youtubej.downloader.request.RequestSubtitlesInfo;
-import com.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
-import com.kalico.api.service.youtubej.model.search.SearchResult;
-import com.kalico.api.service.youtubej.model.videos.VideoInfo;
+import ai.kalico.api.service.youtubej.downloader.request.RequestChannelUploads;
+import ai.kalico.api.service.youtubej.downloader.request.RequestPlaylistInfo;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchable;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSubtitlesInfo;
+import ai.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
+import ai.kalico.api.service.youtubej.model.search.SearchResult;
+import ai.kalico.api.service.youtubej.model.videos.VideoInfo;
 import java.util.List;
 
-import com.kalico.api.service.youtubej.downloader.request.*;
-import com.kalico.api.service.youtubej.downloader.response.Response;
-import com.kalico.api.service.youtubej.model.playlist.PlaylistInfo;
-import com.kalico.api.service.youtubej.model.subtitles.SubtitlesInfo;
+import ai.kalico.api.service.youtubej.downloader.request.*;
+import ai.kalico.api.service.youtubej.downloader.response.Response;
+import ai.kalico.api.service.youtubej.model.playlist.PlaylistInfo;
+import ai.kalico.api.service.youtubej.model.subtitles.SubtitlesInfo;
 
 public interface Parser {
 

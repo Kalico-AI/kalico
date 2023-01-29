@@ -1,9 +1,9 @@
-package com.kalico.api.service.instagram4j.requests.fbsearch;
+package ai.kalico.api.service.instagram4j.requests.fbsearch;
 
-import com.kalico.api.service.instagram4j.IGClient;
-import com.kalico.api.service.instagram4j.requests.IGGetRequest;
-import com.kalico.api.service.instagram4j.requests.IGPageRankTokenRequest;
-import com.kalico.api.service.instagram4j.responses.fbsearch.FbsearchPlacesResponse;
+import ai.kalico.api.service.instagram4j.IGClient;
+import ai.kalico.api.service.instagram4j.requests.IGGetRequest;
+import ai.kalico.api.service.instagram4j.requests.IGPageRankTokenRequest;
+import ai.kalico.api.service.instagram4j.responses.fbsearch.FbsearchPlacesResponse;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

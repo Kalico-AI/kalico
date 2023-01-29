@@ -1,11 +1,11 @@
-package com.kalico.api.service.cms;
+package ai.kalico.api.service.cms;
 
-import com.kalico.api.data.postgres.entity.*;
-import com.kalico.api.data.postgres.repo.*;
-import com.kalico.api.props.AWSProps;
-import com.kalico.api.props.BlogPostProps;
-import com.kalico.api.service.gif.GifService;
-import com.kalico.api.service.mapper.BlogPostMapper;
+import ai.kalico.api.data.postgres.entity.*;
+import ai.kalico.api.data.postgres.repo.*;
+import ai.kalico.api.props.AWSProps;
+import ai.kalico.api.props.BlogPostProps;
+import ai.kalico.api.service.gif.GifService;
+import ai.kalico.api.service.mapper.BlogPostMapper;
 import com.kalico.model.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;

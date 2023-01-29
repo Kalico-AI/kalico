@@ -1,14 +1,14 @@
-package com.kalico.api.service.youtubej.extractor;
+package ai.kalico.api.service.youtubej.extractor;
 
 
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.kalico.api.service.youtubej.YoutubeException;
-import com.kalico.api.service.youtubej.downloader.Downloader;
-import com.kalico.api.service.youtubej.downloader.request.RequestWebpage;
-import com.kalico.api.service.youtubej.downloader.response.Response;
+import ai.kalico.api.service.youtubej.YoutubeException;
+import ai.kalico.api.service.youtubej.downloader.Downloader;
+import ai.kalico.api.service.youtubej.downloader.request.RequestWebpage;
+import ai.kalico.api.service.youtubej.downloader.response.Response;
 
 import java.util.*;
 import java.util.regex.Matcher;
