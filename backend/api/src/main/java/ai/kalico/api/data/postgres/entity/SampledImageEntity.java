@@ -23,9 +23,9 @@ public class SampledImageEntity {
     private Long id;
 
     @Basic
-    @JsonProperty("blog_post_id")
-    @Column(name = "blog_post_id")
-    private Long blogPostId;
+    @JsonProperty("project_id")
+    @Column(name = "project_id")
+    private Long projectId;
 
     @Basic
     @JsonProperty("image_key")

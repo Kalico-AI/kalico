@@ -11,5 +11,5 @@ import lombok.Setter;
 public class SttRequest {
   private String path;
   private String language;
-  private String videoId;
+  private String mediaId;
 }

@@ -1,7 +1,6 @@
 package ai.kalico.api.service.av;
 
 
-import ai.kalico.api.dto.VideoInfoDto;
 import ai.kalico.api.service.ServiceTestConfiguration;
 import ai.kalico.api.service.user.UserService;
 import ai.kalico.api.service.utils.AVAsyncHelper;
@@ -77,7 +76,7 @@ public class AVServiceIntegrationTest extends AbstractTestNGSpringContextTests {
     @Test(enabled = false) // Enable for local testing. FFmpeg not available in GitHub runner so the test will fail
     public void youTubeContentTest() {
       String url = "https://www.youtube.com/watch?v=U-0JCdjkREU";
-        avService.startVideoProcessing(url, null);
+        avService.processMedia(url, null);
 //      Thread.sleep(60000);
       String videoId = avService.extractYouTubeVideoId(url);
       asserFileExistsAndDelete(asyncHelper.getVideoPath(videoId));
@@ -87,7 +86,7 @@ public class AVServiceIntegrationTest extends AbstractTestNGSpringContextTests {
     @Test(enabled = false)
     public void instagramContentTest() {
         String url = "https://www.instagram.com/p/ClFbVsNDLJN/";
-        avService.startVideoProcessing(url, null);
+        avService.processMedia(url, null);
 //        VideoInfoDto dto = new VideoInfoDto();
 //        dto.setVideoIdOverride("AjAeGLI");
 //        avService.processInstagramVideo(dto);

@@ -6,7 +6,7 @@ import lombok.SneakyThrows;
 /**
  * @author Biz Melesse created on 1/2/23
  */
-public class FWUtils {
+public class KALUtils {
 
   @SneakyThrows
   public static String getCanonicalPath(String path) {

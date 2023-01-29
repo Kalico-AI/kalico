@@ -1,0 +1,81 @@
+package ai.kalico.api.service.mapper;
+
+
+import ai.kalico.api.data.postgres.entity.ProjectEntity;
+import ai.kalico.api.data.postgres.entity.MediaContentEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kalico.model.*;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
+import org.openapitools.jackson.nullable.JsonNullable;
+
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Biz Melesse
+ * created on 1/29/23
+ */
+
+@Mapper(componentModel = "spring",
+        unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE,
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        uses = {JsonNullableMapper.class})
+public interface ProjectMapper {
+
+  default List<Project> map(List<ProjectEntity> projectEntities) {
+    if (projectEntities == null) {
+      return new ArrayList<>();
+    }
+    List<Project> projects = new ArrayList<>();
+    for (ProjectEntity projectEntity : projectEntities) {
+      projects.add(new Project()
+          .projectName(projectEntity.getProjectName())
+          .id(projectEntity.getId()));
+    }
+    return projects;
+  }
+
+  default ProjectDetail map(ProjectEntity projectEntity, ObjectMapper objectMapper) {
+    if (projectEntity == null) {
+      return null;
+    }
+    TypeReference<List<ContentItem>> typeRef = new TypeReference<>() {};
+    ProjectDetail detail = new ProjectDetail();
+    detail.setId(projectEntity.getId());
+    detail.setDateCreated(projectEntity.getCreatedAt().toEpochSecond(ZoneOffset.UTC));
+    if (projectEntity.getContent() != null) {
+      try {
+        detail.setContent(objectMapper.readValue(projectEntity.getContent(), typeRef));
+      } catch (JsonProcessingException e) {
+        e.printStackTrace();
+      }
+    }
+    return detail;
+  }
+
+
+  default String getCdnUrl(String cdn, String mediaId, String format) {
+    return cdn + "/" + mediaId + "/" + mediaId + "." + format;
+  }
+
+  default MediaContent mapMediaContent(MediaContentEntity entity) {
+    if (entity == null) {
+      return null;
+    }
+    MediaContent content = new MediaContent();
+    content.setProjectId(entity.getProjectId());
+    content.setDescription(entity.getScrapedDescription());
+    content.setTitle(entity.getScrapedTitle());
+    content.setPermalink(entity.getPermalink());
+    content.setTranscript(entity.getRawTranscript());
+    content.setMediaId(entity.getMediaId());
+    return content;
+  }
+}

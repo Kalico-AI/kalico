@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ai.kalico.api.props.AWSProps;
 import ai.kalico.api.props.DockerImageProps;
 import ai.kalico.api.service.aws.S3Service;
-import ai.kalico.api.service.utils.FWUtils;
+import ai.kalico.api.service.utils.KALUtils;
 import ai.kalico.api.service.utils.ScraperUtils;
 import ai.kalico.api.service.utils.ShellService;
 import java.io.File;
@@ -46,7 +46,6 @@ public class DownloadServiceImpl implements DownloadService {
       HttpEntity httpEntity = httpClient.execute(httpGet).getEntity();
 
       try (InputStream in = httpEntity.getContent()) {
-        // If the content is an image, upload it to S3 immediately
         // Save the file to disk for processing
         if (!new File(path).exists()) {
           new File(path).mkdirs();
@@ -64,8 +63,8 @@ public class DownloadServiceImpl implements DownloadService {
   @Override
   public void generateHlsManifest(String mp4Path, String hlsPath) {
     log.info("Generating HLS segments for {}", mp4Path);
-    String workingDir = FWUtils.getCanonicalPath(new File(mp4Path).getParent());
-    new File(FWUtils.getCanonicalPath(new File(hlsPath).getParent())).mkdir();
+    String workingDir = KALUtils.getCanonicalPath(new File(mp4Path).getParent());
+    new File(KALUtils.getCanonicalPath(new File(hlsPath).getParent())).mkdir();
     String[] command = {
         "docker",
         "run",
@@ -75,7 +74,7 @@ public class DownloadServiceImpl implements DownloadService {
         workingDir,
         dockerImageProps.getFfmpeg(),
         "-i",
-        FWUtils.getCanonicalPath(mp4Path),
+        KALUtils.getCanonicalPath(mp4Path),
         "-codec:",
         "copy",
         "-start_number",
@@ -86,7 +85,7 @@ public class DownloadServiceImpl implements DownloadService {
         "0",
         "-f",
         "hls",
-        FWUtils.getCanonicalPath(hlsPath)
+        KALUtils.getCanonicalPath(hlsPath)
     };
     log.info("Command: {}", String.join(" ", command));
     shell.exec(command);

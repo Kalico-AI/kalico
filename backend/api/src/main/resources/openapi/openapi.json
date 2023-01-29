@@ -22,7 +22,7 @@
           "user"
         ],
         "summary": "Get user profile",
-        "description": "Get user profile if exists or create one if the user is pre-approved",
+        "description": "Get user profile or create one if it doesn't exist",
         "operationId": "getUserprofile",
         "responses": {
           "200": {
@@ -38,118 +38,21 @@
         }
       }
     },
-    "/user/bookmark": {
+    "/project/create": {
       "post": {
         "tags": [
-          "blog"
+          "project"
         ],
-        "summary": "Bookmark a post for a user",
-        "description": "Bookmark a post for a user",
-        "operationId": "createBookmark",
+        "summary": "Create a new project",
+        "description":"Create a new project and start content processing",
+        "operationId": "createProject",
         "requestBody": {
           "required": true,
-          "description": "Create bookmark request",
+          "description": "Create project request",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Slug"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Generic Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GenericResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "blog"
-        ],
-        "summary": "Remove an existing bookmark",
-        "description": "Remove an existing bookmark",
-        "operationId": "removeBookmark",
-        "requestBody": {
-          "required": true,
-          "description": "Remove bookmark request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Slug"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Generic Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GenericResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "blog"
-        ],
-        "summary": "Get all bookmarked posts",
-        "description": "Get all bookmarked posts",
-        "operationId": "getBookmarkedPosts",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "user_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get bookmarked posts response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BlogPost"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/post/create": {
-      "post": {
-        "tags": [
-          "blog"
-        ],
-        "summary": "Initiate recipe video processing",
-        "description":"Initiate recipe video processing",
-        "operationId": "processVideoRecipe",
-        "requestBody": {
-          "required": true,
-          "description": "Process video request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FWStringList"
+                "$ref": "#/components/schemas/CreateProjectRequest"
               }
             }
           }
@@ -168,28 +71,28 @@
         }
       }
     },
-    "/user/post/like": {
+    "/project/update": {
       "post": {
         "tags": [
-          "blog"
+          "project"
         ],
-        "summary": "Like a post",
-        "description":"Like a post",
-        "operationId": "likePost",
+        "summary": "Update content",
+        "description":"Update content",
+        "operationId": "updateProjectContent",
         "requestBody": {
           "required": true,
-          "description": "Post update request",
+          "description": "Update content request",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Slug"
+                "$ref": "#/components/schemas/UpdateProjectContentRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Generic Response",
+            "description": "Update content response",
             "content": {
               "application/json": {
                 "schema": {
@@ -201,127 +104,17 @@
         }
       }
     },
-    "/blog/post/share": {
-      "post": {
-        "tags": [
-          "blog"
-        ],
-        "summary": "Increment share count",
-        "description":"Increment share count",
-        "operationId": "incrementShareCount",
-        "requestBody": {
-          "required": true,
-          "description": "Post update request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Slug"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Generic Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/blog/{slug}": {
+    "/project/all": {
       "get": {
         "tags": [
-          "blog"
+          "project"
         ],
-        "summary": "Get full blog post by slug",
-        "description": "Get full blog post by slug",
-        "operationId": "getFullBlogPost",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "summary": "Get all projects",
+        "description": "Get a list of projects",
+        "operationId": "getAllProjects",
         "responses": {
           "200": {
-            "description": "Get post response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlogPost"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/blog/featured": {
-      "get": {
-        "tags": [
-          "blog"
-        ],
-        "summary": "Get all featured posts",
-        "description": "Get all featured posts",
-        "operationId": "getFeaturedPosts",
-        "responses": {
-          "200": {
-            "description": "Get featured posts response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BlogPost"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/blog/published": {
-      "get": {
-        "tags": [
-          "blog"
-        ],
-        "summary": "Get all published posts",
-        "description": "Get all published posts",
-        "operationId": "getAllPublishedPosts",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page_number",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get published posts response",
+            "description": "All projects response",
             "content": {
               "application/json": {
                 "schema": {
@@ -333,142 +126,17 @@
         }
       }
     },
-    "/user/submissions": {
-      "get": {
+    "/project/delete/{project_id}": {
+      "delete": {
         "tags": [
-          "blog"
+          "project"
         ],
-        "summary": "Get all submissions by user Id",
-        "description": "Get all submissions by user Id",
-        "operationId": "getUserSubmissions",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "user_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get all user posts",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BlogPost"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/blog/video-content/{slug}": {
-      "get": {
-        "tags": [
-          "blog"
-        ],
-        "summary": "Get video content for a full blog post",
-        "description": "Get video content for a full blog post",
-        "operationId": "getBlogVideoContent",
+        "summary": "Delete a project",
+        "operationId": "deleteProject",
         "parameters": [
           {
             "in": "path",
-            "name": "slug",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get video content response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlogVideoContent"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/blog/ingredients/{slug}": {
-      "get": {
-        "tags": [
-          "blog"
-        ],
-        "summary": "Get ingredients for full blog post",
-        "description": "Get ingredients for full blog post",
-        "operationId": "getBlogIngredients",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get ingredients response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IngredientContent"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/posts/all": {
-      "get": {
-        "tags": [
-          "cms"
-        ],
-        "summary": "Get list of posts",
-        "description": "Get a list of posts",
-        "operationId": "getAllPosts",
-        "responses": {
-          "200": {
-            "description": "All posts response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BlogPost"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/posts/{docId}": {
-      "get": {
-        "tags": [
-          "cms"
-        ],
-        "summary": "Get a post by document slug",
-        "description": "Get a post by document slug",
-        "operationId": "getPostById",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "docId",
+            "name": "project_id",
             "required": true,
             "schema": {
               "type": "integer",
@@ -478,73 +146,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Get single post response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlogPost"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/post": {
-      "post": {
-        "tags": [
-          "cms"
-        ],
-        "summary": "Create or update a post",
-        "description": "Create or update a post",
-        "operationId": "upsertBlogPost",
-        "requestBody": {
-          "required": true,
-          "description": "Update request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BlogPost"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlogPostResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/post/video-content": {
-      "post": {
-        "tags": [
-          "cms"
-        ],
-        "summary": "Create or update video data",
-        "description": "Create or update video data",
-        "operationId": "updateCmsVideoContent",
-        "requestBody": {
-          "required": true,
-          "description": "Update request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CmsVideoContent"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update response",
+            "description": "Delete project response",
             "content": {
               "application/json": {
                 "schema": {
@@ -556,51 +158,18 @@
         }
       }
     },
-    "/cms/post/recipe-steps": {
-      "post": {
-        "tags": [
-          "cms"
-        ],
-        "summary": "Create or update image data",
-        "description": "Create or update image data",
-        "operationId": "upsertRecipeStep",
-        "requestBody": {
-          "required": true,
-          "description": "Update request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RecipeContent"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/post/recipe-steps/{docId}": {
+    "/project/detail/{project_id}": {
       "get": {
         "tags": [
-          "cms"
+          "project"
         ],
-        "summary": "Get image content for a full blog post",
-        "description": "Get image content for a full blog post",
-        "operationId": "getRecipeContent",
+        "summary": "Get a project by ID",
+        "description": "Get a project by ID",
+        "operationId": "getProjectById",
         "parameters": [
           {
             "in": "path",
-            "name": "docId",
+            "name": "project_id",
             "required": true,
             "schema": {
               "type": "integer",
@@ -610,11 +179,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Get image content response",
+            "description": "Project detail response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RecipeContent"
+                  "$ref": "#/components/schemas/ProjectDetail"
                 }
               }
             }
@@ -622,76 +191,10 @@
         }
       }
     },
-    "/cms/post/video-content/{doc_id}": {
+    "/project/sampled-images/{project_id}": {
       "get": {
         "tags": [
-          "cms"
-        ],
-        "summary": "Get video content for a full blog post",
-        "description": "Get video content for a full blog post",
-        "operationId": "getCmsVideoContent",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "doc_id",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get video content response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CmsVideoContent"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/post/ingredients/{doc_id}": {
-      "get": {
-        "tags": [
-          "cms"
-        ],
-        "summary": "Get ingredients for full blog post",
-        "description": "Get ingredients for full blog post",
-        "operationId": "getIngredients",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "doc_id",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get ingredients response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IngredientContent"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/post/sampled-images/{doc_id}": {
-      "get": {
-        "tags": [
-          "cms"
+          "project"
         ],
         "summary": "Get video sampled images",
         "description": "Get video sampled images",
@@ -699,7 +202,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "doc_id",
+            "name": "project_id",
             "required": true,
             "schema": {
               "type": "integer",
@@ -724,163 +227,32 @@
         }
       }
     },
-    "/cms/post/publish": {
-      "post": {
+    "/project/media-content/{project_id}": {
+      "get": {
         "tags": [
-          "cms"
+          "project"
         ],
-        "summary": "Publish a post",
-        "description": "Publish a post",
-        "operationId": "publishBlogPost",
-        "requestBody": {
-          "required": true,
-          "description": "Update request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Slug"
-              }
+        "summary": "Get full media content metadata",
+        "description": "Get full media content metadata",
+        "operationId": "getMediaContent",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "Update response",
+            "description": "Media content response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/post/unpublish": {
-      "post": {
-        "tags": [
-          "cms"
-        ],
-        "summary": "Unpublish a post",
-        "description": "Unpublish a post",
-        "operationId": "unPublishBlogPost",
-        "requestBody": {
-          "required": true,
-          "description": "Update request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Slug"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/post/ingredients": {
-      "post": {
-        "tags": [
-          "cms"
-        ],
-        "summary": "Create or update ingredient list",
-        "description": "Create or update ingredient list",
-        "operationId": "upsertIngredients",
-        "requestBody": {
-          "required": true,
-          "description": "Update request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IngredientContent"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/gif/generate": {
-      "post": {
-        "tags": [
-          "cms"
-        ],
-        "summary": "Generate a GIF from a video file",
-        "description": "Generate a GIF from a video file",
-        "operationId": "generateGif",
-        "requestBody": {
-          "required": true,
-          "description": "Generate GIF request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GifRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Gif Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GifResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cms/gif/delete": {
-      "delete": {
-        "tags": [
-          "cms"
-        ],
-        "summary": "Delete a gif",
-        "operationId": "deleteGif",
-        "requestBody": {
-          "required": true,
-          "description": "Delete ",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Delete Gif response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GenericResponse"
+                  "$ref": "#/components/schemas/MediaContent"
                 }
               }
             }
@@ -898,6 +270,175 @@
       }
     },
     "schemas": {
+      "CreateProjectRequest": {
+        "type": "object",
+        "properties": {
+          "project_name": {
+            "type": "string",
+            "nullable": true,
+            "default": "Untitled"
+          },
+          "content_link": {
+            "type": "string",
+            "nullable": true
+          },
+          "content_type": {
+            "$ref": "#/components/schemas/KalicoContentType"
+          },
+          "paraphrase": {
+            "type": "boolean",
+            "nullable": true,
+            "default": false
+          },
+          "embed_images": {
+            "type": "boolean",
+            "nullable": true,
+            "default": false
+          },
+          "file": {
+            "type": "string",
+            "format": "base64",
+            "nullable": true
+          },
+          "file_extension": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "KalicoContentType": {
+        "type": "string",
+        "nullable": true,
+        "enum": [
+          "DIY",
+          "FOOD_RECIPE",
+          "INTERVIEW",
+          "LECTURE",
+          "PODCAST",
+          "OTHER"
+        ]
+      },
+      "UpdateProjectContentRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": false
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContentItem"
+            }
+          }
+        }
+      },
+      "GenericResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "project_name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ProjectDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "date_created": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContentItem"
+            }
+          }
+        }
+      },
+      "ContentItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContentItemChildren"
+            }
+          }
+        }
+      },
+      "ContentItemChildren": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "MediaContent": {
+        "type": "object",
+        "required": [
+          "media_id",
+          "project_id",
+          "permalink",
+          "title",
+          "description",
+          "transcript"
+        ],
+        "properties": {
+          "media_id": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "permalink": {
+            "type": "string"
+          },
+          "transcript": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
       "GifRequest": {
         "type": "object",
         "properties": {
@@ -909,7 +450,7 @@
             "type": "number",
             "format": "float"
           },
-          "doc_id": {
+          "project_id": {
             "type": "integer",
             "format": "int64"
           }
@@ -926,19 +467,6 @@
           },
           "error": {
             "type": "string"
-          }
-        }
-      },
-      "GenericResponse": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
-          "error": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -991,134 +519,6 @@
           }
         }
       },
-      "CompleteRecipe":  {
-        "type": "object",
-        "nullable": true,
-        "properties": {
-          "cuisine": {
-            "type": "string",
-            "nullable": true
-          },
-          "original_source": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "prep_time": {
-            "type": "string",
-            "nullable": true
-          },
-          "ingredients": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Ingredient"
-            }
-          },
-          "steps": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RecipeStep"
-            }
-          }
-        }
-      },
-      "BlogPostResponse": {
-        "type": "object",
-        "properties": {
-          "blog_post": {
-            "$ref": "#/components/schemas/BlogPost"
-          },
-          "error": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          }
-        }
-      },
-      "FWStringList": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "BlogPost": {
-        "type": "object",
-        "properties": {
-          "doc_id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "post_url": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "tags": {
-            "type": "string",
-            "nullable": true
-          },
-          "summary": {
-            "type": "string",
-            "nullable": true
-          },
-          "author": {
-            "type": "string",
-            "nullable": true
-          },
-          "date_created": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "date_published": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "status": {
-            "type": "string"
-          },
-          "is_featured": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "recipe": {
-            "$ref": "#/components/schemas/CompleteRecipe"
-          },
-          "slug": {
-            "type": "string",
-            "nullable": true
-          },
-          "primary_thumbnail": {
-            "type": "string",
-            "nullable": true
-          },
-          "video_metadata": {
-            "$ref": "#/components/schemas/VideoMetadata"
-          }
-        }
-      },
-      "BlogVideoContent": {
-        "type": "object",
-        "required": [
-          "url",
-          "transcript"
-        ],
-        "properties": {
-          "url": {
-            "type": "string"
-          },
-          "transcript": {
-            "type": "string"
-          }
-        }
-      },
       "VideoMetadata": {
         "type": "object",
         "nullable": true,
@@ -1165,163 +565,6 @@
           }
         }
       },
-      "CmsVideoContent": {
-        "type": "object",
-        "required": [
-          "doc_id",
-          "url",
-          "on_screen_text",
-          "description",
-          "caption"
-        ],
-        "properties": {
-          "doc_id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "url": {
-            "type": "string"
-          },
-          "raw_transcript": {
-            "type": "string"
-          },
-          "on_screen_text": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "caption": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "RecipeContent": {
-        "type": "object",
-        "required": [
-          "sampling_rate",
-          "primary_thumbnail",
-          "recipe_steps",
-          "doc_id"
-        ],
-        "properties": {
-          "doc_id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "sampling_rate": {
-            "type": "string"
-          },
-          "primary_thumbnail": {
-            "type": "string"
-          },
-          "recipe_steps": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RecipeStep"
-            }
-          }
-        }
-      },
-      "PostBody": {
-        "type": "object",
-        "required": [
-          "doc_id",
-          "body"
-        ],
-        "properties": {
-          "doc_id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "body": {
-            "type": "string"
-          }
-        }
-      },
-      "RecipeStep": {
-        "type": "object",
-        "nullable": true,
-        "required": [
-          "step_number",
-          "image_url",
-          "description"
-        ],
-        "properties": {
-          "step_number": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "image_url": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          }
-        }
-      },
-      "IngredientContent": {
-        "type": "object",
-        "required": [
-          "doc_id",
-          "ingredients"
-        ],
-        "properties": {
-          "doc_id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "ingredients": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Ingredient"
-            }
-          }
-        }
-      },
-      "Ingredient": {
-        "type": "object",
-        "nullable": true,
-        "required": [
-          "description",
-          "amount",
-          "units",
-          "sort_order"
-        ],
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "number",
-            "format": "double"
-          },
-          "units": {
-            "type": "string"
-          },
-          "sort_order": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "BookmarkRequest": {
-        "type": "object",
-        "required": [
-          "user_id",
-          "doc_id"
-        ],
-        "properties": {
-          "user_id": {
-            "type": "string"
-          },
-          "doc_id": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
       "PageableResponse": {
         "type": "object",
         "required": [
@@ -1332,7 +575,7 @@
         "properties": {
           "total_records": {
             "type": "integer",
-            "format": "int64"
+            "format": "int32"
           },
           "num_pages": {
             "type": "integer",
@@ -1341,16 +584,8 @@
           "records": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BlogPost"
+              "$ref": "#/components/schemas/Project"
             }
-          }
-        }
-      },
-      "Slug": {
-        "type": "object",
-        "properties": {
-          "slug": {
-            "type": "string"
           }
         }
       }

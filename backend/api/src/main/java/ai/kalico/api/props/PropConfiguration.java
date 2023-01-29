@@ -20,9 +20,8 @@ import org.springframework.context.annotation.Configuration;
     SourceProps.class,
     SwaggerUIProps.class,
     DefaultUserProps.class,
-    BlogPostProps.class,
+    ProjectProps.class,
     InstagramProps.class,
-    AuthorizedUserProps.class,
     DockerImageProps.class
 })
 public class PropConfiguration {

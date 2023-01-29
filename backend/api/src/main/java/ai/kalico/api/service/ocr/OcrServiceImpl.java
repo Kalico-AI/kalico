@@ -1,8 +1,8 @@
 package ai.kalico.api.service.ocr;
 
-import ai.kalico.api.props.BlogPostProps;
+import ai.kalico.api.props.ProjectProps;
 import ai.kalico.api.props.DockerImageProps;
-import ai.kalico.api.service.utils.FWUtils;
+import ai.kalico.api.service.utils.KALUtils;
 import ai.kalico.api.service.utils.ShellService;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class OcrServiceImpl implements OcrService {
   private final ShellService shell;
   private final String imageFormat = "jpg";
-  private final BlogPostProps blogPostProps;
+  private final ProjectProps projectProps;
   private final DockerImageProps dockerImageProps;
 
   @SneakyThrows
@@ -32,11 +32,11 @@ public class OcrServiceImpl implements OcrService {
     String testFile = request.getOcrTesseractPath() + "/0001." + imageFormat + ".txt";
     File file = new File(testFile);
     if (file.exists()) {
-      log.info("Tesseract OCR ouptut already exists for video id={}. Aborting task.", request.getVideoId());
+      log.info("Tesseract OCR ouptut already exists for video id={}. Aborting task.", request.getMediaId());
       return null;
     }
-    log.info("Tesseract OCR in progress for video id={}", request.getVideoId());
-    String workingDir = FWUtils.getCanonicalPath(new File(request.getOcrPath()).getParent());
+    log.info("Tesseract OCR in progress for video id={}", request.getMediaId());
+    String workingDir = KALUtils.getCanonicalPath(new File(request.getOcrPath()).getParent());
     String[] command = {
         "docker",
         "run",
@@ -49,13 +49,13 @@ public class OcrServiceImpl implements OcrService {
         dockerImageProps.getTesseract(),
         "-c",
         String.format("for FILE in %s/*.%s; do tesseract $FILE $FILE --oem 1 -l eng; done",
-            FWUtils.getCanonicalPath(request.getOcrTesseractPath()),
+            KALUtils.getCanonicalPath(request.getOcrTesseractPath()),
             imageFormat
         )
     };
     log.info("Command: {}", String.join(" ", command));
     shell.exec(command);
-    log.info("Tesseract OCR finished for video id={}", request.getVideoId());
+    log.info("Tesseract OCR finished for video id={}", request.getMediaId());
     return null;
   }
 
@@ -69,7 +69,7 @@ public class OcrServiceImpl implements OcrService {
     }
     copyOcrImages(request);
     log.info("ImageMagick is adding borders to OCR images");
-    String workingDir = FWUtils.getCanonicalPath(new File(request.getOcrPath()).getParent());
+    String workingDir = KALUtils.getCanonicalPath(new File(request.getOcrPath()).getParent());
     String[] command = {
         "docker",
         "run",
@@ -83,13 +83,13 @@ public class OcrServiceImpl implements OcrService {
         "-c",
         String.format("for FILE in %s/*.%s; do convert  $FILE  "
             + "-bordercolor White -border 10x10 $FILE; done",
-            FWUtils.getCanonicalPath(request.getOcrTesseractPath()),
+            KALUtils.getCanonicalPath(request.getOcrTesseractPath()),
             imageFormat
         )
     };
     log.info("Command: {}", String.join(" ", command));
     shell.exec(command);
-    log.info("ImageMagic border addition is done for OCR images with video id={}", request.getVideoId());
+    log.info("ImageMagic border addition is done for OCR images with video id={}", request.getMediaId());
   }
 
   private void copyOcrImages(OcrRequest request) {
@@ -116,7 +116,7 @@ public class OcrServiceImpl implements OcrService {
       }
       file.mkdirs();
       log.info("FFMPEG image sample generation in progress");
-      String workingDir = FWUtils.getCanonicalPath(file.getParent());
+      String workingDir = KALUtils.getCanonicalPath(file.getParent());
 
     String[] command = {
           "docker",
@@ -127,13 +127,13 @@ public class OcrServiceImpl implements OcrService {
           workingDir,
           dockerImageProps.getFfmpeg(),
           "-i",
-        FWUtils.getCanonicalPath(request.getVideoPath()),
+        KALUtils.getCanonicalPath(request.getVideoPath()),
           "-filter:v",
-          "fps=" + blogPostProps.getFps(),
-          FWUtils.getCanonicalPath(request.getOcrPath()) + "/" + "%04d." + imageFormat
+          "fps=" + projectProps.getFps(),
+          KALUtils.getCanonicalPath(request.getOcrPath()) + "/" + "%04d." + imageFormat
       };
       log.info("Command: {}", String.join(" ", command));
       shell.exec(command);
-      log.info("FFMPEG image sample generation in done for video id={}", request.getVideoId());
+      log.info("FFMPEG image sample generation in done for video id={}", request.getMediaId());
   }
 }

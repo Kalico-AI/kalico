@@ -1,5 +1,6 @@
 package ai.kalico.api.props;
 
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,11 +17,19 @@ import java.util.List;
 @Getter @Setter
 @Configuration
 @ConfigurationProperties(prefix = "blog")
-public class BlogPostProps {
+public class ProjectProps {
     private Boolean seedDb;
+    private List<String> supportedDomains;
+    private Set<String> supportedVideoFormats;
+    private Set<String> supportedAudioFormats;
+
+
+
+
+
     private String baseSiteUrl;
     private String baseImageCdnUrl;
     private Double fps;
     private String urlNotSupportedMessage;
-    private List<String> supportedDomains;
+
 }

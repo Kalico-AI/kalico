@@ -1,10 +1,9 @@
 package ai.kalico.api.service.stt;
 
 import ai.kalico.api.props.DockerImageProps;
-import ai.kalico.api.service.utils.FWUtils;
+import ai.kalico.api.service.utils.KALUtils;
 import ai.kalico.api.service.utils.ShellService;
 import java.io.File;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,7 @@ public class SpeechToTextServiceImpl implements SpeechToTextService {
     File file = new File(request.getPath());
     if (file.exists()) {
       log.info("Whisper audio transcription in progress for {}", request.getPath());
-      String workingDir = FWUtils.getCanonicalPath(new File(request.getPath()).getParent());
+      String workingDir = KALUtils.getCanonicalPath(new File(request.getPath()).getParent());
       String[] command = {
           "docker",
           "run",
@@ -36,7 +35,7 @@ public class SpeechToTextServiceImpl implements SpeechToTextService {
           workingDir,
           dockerImageProps.getWhisper(),
           "whisper",
-          FWUtils.getCanonicalPath(request.getPath()),
+          KALUtils.getCanonicalPath(request.getPath()),
           "--model",
           "tiny",
           "--language",

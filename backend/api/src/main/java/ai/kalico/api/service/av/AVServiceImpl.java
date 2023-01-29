@@ -1,6 +1,9 @@
 package ai.kalico.api.service.av;
 
+import ai.kalico.api.data.postgres.entity.MediaContentEntity;
+import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.dto.VideoInfoDto;
+import ai.kalico.api.props.ProjectProps;
 import ai.kalico.api.service.download.DownloadService;
 import ai.kalico.api.service.parser.InstagramParser;
 import ai.kalico.api.service.utils.AVAsyncHelper;
@@ -10,13 +13,14 @@ import ai.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
 import ai.kalico.api.service.youtubej.downloader.response.Response;
 import ai.kalico.api.service.youtubej.model.videos.VideoInfo;
 import ai.kalico.api.service.youtubej.model.videos.formats.Format;
-import ai.kalico.api.service.scraper.ScraperService;
 import ai.kalico.api.service.utils.Platform;
-import com.kalico.model.GenericResponse;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Base64;
 import java.util.Random;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author Bizuwork Melesse
@@ -40,9 +45,10 @@ import java.util.concurrent.ExecutionException;
 public class AVServiceImpl implements AVService {
   private final YoutubeDownloader youtubeDownloader = new YoutubeDownloader();
   private final DownloadService downloadService;
-
   private final AVAsyncHelper asyncHelper;
   private final InstagramParser instagramParser;
+  private final MediaContentRepo mediaContentRepo;
+  private final ProjectProps projectProps;
 
 
   // Refer to https://gist.github.com/sidneys/7095afe4da4ae58694d128b1034e01e2 for YouTube
@@ -55,13 +61,11 @@ public class AVServiceImpl implements AVService {
 
   @Async
   @Override
-  public void startVideoProcessing(String url, Function<VideoInfoDto, GenericResponse> callback) {
+  public void processMedia(String url, Long projectId, String file, String fileExtension) {
     log.info("Starting video processing for url {}", url);
-    VideoInfoDto dto = getContent(url);
-    if (callback != null) {
-      callback.apply(dto);
-    }
-    if (dto != null) {
+    if (url != null) {
+      VideoInfoDto dto = getContent(url);
+      createMediaContentFromUrl(dto, projectId);
       try {
         if (dto.getPlatform() == Platform.YOUTUBE) {
           youtubeDownloader
@@ -80,7 +84,54 @@ public class AVServiceImpl implements AVService {
         log.error("ContentServiceImpl.startVideoProcessing: {}", e.getLocalizedMessage());
         e.printStackTrace();
       }
+    } else if (file != null && fileExtension != null) {
+      String mediaId = createMediaContentFromUpload(projectId);
+      if (isVideo(fileExtension)) {
+        processUploadedVideo(file, fileExtension, mediaId);
+      } else if (isAudio(fileExtension)) {
+        processUploadedAudio(file, fileExtension, mediaId);
+      } else {
+        log.error("File extension not supported for mediaId={}", mediaId);
+      }
     }
+  }
+
+  private boolean isAudio(String fileExtension) {
+    return projectProps.getSupportedAudioFormats().contains(fileExtension.toLowerCase());
+  }
+
+  private boolean isVideo(String fileExtension) {
+    return projectProps.getSupportedVideoFormats().contains(fileExtension.toLowerCase());
+  }
+
+  private String createMediaContentFromUpload(Long projectId) {
+    MediaContentEntity mediaContent = new MediaContentEntity();
+    mediaContent.setMediaId(generateUid());
+    mediaContent.setProjectId(projectId);
+    mediaContentRepo.save(mediaContent);
+    return mediaContent.getMediaId();
+  }
+
+  private void createMediaContentFromUrl(VideoInfoDto dto, Long projectId) {
+    MediaContentEntity mediaContent = new MediaContentEntity();
+    mediaContent.setPermalink(dto.getPermalink());
+
+    if (dto.getVideoInfo() != null && dto.getVideoInfo().details() != null) {
+      mediaContent.setMediaId(dto.getVideoInfo().details().videoId());
+      if (dto.getVideoInfo().details().title() != null) {
+        mediaContent.setScrapedTitle(dto.getVideoInfo().details().title().replace("\n", "<br>"));
+      }
+      if (dto.getVideoInfo().details().description() != null) {
+        mediaContent.setScrapedDescription(dto.getVideoInfo().details().description().replace("\n", "<br>"));
+      }
+    } else {
+      if (!ObjectUtils.isEmpty(dto.getMediaIdOverride())) {
+        mediaContent.setMediaId(dto.getMediaIdOverride());
+        mediaContent.setScrapedDescription(dto.getCaption().replace("\n", "<br>"));
+      }
+    }
+    mediaContent.setProjectId(projectId);
+    mediaContentRepo.save(mediaContent);
   }
 
   /**
@@ -114,47 +165,84 @@ public class AVServiceImpl implements AVService {
 
   @Override
   public void processYouTubeVideo(VideoInfoDto videoInfoDto) {
-      String videoId = videoInfoDto.getVideoInfo().details().videoId();
+      String mediaId = videoInfoDto.getVideoInfo().details().videoId();
       RequestVideoFileDownload request = new RequestVideoFileDownload(videoInfoDto.getFormat())
-          .saveTo(new File(asyncHelper.getParentPath(videoId)))
-          .renameTo(videoId)
+          .saveTo(new File(asyncHelper.getParentPath(mediaId)))
+          .renameTo(mediaId)
           .overwriteIfExists(true);
-      String path = asyncHelper.getVideoPath(videoId);
+      String path = asyncHelper.getVideoPath(mediaId);
       if (!Files.exists(Path.of(path))) {
         youtubeDownloader.downloadVideoFile(request);
       }
-    submitAsyncTasks(path, videoId);
+    submitAsyncTasks(path, mediaId, true);
+  }
+
+  @Override
+  public void processUploadedVideo(String file, String fileExtension, String mediaId) {
+    String path = asyncHelper.getVideoPath(mediaId);
+    var prefix = "data:video/mp4;base64,";
+    if (!Files.exists(Path.of(path))) {
+      saveFile(file, prefix, path);
+    }
+    submitAsyncTasks(path, mediaId, true);
+  }
+
+  @Override
+  public void processUploadedAudio(String file, String fileExtension, String mediaId) {
+    String path = asyncHelper.getAudioPath(mediaId);
+    var prefix = "data:audio/mp3;base64,";
+    if (!Files.exists(Path.of(path))) {
+      saveFile(file, prefix, path);
+    }
+    submitAsyncTasks(path, mediaId, false);
+  }
+
+  private void saveFile(String file, String prefix, String path) {
+    try {
+      var bStr = file.substring(prefix.length());
+      var bs = Base64.getDecoder().decode(bStr);
+      InputStream in = new ByteArrayInputStream(bs);
+      if (!new File(path).exists()) {
+        new File(path).mkdirs();
+      }
+      File output = new File(path);
+      Files.copy(in, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    } catch (Exception e) {
+      log.error("Error in AVServiceImpl.saveFile: {}", e.getLocalizedMessage());
+    }
   }
 
   @Override
   public void processInstagramVideo(VideoInfoDto videoInfoDto) {
-    String videoId = videoInfoDto.getVideoIdOverride();
-    String path = asyncHelper.getVideoPath(videoId);
+    String mediaId = videoInfoDto.getMediaIdOverride();
+    String path = asyncHelper.getVideoPath(mediaId);
     if (!Files.exists(Path.of(path))) {
       downloadService.instagramReelDownload(
-          videoInfoDto.getVideoIdOverride(),
+          videoInfoDto.getMediaIdOverride(),
           videoInfoDto.getPermalink(),
           videoInfoDto.getUrl(),
-          asyncHelper.getVideoPath(videoId));
+          asyncHelper.getVideoPath(mediaId));
     }
-    submitAsyncTasks(path, videoId);
+    submitAsyncTasks(path, mediaId, true);
   }
 
-  private void submitAsyncTasks(String path, String videoId) {
+  private void submitAsyncTasks(String path, String mediaId, boolean isVideo) {
     // Generate audio file for transcoding and perform audio to text
-    asyncHelper.processAudio(videoId);
+    asyncHelper.processAudio(mediaId);
 
-    // Generate images from frames and perform image to text
-    asyncHelper.processImages(videoId);
+    if (isVideo) {
+      // Generate images from frames and perform image to text
+      asyncHelper.processImages(mediaId);
 
-    // Generate HLS files and upload them to S3
-    asyncHelper.processHls(videoId, path);
+      // Generate HLS files and upload them to S3
+      asyncHelper.processHls(mediaId, path);
+    }
   }
 
   private VideoInfoDto getYouTubeVideoInfo(String url) {
     YoutubeDownloader downloader = new YoutubeDownloader();
-    String videoId = extractYouTubeVideoId(url);
-    Response<VideoInfo> response = downloader.getVideoInfo(new RequestVideoInfo(videoId));
+    String mediaId = extractYouTubeVideoId(url);
+    Response<VideoInfo> response = downloader.getVideoInfo(new RequestVideoInfo(mediaId));
     if (response.ok()) {
       VideoInfo video = response.data();
       // Loop through the itags and get the first highest quality version found
@@ -206,7 +294,7 @@ public class AVServiceImpl implements AVService {
   public String generateUid() {
     StringBuilder builder = new StringBuilder();
     // An ID length of N gives 62^N unique IDs
-    int contentIdLength = 7;
+    int contentIdLength = 8;
     for (int i = 0; i < contentIdLength; i++) {
       builder.append(getRandomCharacter());
     }

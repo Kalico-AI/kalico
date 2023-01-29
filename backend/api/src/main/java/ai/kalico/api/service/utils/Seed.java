@@ -2,32 +2,25 @@ package ai.kalico.api.service.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ai.kalico.api.data.postgres.entity.BlogPostEntity;
-import ai.kalico.api.data.postgres.entity.IngredientEntity;
-import ai.kalico.api.data.postgres.entity.RecipeStepEntity;
+import ai.kalico.api.data.postgres.entity.ProjectEntity;
 import ai.kalico.api.data.postgres.entity.SampledImageEntity;
-import ai.kalico.api.data.postgres.entity.SubmissionEntity;
 import ai.kalico.api.data.postgres.entity.UserEntity;
-import ai.kalico.api.data.postgres.entity.VideoContentEntity;
-import ai.kalico.api.data.postgres.repo.BlogPostRepo;
-import ai.kalico.api.data.postgres.repo.IngredientRepo;
-import ai.kalico.api.data.postgres.repo.RecipeStepRepo;
+import ai.kalico.api.data.postgres.entity.MediaContentEntity;
+import ai.kalico.api.data.postgres.repo.ProjectRepo;
 import ai.kalico.api.data.postgres.repo.SampledImageRepo;
-import ai.kalico.api.data.postgres.repo.SubmissionRepo;
 import ai.kalico.api.data.postgres.repo.UserRepo;
-import ai.kalico.api.data.postgres.repo.VideoContentRepo;
+import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.props.AWSProps;
-import ai.kalico.api.props.BlogPostProps;
+import ai.kalico.api.props.ProjectProps;
+import com.kalico.model.ContentItem;
+import com.kalico.model.ContentItemChildren;
+import com.kalico.model.KalicoContentType;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -37,40 +30,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 /**
- * @author Biz Melesse created on 12/25/22
+ * @author Biz Melesse created on 1/29/23
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class Seed {
-  private final BlogPostRepo blogPostRepo;
-  private final RecipeStepRepo recipeStepRepo;
-  private final VideoContentRepo videoContentRepo;
-  private final IngredientRepo ingredientRepo;
+  private final ProjectRepo projectRepo;
+  private final MediaContentRepo mediaContentRepo;
   private final SampledImageRepo sampledImageRepo;
-  private final SubmissionRepo submissionRepo;
   private final UserRepo userRepo;
-  private final BlogPostProps blogPostProps;
-  private final ObjectMapper mapper;
+  private final ProjectProps projectProps;
+  private final ObjectMapper objectMapper;
   private final AWSProps awsProps;
-  private final Map<Long, String> primaryThumbnails = new HashMap<>();
 
   public void seed() {
-    if (blogPostProps.getSeedDb() != null && blogPostProps.getSeedDb()) {
-      int numRecords = 13;
-      if (blogPostRepo.count() != numRecords) {
+    if (projectProps.getSeedDb() != null && projectProps.getSeedDb()) {
+      int numRecords = 5;
+      if (projectRepo.count() != numRecords) {
         try {
-          List<BlogPostEntity> blogPostEntities = createBlogPosts(numRecords);
-          createUserAccounts();
-          List<Long> blogPostIds = blogPostEntities.stream()
-              .map(BlogPostEntity::getId)
+          String userId = createUserAccounts();
+          List<ProjectEntity> projectEntities = createProject(numRecords, userId);
+          
+          List<Long> projectIds = projectEntities.stream()
+              .map(ProjectEntity::getId)
               .collect(Collectors.toList());
-          createSampledImages();
-          setPrimaryThumbnails();
-          createVideoContent();
-          createRecipeSteps(blogPostIds);
-          createIngredients(blogPostIds);
-          createSubmissions();
+          createSampledImages(projectIds);
+          createMediaContent(projectIds);
         } catch (Exception e) {
           log.error(e.getLocalizedMessage());
         }
@@ -79,91 +65,62 @@ public class Seed {
   }
 
   @SneakyThrows
-  private void createUserAccounts() {
+  private String createUserAccounts() {
     TypeReference<List<UserEntity>> typeRef = new TypeReference<>() {};
-    List<UserEntity> userEntities = mapper.readValue(loadFromFile("mr_public_user.json"), typeRef);
+    List<UserEntity> userEntities = objectMapper.readValue(loadFromFile("mr_public_user.json"), typeRef);
     userRepo.saveAll(userEntities);
+    return userEntities.get(1).getFirebaseId();
   }
+  
 
   @SneakyThrows
-  private void createSubmissions() {
-    TypeReference<List<SubmissionEntity>> typeRef = new TypeReference<>() {};
-    List<SubmissionEntity> submissionEntities = mapper.readValue(loadFromFile("mr_public_submission.json"), typeRef);
-    submissionRepo.saveAll(submissionEntities);
-  }
-
-  @SneakyThrows
-  private List<BlogPostEntity> createBlogPosts(int count) {
-    TypeReference<List<BlogPostEntity>> typeRef = new TypeReference<>() {};
-    List<BlogPostEntity> blogPostEntities = mapper.readValue(loadFromFile("mr_public_blog_post.json"), typeRef);
-    for (BlogPostEntity entity : blogPostEntities) {
-      entity.setAuthor("TheFoodieTakesFlight");
-      entity.setBody("Kalico Post");
-      entity.setCuisine("Global");
-      entity.setSlug(UUID.randomUUID().toString());
-      entity.setSummary("Kalico Post");
-      entity.setTags("food");
-      entity.setTitle("Demo Title: Easy and Delicious Korean Braised Tofu Recipe");
-      entity.setIsFeatured(false);
-      entity.setPublished(true);
-      entity.setPrepTime("30 minutes");
-      entity.setPublishedOn(LocalDateTime.now());
+  private List<ProjectEntity> createProject(int count, String userId) {
+    List<ProjectEntity> projectEntities = new ArrayList<>();
+    for (int i = 0; i < count; i++) {
+      ProjectEntity entity = new ProjectEntity();
+      List<ContentItem> content = new ArrayList<>();
+      content.add(new ContentItem()
+          .type("title")
+          .children(List.of(new ContentItemChildren()
+              .text("Hello, World!"))));
+      entity.setContent(objectMapper.writeValueAsString(content));
+      entity.setContentLink("https://www.instagram.com/p/CmGPqXuNvYG/?a=5");
+      entity.setContentType(KalicoContentType.FOOD_RECIPE.getValue());
+      entity.setParaphrase(true);
+      entity.setEmbedImages(false);
+      entity.setUserId(userId);
+      entity.setProjectName("Demo Project " + i);
     }
-    blogPostRepo.saveAll(blogPostEntities);
-    return blogPostEntities;
+    projectRepo.saveAll(projectEntities);
+    return projectEntities;
   }
 
-  private void createRecipeSteps(List<Long> blogPostIds) {
-    List<RecipeStepEntity> entities = new ArrayList<>();
-    for (Long blogPostId : blogPostIds) {;
-      int numRecipeImages = 3;
-      for (long i = 0; i < numRecipeImages; i++) {
-        RecipeStepEntity entity = new RecipeStepEntity();
-        entity.setStepNumber(i);
-        entity.setImageUrl(getPrimaryThumbnail(primaryThumbnails.get(blogPostId)));
-        entity.setBlogPostId(blogPostId);
-        entity.setDescription("Allow the tofu and the sauce to simmer for a few minutes with a lid on. After taking the lid off, allow the sauce to reduce. Add scallions or green onions on top for garnishing. Serve and enjoy.");
-        entities.add(entity);
+  @SneakyThrows
+  private void createMediaContent(List<Long> projectIds) {
+    TypeReference<List<MediaContentEntity>> typeRef = new TypeReference<>() {};
+    List<MediaContentEntity> contentEntities = objectMapper.readValue(
+        loadFromFile("mr_public_video_content.json"), typeRef);
+    for (Long projectId : projectIds) {
+      for (MediaContentEntity contentEntity : contentEntities) {
+        contentEntity.setId(null);
+        contentEntity.setProjectId(projectId);
       }
+      mediaContentRepo.saveAll(contentEntities);
     }
-    recipeStepRepo.saveAll(entities);
   }
 
   @SneakyThrows
-  private void createVideoContent() {
-    TypeReference<List<VideoContentEntity>> typeRef = new TypeReference<>() {};
-    List<VideoContentEntity> videoContentEntities = mapper.readValue(loadFromFile("mr_public_video_content.json"), typeRef);
-    videoContentRepo.saveAll(videoContentEntities);
-  }
-
-  private void createIngredients(List<Long> blogPostIds) {
-    List<IngredientEntity> ingredientEntities = new ArrayList<>();
-    for (Long blogPostId : blogPostIds) {
-      int numIngredients = 5;
-      for (long i = 0; i < numIngredients; i++) {
-        IngredientEntity entity = new IngredientEntity();
-        entity.setAmount("2");
-        entity.setDescription("Chopped scallions (white parts)");
-        entity.setBlogPostId(blogPostId);
-        entity.setSortOrder(i);
-        entity.setUnits("cups");
-        ingredientEntities.add(entity);
-      }
-    }
-    ingredientRepo.saveAll(ingredientEntities);
-  }
-
-  @SneakyThrows
-  private void createSampledImages() {
+  private void createSampledImages(List<Long> projectIds) {
     TypeReference<List<SampledImageEntity>> typeRef = new TypeReference<>() {};
-    List<SampledImageEntity> sampledImageEntities = mapper.readValue(loadFromFile("mr_public_sampled_image.json"), typeRef);
+    List<SampledImageEntity> sampledImageEntities = objectMapper.readValue(loadFromFile("mr_public_sampled_image.json"), typeRef);
     sampledImageEntities.sort(Comparator.comparing(SampledImageEntity::getImageKey));
-    for (SampledImageEntity entity : sampledImageEntities) {
-      if (!primaryThumbnails.containsKey(entity.getBlogPostId())) {
-        primaryThumbnails.put(entity.getBlogPostId(), entity.getImageKey());
-      }
+    for (Long projectId : projectIds) {
+      for (SampledImageEntity entity : sampledImageEntities) {
+        entity.setId(null);
+        entity.setProjectId(projectId);
     }
-    sampledImageRepo.saveAll(sampledImageEntities);
+      sampledImageRepo.saveAll(sampledImageEntities);
+    }
   }
 
   @SneakyThrows
@@ -172,19 +129,6 @@ public class Seed {
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource)) ) {
       String json = FileCopyUtils.copyToString(reader);
       return json;
-    }
-  }
-
-  private void setPrimaryThumbnails() {
-    List<BlogPostEntity> blogPostEntities = blogPostRepo.findAll();
-    for (BlogPostEntity entity : blogPostEntities) {
-      String key = primaryThumbnails.get(entity.getId());
-      if (key != null) {
-        entity.setPrimaryThumbnail(getPrimaryThumbnail(key));
-      }
-    }
-    if (blogPostEntities.size() > 0) {
-      blogPostRepo.saveAll(blogPostEntities);
     }
   }
 

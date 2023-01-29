@@ -1,1 +1,0 @@
-ALTER TABLE public.video_content ADD COLUMN caption varchar;
