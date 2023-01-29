@@ -81,7 +81,7 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
 
   const getProjects = (): Project[] => {
     const projects = []
-    const count = 12
+    const count = 120
     projects.push(
         {
           name: 'My demo project',

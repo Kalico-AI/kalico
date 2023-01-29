@@ -117,6 +117,10 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
               <Grid container spacing={3}>
                 <Grid item xs={12}>
                   <TextField
+                      InputLabelProps={{
+                        style: {background: '#fff'},
+                        shrink: true,
+                      }}
                       className="create-dialog-textfield"
                       fullWidth
                       name="project_name"
@@ -148,6 +152,11 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
+                      key='content_link'
+                      InputLabelProps={{
+                        style: {background: '#fff'},
+                        shrink: true,
+                      }}
                       className="create-dialog-textfield"
                       fullWidth
                       name="content_link"
