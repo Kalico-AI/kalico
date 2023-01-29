@@ -1,0 +1,57 @@
+package com.kalico.api.service.stt;
+
+import com.kalico.api.props.DockerImageProps;
+import com.kalico.api.service.utils.FWUtils;
+import com.kalico.api.service.utils.ShellService;
+import java.io.File;
+import java.io.IOException;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+/**
+ * @author Biz Melesse created on 11/27/22
+ */
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class SpeechToTextServiceImpl implements SpeechToTextService {
+  private final ShellService shell;
+  private final DockerImageProps dockerImageProps;
+
+  @SneakyThrows
+  @Override
+  public Void transcribe(SttRequest request) {
+    File file = new File(request.getPath());
+    if (file.exists()) {
+      log.info("Whisper audio transcription in progress for {}", request.getPath());
+      String workingDir = FWUtils.getCanonicalPath(new File(request.getPath()).getParent());
+      String[] command = {
+          "docker",
+          "run",
+          "-v",
+          workingDir + ":" + workingDir,
+          "-w",
+          workingDir,
+          dockerImageProps.getWhisper(),
+          "whisper",
+          FWUtils.getCanonicalPath(request.getPath()),
+          "--model",
+          "tiny",
+          "--language",
+          request.getLanguage(),
+          "--output_dir",
+          workingDir,
+          "--fp16",
+          "False"
+      };
+      log.info("Command: {}", String.join(" ", command));
+      shell.exec(command);
+      log.info("Whisper audio transcription complete for {}", request.getPath());
+    } else {
+      log.info("SpeechToTextServiceImpl.transcribe Audio does not exist at path {}", request.getPath());
+    }
+    return null;
+  }
+}
