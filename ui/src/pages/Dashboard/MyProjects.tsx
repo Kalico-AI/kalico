@@ -8,6 +8,7 @@ import {useRouter} from "next/router";
 import {PATHS} from "@/utils/constants";
 import PendingJobs from "@/pages/Dashboard/PendingJobs";
 import CreateDialog from "@/pages/Dashboard/CreateDialog";
+import {toast, ToastContainer} from "react-toastify";
 
 export interface MyProjectsProps {
 
@@ -32,6 +33,23 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
 
   const onCreate = () => {
     setCreateDialogOpen(true)
+  }
+
+  const onSubmitProject = () => {
+    setCreateDialogOpen(false)
+    // toast("Your project is now being processed", {
+    //   type: 'success',
+    //   position: toast.POSITION.TOP_CENTER
+    // });
+    const resolveAfter3Sec = new Promise(resolve => setTimeout(resolve, 3000));
+    toast.promise(
+        resolveAfter3Sec,
+        {
+          pending: 'Uploading file',
+          success: 'Your file has been uploaded and processing has begun',
+          error: 'Something went wrong while uploading your file'
+        }
+    )
   }
 
   const onOpenProject = () => {
@@ -132,7 +150,9 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
       <>
       <Grid container className="dashboard-container">
         <Grid item sm={12} md={6}>
-          <CreateDialog open={createDialogOpen} onClose={onCloseCreateDialog}/>
+          <CreateDialog open={createDialogOpen}
+                        onSubmit={onSubmitProject}
+                        onClose={onCloseCreateDialog}/>
           <Box className="create-project-btn-box" onClick={onCreate}>
             <Button
                 sx={{width: '30px'}}
@@ -157,6 +177,18 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
           getProjectComponents(getProjects())
         }
       </Grid>
+        <ToastContainer
+            style={{width: '100%', maxWidth: '600px'}}
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"/>
         <ConfirmActionDialog open={deleteDialogOpen} onCloseDialog={onCloseDeleteDialog}/>
         </>
   );

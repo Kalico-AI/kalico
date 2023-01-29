@@ -71,7 +71,8 @@ const AvatarSuccess = styled(Avatar)(
 
 export interface CreateDialogProps {
   open: boolean,
-  onClose: () => void
+  onClose: () => void,
+  onSubmit: () => void
 }
 const CreateDialog: FC<CreateDialogProps> = (props) => {
   const {
@@ -209,7 +210,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => props.onClose()} variant={'contained'} color={'error'}>Cancel</Button>
-            <Button onClick={() => props.onClose()} variant={'contained'} color={'success'}>Submit</Button>
+            <Button onClick={() => props.onSubmit()} variant={'contained'} color={'success'}>Submit</Button>
           </DialogActions>
         </Dialog>
       </div>

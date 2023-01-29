@@ -29,6 +29,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-toastify": "^9.1.1",
     "slate-history": "^0.86.0",
     "slate-react": "^0.88.2"
   },
