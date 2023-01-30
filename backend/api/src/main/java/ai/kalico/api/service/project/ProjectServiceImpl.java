@@ -78,7 +78,7 @@ public class ProjectServiceImpl implements ProjectService {
        file = null;
        ext = null;
      } else {
-        return new CreateProjectResponse().error("Please provide a link or upload a file");
+       throw new RuntimeException("Please provide a link or upload a supported file");
       }
       String userId = securityFilter.getUser().getFirebaseId();
       ProjectEntity entity = new ProjectEntity();
@@ -93,9 +93,10 @@ public class ProjectServiceImpl implements ProjectService {
       entity.setContentType(createProjectRequest.getContentType().get().getValue());
       entity.setContentLink(url);
       projectRepo.save(entity);
-      avService.processMedia(url, entity.getId(), file, ext);
+//      avService.processMedia(url, entity.getId(), file, ext);
       return new CreateProjectResponse()
           .status("OK")
+          .projectName(entity.getProjectName())
           .projectId(entity.getId());
     }
     return new CreateProjectResponse().error("Encountered an error while creating the project");

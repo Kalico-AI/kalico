@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {FC, useCallback, useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -6,30 +7,30 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {FC, useCallback, useState} from "react";
-import { useDropzone } from 'react-dropzone';
+import {useDropzone} from 'react-dropzone';
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import {
-  Switch,
-  styled,
-  Grid,
+  Avatar,
   Box,
-  Typography,
   Divider,
   FormControl,
   FormControlLabel,
+  Grid,
   InputLabel,
-  Select, Avatar,
+  Select,
+  styled,
+  Switch,
+  Typography,
 } from '@mui/material';
 import {CreateProjectRequest, KalicoContentType} from "@/api";
 import {toast, TypeOptions} from "react-toastify";
 
 
-
 const BoxUploadWrapper = styled(Box)(
     ({ theme }) => `
+    cursor: pointer;
     height: 120px;
     border-radius: 15px;
     padding: ${theme.spacing(2)};
@@ -80,9 +81,26 @@ export interface CreateDialogProps {
 const CreateDialog: FC<CreateDialogProps> = (props) => {
   const [paraphrase, setParaphrase] = useState(false)
   const [embedImages, setEmbedImages] = useState(false)
-  const [projectName, setProjectName] = useState()
+  const [projectName, setProjectName] = useState('')
   const [contentLink, setContentLink] = useState('')
   const [contentType, setContentType] = useState<KalicoContentType>()
+  const [file, setFile] = useState('')
+  const [fileName, setFileName] = useState('')
+  const [fileExtension, setFileExtension] = useState('')
+  const [showFileName, setShowFileName] = useState(false)
+
+  useEffect(() => {
+    // Reset the previous state
+    setProjectName('')
+    setContentType(KalicoContentType.Other)
+    setContentLink('')
+    setFileName('')
+    setFileExtension('')
+    setFile('')
+    setShowFileName(false)
+    setParaphrase(false)
+    setEmbedImages(false)
+  }, [])
 
   const handleParaphrase = (event: any) => {
     event.preventDefault()
@@ -126,22 +144,14 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
         showToast(`File size of ${Math.round(f.size/conversionFactor)} MB is too big. Max allowed is 100MB`, 'error')
       } else {
         convertBase64(f).then(binaryData => {
-          props.onSubmit({
-            project_name: projectName,
-            paraphrase: paraphrase,
-            embed_images: embedImages,
-            content_link: contentLink,
-            content_type: contentType,
-            file: binaryData + '',
-            file_extension: f.name.split('.').pop()
-          })
+          setFile(binaryData + '')
+          setFileExtension(f.name.split('.').pop())
+          setFileName(f.name)
+          setShowFileName(true)
         }).catch(e => {
           showToast(e.message, 'error')
         })
-
-
       }
-
     }
   }, [])
 
@@ -182,7 +192,9 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
       paraphrase: paraphrase,
       embed_images: embedImages,
       content_link: contentLink,
-      content_type: contentType
+      content_type: contentType,
+      file: file,
+      file_extension: fileExtension
     })
   }
   return (
@@ -314,7 +326,9 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                             mt: 1
                           }}
                       >
-                        {('Drag & drop files here')}
+                        {
+                          showFileName ? `${fileName}` : `Drag & drop files here`
+                        }
                       </Typography>
                       <Typography
                           sx={{
@@ -323,7 +337,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                           }}
                           variant='body1'
                       >
-                        {('Supported formats: .aac, .mp3, .wav, .mp4. .webm. Max 100MB')}
+                        {'Supported formats: .aac, .mp3, .wav, .mp4. .webm. Max 100MB'}
                       </Typography>
                     </>
                 )}

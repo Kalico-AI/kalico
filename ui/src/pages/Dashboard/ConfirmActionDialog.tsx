@@ -8,8 +8,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import {FC, useEffect} from "react";
 
 export interface DialogProps {
+  projectId: number,
   open: boolean,
-  onCloseDialog: () => void
+  onCloseDialog: (doDelete: boolean) => void
 }
 const ConfirmActionDialog: FC<DialogProps> = (props) => {
   const [open, setOpen] = React.useState(false);
@@ -19,8 +20,13 @@ const ConfirmActionDialog: FC<DialogProps> = (props) => {
 
   const handleClose = () => {
     setOpen(false);
-    props.onCloseDialog()
+    props.onCloseDialog(false)
   };
+
+  const handleConfirmDelete = () => {
+    setOpen(false)
+    props.onCloseDialog(true)
+  }
 
   return (
       <div>
@@ -40,7 +46,7 @@ const ConfirmActionDialog: FC<DialogProps> = (props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color={"info"} variant="contained">Cancel</Button>
-            <Button onClick={handleClose} autoFocus color={"error"} variant="contained">
+            <Button onClick={handleConfirmDelete} autoFocus color={"error"} variant="contained">
               Delete
             </Button>
           </DialogActions>

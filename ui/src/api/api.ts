@@ -125,6 +125,12 @@ export interface CreateProjectResponse {
      * @type {string}
      * @memberof CreateProjectResponse
      */
+    project_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateProjectResponse
+     */
     status?: string;
     /**
      * 

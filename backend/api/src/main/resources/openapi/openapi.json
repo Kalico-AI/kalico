@@ -277,6 +277,9 @@
             "type": "integer",
             "format": "int64"
           },
+          "project_name": {
+            "type": "string"
+          },
           "status": {
             "type": "string"
           },

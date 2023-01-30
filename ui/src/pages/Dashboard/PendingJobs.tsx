@@ -7,6 +7,8 @@ import {
   styled
 } from '@mui/material';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
+import {FC} from "react";
+import {Project} from "@/api";
 
 const AvatarWrapperError = styled(Avatar)(
   ({ theme }) => `
@@ -19,7 +21,10 @@ const AvatarWrapperError = styled(Avatar)(
 `
 );
 
-function PendingJobs() {
+export interface PendingJobsProps {
+  project?: Project
+}
+const PendingJobs: FC<PendingJobsProps> = (props) => {
 
   return (
     <Card
@@ -35,25 +40,37 @@ function PendingJobs() {
       <AvatarWrapperError>
         <CloudSyncIcon />
       </AvatarWrapperError>
-      <Typography
-        variant="body1"
-        sx={{
-          pb: 1,
-          display: 'inline-flex'
-        }}
-      >
-        Processing
-      </Typography>
-      {' '}
-      <Typography
-          variant="body1"
-          sx={{
-            color: 'orange',
-            display: 'inline-flex'
-          }}
-      >
-        <strong>Hello</strong>
-      </Typography>
+      {props.project ? <>
+        <Typography
+            variant="body1"
+            sx={{
+              pb: 1,
+              display: 'inline-flex'
+            }}
+        >
+          Processing
+        </Typography>
+        {' '}
+        <Typography
+            variant="body1"
+            sx={{
+              color: 'orange',
+              display: 'inline-flex'
+            }}
+        >
+          <strong>{props.project.project_name}</strong>
+        </Typography>
+      </> :
+          <Typography
+              variant="body1"
+              sx={{
+                pb: 1,
+                display: 'inline-flex'
+              }}
+          >
+            No pending jobs
+          </Typography>
+      }
       <Typography
         color="text.primary"
         variant="h4"

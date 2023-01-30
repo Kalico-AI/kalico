@@ -27,8 +27,15 @@ const folderColors = {
 
 const MyProjects: FC<MyProjectsProps> = observer((props) => {
   const router = useRouter()
+  const [projects, setProjects] = useState<Project[]>([])
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false)
   const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false)
+  const [projectInProgress, setProjectInProgress] = useState<Project | undefined>(undefined)
+  const [pendingDeleteProjectId, setPendingDeleteProjectId] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    setProjects(props.projects)
+  }, [props.projects])
 
   const onCreate = () => {
     setCreateDialogOpen(true)
@@ -44,10 +51,24 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
             projectApi.createProject(request),
             {
               pending: 'Uploading file...',
-              success: 'Your file has been uploaded and processing has begun',
-              error: 'Something went wrong while uploading your file'
+              success: 'Your project is now being processed',
             }
-        )
+        ).then(result => {
+          if (result && result.data) {
+            const newProject: Project = {
+              project_name: result.data.project_name,
+              id: result.data.project_id
+            }
+            setProjectInProgress(newProject)
+          }
+        })
+        .catch(e => {
+          const msg = e?.response?.data?.message ? e?.response?.data?.message : 'Something went wrong while uploading your file'
+          toast(msg, {
+            type: 'error',
+            position: toast.POSITION.TOP_CENTER
+          });
+        })
         setCreateDialogOpen(false)
       } else {
         projectApi.createProject(request)
@@ -63,22 +84,14 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
             position: toast.POSITION.TOP_CENTER
           });
           setCreateDialogOpen(false)
-        }).catch(e => console.log(e))
+        }).catch(e => {
+          toast(e.message, {
+            type: 'error',
+            position: toast.POSITION.TOP_CENTER
+          });
+        })
       }
     }).catch(e => console.log(e))
-
-
-
-
-    // const resolveAfter3Sec = new Promise(resolve => setTimeout(resolve, 3000));
-    // toast.promise(
-    //     resolveAfter3Sec,
-    //     {
-    //       pending: 'Uploading file',
-    //       success: 'Your file has been uploaded and processing has begun',
-    //       error: 'Something went wrong while uploading your file'
-    //     }
-    // )
   }
 
   const onOpenProject = (projectId: number) => {
@@ -87,12 +100,30 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
     }, undefined, {shallow: true})
     .catch(e => console.log(e))
   }
-  const onDeleteProject = () => {
+  const onDeleteProject = (projectId: number) => {
     setDeleteDialogOpen(true)
+    setPendingDeleteProjectId(projectId)
   }
 
-  const onCloseDeleteDialog = () => {
+  const onCloseDeleteDialog = (doDelete: boolean) => {
     setDeleteDialogOpen(false)
+    if (doDelete && pendingDeleteProjectId) {
+      console.log("DEBUG delete: ", pendingDeleteProjectId)
+      props?.user?.getIdToken(false)
+      .then(tokenResult => {
+        const projectApi = new ProjectApi(headerConfig(tokenResult))
+          projectApi.deleteProject(pendingDeleteProjectId)
+          .then(response => {
+            if (response.data.status) {
+              setPendingDeleteProjectId(undefined)
+              const filteredProjects = projects.filter(it => it.id !== pendingDeleteProjectId)
+              setProjects([...filteredProjects])
+            }
+          }).catch(e => console.log(e))
+      }).catch(e => console.log(e))
+    } else {
+      setPendingDeleteProjectId(undefined)
+    }
   }
 
   const onCloseCreateDialog = () => {
@@ -108,7 +139,7 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
     return title;
   }
 
-  const getProjectComponents = (projects: Project[]) => {
+  const getProjectComponents = () => {
     let prevClassName = ''
     return projects.map((item, index) => {
       const folderClass = getFolderClassName(prevClassName)
@@ -123,7 +154,7 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
                   className="folder-delete-btn"
                   size='large'
                   variant='text'
-                  onClick={onDeleteProject}
+                  onClick={() => onDeleteProject(item.id)}
               />
               <h6 onClick={() => onOpenProject(item.id)}
                   className="folder-title">{abridgedTitle(item.project_name)}</h6>
@@ -151,10 +182,6 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
     return name + nextColor
   }
 
-  useEffect(() => {
-
-  }, [])
-
   return (
       <>
       <Grid container className="dashboard-container">
@@ -176,14 +203,14 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
         </Grid>
         <Grid item sm={12} md={6} justifyContent='flex-end' sx={{display: 'flex'}}>
           <Box className="dashboard-pending-jobs">
-            <PendingJobs/>
+            <PendingJobs project={projectInProgress}/>
           </Box>
         </Grid>
         <Grid item sm={12} className="files-section">
           <h3>Your Files</h3>
         </Grid>
         {
-          getProjectComponents(props.projects)
+          getProjectComponents()
         }
       </Grid>
         <ToastContainer
@@ -198,7 +225,10 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
             draggable
             pauseOnHover
             theme="colored"/>
-        <ConfirmActionDialog open={deleteDialogOpen} onCloseDialog={onCloseDeleteDialog}/>
+        <ConfirmActionDialog
+            open={deleteDialogOpen}
+            onCloseDialog={onCloseDeleteDialog}
+        />
         </>
   );
 })
