@@ -30,4 +30,12 @@ public interface ProjectRepo extends JpaRepository<ProjectEntity, Long> {
       "WHERE user_id = ?1 AND id = ?2 AND processed = true ",
       nativeQuery = true)
   Optional<ProjectEntity> findProjectByUserIdAndProjectId(String userId, Long projectId);
+
+  @Query(value = "SELECT * " +
+      "FROM project " +
+      "WHERE user_id = ?1 AND processed = false "
+      + "ORDER BY created_at DESC "
+      + "LIMIT 1 ",
+      nativeQuery = true)
+  Optional<ProjectEntity> findPendingJob(String userId);
 }

@@ -348,6 +348,12 @@ export interface ProjectDetail {
 export interface ProjectJobStatus {
     /**
      * 
+     * @type {string}
+     * @memberof ProjectJobStatus
+     */
+    project_name?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ProjectJobStatus
      */

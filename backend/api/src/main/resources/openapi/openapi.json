@@ -306,6 +306,9 @@
       "ProjectJobStatus": {
         "type": "object",
         "properties": {
+          "project_name": {
+            "type": "string"
+          },
           "project_id": {
             "type": "integer",
             "format": "int64"
