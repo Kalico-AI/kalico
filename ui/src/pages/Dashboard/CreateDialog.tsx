@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {FC} from "react";
+import {FC, useState} from "react";
 import { useDropzone } from 'react-dropzone';
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
@@ -23,6 +23,7 @@ import {
   InputLabel,
   Select, Avatar,
 } from '@mui/material';
+import {CreateProjectRequest, KalicoContentType} from "@/api";
 
 
 
@@ -72,9 +73,41 @@ const AvatarSuccess = styled(Avatar)(
 export interface CreateDialogProps {
   open: boolean,
   onClose: () => void,
-  onSubmit: () => void
+  onSubmit: (data: CreateProjectRequest) => void
 }
+
 const CreateDialog: FC<CreateDialogProps> = (props) => {
+  const [paraphrase, setParaphrase] = useState(false)
+  const [embedImages, setEmbedImages] = useState(false)
+  const [projectName, setProjectName] = useState('Untitled')
+  const [contentLink, setContentLink] = useState('')
+  const [contentType, setContentType] = useState<KalicoContentType>()
+
+  const handleParaphrase = (event: any) => {
+    event.preventDefault()
+    setParaphrase(event.target.checked)
+  }
+
+  const handleEmbedImages = (event: any) => {
+    event.preventDefault()
+    setEmbedImages(event.target.checked)
+  }
+
+  const handleProjectName = (event: any) => {
+    event.preventDefault()
+    setProjectName(event.target.value)
+  }
+
+  const handleContentLink = (event: any) => {
+    event.preventDefault()
+    setContentLink(event.target.value)
+  }
+
+  const handleContentType = (event: any) => {
+    event.preventDefault()
+    setContentType(event.target.value)
+  }
+
   const {
     isDragActive,
     isDragAccept,
@@ -86,6 +119,16 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
       'image/png': ['.png'],
     }
   });
+
+  const onSubmit = () => {
+    props.onSubmit({
+      project_name: projectName,
+      paraphrase: paraphrase,
+      embed_images: embedImages,
+      content_link: contentLink,
+      content_type: contentType
+    })
+  }
   return (
       <div className="create-project-dialog">
         <Dialog open={props.open} onClose={() => props.onClose()}>
@@ -101,14 +144,14 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
           <DialogContent>
             <Box p={0}>
               <FormControlLabel
-                  control={<Switch color="warning" defaultChecked={false} />}
+                  control={<Switch color="warning" defaultChecked={false} onChange={handleParaphrase}/>}
                   label={'Paraphrase'}
               />
             </Box>
             <Box p={0}>
               <FormControlLabel
                   disabled
-                  control={<Switch color="warning" defaultChecked={false} />}
+                  control={<Switch color="warning" defaultChecked={false} onChange={handleEmbedImages}/>}
                   label={'Intelligently embed images (coming soon)'}
               />
             </Box>
@@ -118,9 +161,11 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                 <Grid item xs={12}>
                   <TextField
                       InputLabelProps={{
-                        style: {background: '#fff'},
+                        style: {background: '#fff', padding: 0},
                         shrink: true,
                       }}
+                      onChange={handleProjectName}
+                      value={projectName}
                       className="create-dialog-textfield"
                       fullWidth
                       name="project_name"
@@ -133,6 +178,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                   <FormControl fullWidth variant="outlined">
                     <InputLabel htmlFor="content_type">{('Content Type')}</InputLabel>
                     <Select
+                        onChange={handleContentType}
                         required
                         native
                         label={('Content Type')}
@@ -141,12 +187,12 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                         }}
                     >
                       <option aria-label="None" value="" />
-                      <option value={0}>{('Food Recipe')}</option>
-                      <option value={1}>{('Interview')}</option>
-                      <option value={2}>{('Podcast')}</option>
-                      <option value={3}>{('Lecture')}</option>
-                      <option value={4}>{('DIY')}</option>
-                      <option value={5}>{('Other')}</option>
+                      <option value={KalicoContentType.Diy}>{('DIY')}</option>
+                      <option value={KalicoContentType.FoodRecipe}>{('Food Recipe')}</option>
+                      <option value={KalicoContentType.Interview}>{('Interview')}</option>
+                      <option value={KalicoContentType.Lecture}>{('Lecture')}</option>
+                      <option value={KalicoContentType.Podcast}>{('Podcast')}</option>
+                      <option value={KalicoContentType.Other}>{('Other')}</option>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -157,6 +203,8 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                         style: {background: '#fff'},
                         shrink: true,
                       }}
+                      onChange={handleContentLink}
+                      value={contentLink}
                       className="create-dialog-textfield"
                       fullWidth
                       name="content_link"
@@ -219,7 +267,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => props.onClose()} variant={'contained'} color={'error'}>Cancel</Button>
-            <Button onClick={() => props.onSubmit()} variant={'contained'} color={'success'}>Submit</Button>
+            <Button onClick={onSubmit} variant={'contained'} color={'success'}>Create</Button>
           </DialogActions>
         </Dialog>
       </div>

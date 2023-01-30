@@ -8,11 +8,14 @@ import {useRouter} from "next/router";
 import {PATHS} from "@/utils/constants";
 import PendingJobs from "@/pages/Dashboard/PendingJobs";
 import CreateDialog from "@/pages/Dashboard/CreateDialog";
-import {toast, ToastContainer} from "react-toastify";
-import {Project} from "@/api";
+import {toast, ToastContainer, TypeOptions} from "react-toastify";
+import {CreateProjectRequest, Project, ProjectApi} from "@/api";
+import {headerConfig} from "@/api/headerConfig";
+import {AuthUserContext} from "next-firebase-auth";
 
 export interface MyProjectsProps {
-  projects?: Project[]
+  projects?: Project[],
+  user: AuthUserContext
 }
 
 const folderColors = {
@@ -31,21 +34,38 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
     setCreateDialogOpen(true)
   }
 
-  const onSubmitProject = () => {
-    setCreateDialogOpen(false)
-    // toast("Your project is now being processed", {
-    //   type: 'success',
-    //   position: toast.POSITION.TOP_CENTER
-    // });
-    const resolveAfter3Sec = new Promise(resolve => setTimeout(resolve, 3000));
-    toast.promise(
-        resolveAfter3Sec,
-        {
-          pending: 'Uploading file',
-          success: 'Your file has been uploaded and processing has begun',
-          error: 'Something went wrong while uploading your file'
+  const onSubmitProject = (request: CreateProjectRequest) => {
+    props.user.getIdToken(false)
+    .then(tokenResult => {
+      const projectApi = new ProjectApi(headerConfig(tokenResult))
+      projectApi.createProject(request)
+      .then(response => {
+        let msg = response.data.error
+        let type: TypeOptions = 'error'
+        if (response.data && response.data.project_id) {
+          msg = 'Your project is now being processed'
+          type = 'success'
         }
-    )
+        toast(msg, {
+          type: type,
+          position: toast.POSITION.TOP_CENTER
+        });
+        setCreateDialogOpen(false)
+      }).catch(e => console.log(e))
+    }).catch(e => console.log(e))
+
+
+
+    //
+    // const resolveAfter3Sec = new Promise(resolve => setTimeout(resolve, 3000));
+    // toast.promise(
+    //     resolveAfter3Sec,
+    //     {
+    //       pending: 'Uploading file',
+    //       success: 'Your file has been uploaded and processing has begun',
+    //       error: 'Something went wrong while uploading your file'
+    //     }
+    // )
   }
 
   const onOpenProject = (projectId: number) => {

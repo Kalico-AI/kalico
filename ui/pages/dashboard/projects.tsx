@@ -55,7 +55,7 @@ const ProjectsIndex: FC<ProjectIndexProps> =  (props) => {
           </Head>
           <main>
             <section className="container">
-              <MyProjects projects={projects}/>
+              <MyProjects projects={projects} user={user}/>
             </section>
           </main>
         </>
