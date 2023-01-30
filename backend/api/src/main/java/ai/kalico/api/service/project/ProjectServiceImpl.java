@@ -56,8 +56,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public CreateProjectResponse createProject(CreateProjectRequest createProjectRequest) {
     if (createProjectRequest != null) {
-      // If a url is provided, then use that instead of any uploaded content. Otherwise, use
-      // the uploaded content
+      // If a file is uploaded, use that. Otherwise, use the url
       String url = null;
       String file = null;
       String ext = null;
@@ -70,15 +69,15 @@ public class ProjectServiceImpl implements ProjectService {
       if (createProjectRequest.getFileExtension().isPresent()) {
         ext = createProjectRequest.getFileExtension().get();
       }
-      if (!ObjectUtils.isEmpty(url)) {
-        if (!isSupportedUrl(url)) {
-          return new CreateProjectResponse().error("The link provided is not yet supported");
-        }
-        file = null;
-        ext = null;
-      } else if (!ObjectUtils.isEmpty(file) &&  !ObjectUtils.isEmpty(ext)) {
+     if (!ObjectUtils.isEmpty(file) &&  !ObjectUtils.isEmpty(ext)) {
         url = null;
-      } else {
+      }  else if (!ObjectUtils.isEmpty(url)) {
+       if (!isSupportedUrl(url)) {
+         return new CreateProjectResponse().error("The link provided is not yet supported");
+       }
+       file = null;
+       ext = null;
+     } else {
         return new CreateProjectResponse().error("Please provide a link or upload a file");
       }
       String userId = securityFilter.getUser().getFirebaseId();

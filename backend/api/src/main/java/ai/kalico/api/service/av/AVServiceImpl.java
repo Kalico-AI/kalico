@@ -181,9 +181,8 @@ public class AVServiceImpl implements AVService {
   @Override
   public void processUploadedVideo(String file, String fileExtension, String mediaId) {
     String path = asyncHelper.getVideoPath(mediaId);
-    var prefix = "data:video/mp4;base64,";
     if (!Files.exists(Path.of(path))) {
-      saveFile(file, prefix, path);
+      saveFile(file, path);
     }
     submitAsyncTasks(path, mediaId, true);
   }
@@ -191,17 +190,21 @@ public class AVServiceImpl implements AVService {
   @Override
   public void processUploadedAudio(String file, String fileExtension, String mediaId) {
     String path = asyncHelper.getAudioPath(mediaId);
-    var prefix = "data:audio/mp3;base64,";
     if (!Files.exists(Path.of(path))) {
-      saveFile(file, prefix, path);
+      saveFile(file, path);
     }
     submitAsyncTasks(path, mediaId, false);
   }
 
-  private void saveFile(String file, String prefix, String path) {
+  private void saveFile(String file, String path) {
+    String rawFile = file;
+    String delimiter = "base64,";
+    String[] tokens = file.split(delimiter);
+    if (tokens.length > 1 && !ObjectUtils.isEmpty(tokens[1])) {
+      rawFile = tokens[1];
+    }
     try {
-      var bStr = file.substring(prefix.length());
-      var bs = Base64.getDecoder().decode(bStr);
+      var bs = Base64.getDecoder().decode(rawFile);
       InputStream in = new ByteArrayInputStream(bs);
       if (!new File(path).exists()) {
         new File(path).mkdirs();
