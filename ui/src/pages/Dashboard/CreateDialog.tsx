@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {FC, useState} from "react";
+import {FC, useCallback, useState} from "react";
 import { useDropzone } from 'react-dropzone';
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
@@ -24,12 +24,13 @@ import {
   Select, Avatar,
 } from '@mui/material';
 import {CreateProjectRequest, KalicoContentType} from "@/api";
+import {toast, TypeOptions} from "react-toastify";
 
 
 
 const BoxUploadWrapper = styled(Box)(
     ({ theme }) => `
-    height: 85px;
+    height: 120px;
     border-radius: 15px;
     padding: ${theme.spacing(2)};
     background: ${theme.palette.grey["50"]};
@@ -79,7 +80,7 @@ export interface CreateDialogProps {
 const CreateDialog: FC<CreateDialogProps> = (props) => {
   const [paraphrase, setParaphrase] = useState(false)
   const [embedImages, setEmbedImages] = useState(false)
-  const [projectName, setProjectName] = useState('Untitled')
+  const [projectName, setProjectName] = useState()
   const [contentLink, setContentLink] = useState('')
   const [contentType, setContentType] = useState<KalicoContentType>()
 
@@ -108,6 +109,55 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
     setContentType(event.target.value)
   }
 
+  const showToast = (msg: string, type: TypeOptions) => {
+    toast(msg, {
+      type: type,
+      position: toast.POSITION.TOP_CENTER
+    });
+  }
+
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const conversionFactor = 1024*1024
+    const maxFileSize = 100*conversionFactor // 100MB
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      const f = acceptedFiles[0]
+      if (f.size > maxFileSize) {
+        showToast(`File size of ${Math.round(f.size/conversionFactor)} MB is too big. Max allowed is 100MB`, 'error')
+      } else {
+        convertBase64(f).then(binaryData => {
+          props.onSubmit({
+            project_name: projectName,
+            paraphrase: paraphrase,
+            embed_images: embedImages,
+            content_link: contentLink,
+            content_type: contentType,
+            file: binaryData + '',
+            file_extension: f.name.split('.').pop()
+          })
+        }).catch(e => {
+          showToast(e.message, 'error')
+        })
+
+
+      }
+
+    }
+  }, [])
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file)
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      }
+      fileReader.onerror = (error) => {
+        reject(error);
+      }
+    })
+  }
+
   const {
     isDragActive,
     isDragAccept,
@@ -116,8 +166,14 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
     getInputProps
   } = useDropzone({
     accept: {
-      'image/png': ['.png'],
-    }
+      'audio/aac': ['.aac'],
+      'audio/mpeg': ['.mp3'],
+      'audio/wav': ['.wav'],
+      'video/mp4': ['.mp4'],
+      'video/webm': ['.webm']
+    },
+    multiple: false,
+    onDrop
   });
 
   const onSubmit = () => {
@@ -217,13 +273,13 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
               </Grid>
             </Box>
             <Divider>OR</Divider>
-            <Box p={2}>
+            <Box p={1}>
               <BoxUploadWrapper {...getRootProps()}>
                 <input {...getInputProps()} />
                 {isDragAccept && (
                     <>
                       <AvatarSuccess variant="rounded">
-                        <CheckTwoToneIcon />
+                        <CheckTwoToneIcon/>
                       </AvatarSuccess>
                       <Typography
                           sx={{
@@ -259,6 +315,15 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                           }}
                       >
                         {('Drag & drop files here')}
+                      </Typography>
+                      <Typography
+                          sx={{
+                            fontSize: '10px',
+                            mb: 2
+                          }}
+                          variant='body1'
+                      >
+                        {('Supported formats: .aac, .mp3, .wav, .mp4. .webm. Max 100MB')}
                       </Typography>
                     </>
                 )}
