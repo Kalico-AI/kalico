@@ -47,49 +47,4 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   )
 }
 
-
-// const initialValue: Descendant[] = [
-//   {
-//     type: 'title',
-//     children: [{ text: 'Untitled' }],
-//   },
-//   {
-//     type: 'paragraph',
-//     children: [
-//       {
-//         text:
-//             'Enter your body text here',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'heading',
-//     children: [
-//       {
-//         text:
-//             'This is a subheading!',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'image',
-//     url: 'https://source.unsplash.com/zOwZKwZOZq8',
-//     children: [{ text: '' }],
-//   },
-//   {
-//     type: 'paragraph',
-//     children: [
-//       {
-//         text:
-//             'Enter your body text here',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'image',
-//     url: 'https://source.unsplash.com/zOwZKwZOZq8',
-//     children: [{ text: '' }],
-//   },
-// ]
-
 export default ForcedLayoutEditor

@@ -1,6 +1,7 @@
 import moment from "moment";
 import {Box, CircularProgress} from "@mui/material";
 import React from "react";
+import {StoreKey} from "@/store/Store";
 
 export const getFormattedDate = (date: number) => {
   return moment.unix(date).format("llll")
@@ -22,4 +23,14 @@ export const CenterAlignedProgress = () => {
         <CircularProgress />
       </Box>
   )
+}
+
+export const userSessionFound = () => {
+  const storedJson = localStorage.getItem(StoreKey.SESSION_DATA);
+  if (storedJson) {
+    if (JSON.parse(storedJson).user?.firebase_id) {
+      return true;
+    }
+  }
+  return false;
 }

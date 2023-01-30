@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {observer} from "mobx-react";
 import {useStore} from "@/hooks/useStore";
 import {Box, Button} from "@mui/material";
@@ -9,10 +9,16 @@ import {PATHS} from "@/utils/constants";
 import initAuth from "@/auth/nextAuth";
 import {useAuthUser, withAuthUser} from "next-firebase-auth";
 import Link from "next/link";
+import {CenterAlignedProgress} from "@/utils/utils";
+import dynamic from "next/dynamic";
 
 initAuth()
 
-const HeaderNav: FC<any> = observer((_props) => {
+export interface HeaderNavProps {
+}
+
+const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
+  const [hide, setHide] = useState(true)
   const store = useStore()
   const router = useRouter()
   const user = useAuthUser()
@@ -27,10 +33,26 @@ const HeaderNav: FC<any> = observer((_props) => {
     }).catch(e => console.log(e))
   }
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHide(false)
+    }, 2000)
+    if (user.id) {
+      setHide(false)
+    }
+    return () => {
+      clearInterval(interval)
+    }
+  }, [user.id])
+
   let navbarClasses = "container-fluid"
   if (user && user.id) {
     navbarClasses = "container-fluid dashboard-navbar"
   }
+  if (hide) {
+    return <CenterAlignedProgress/>
+  }
+
   return (
       <header className="header-area">
         <nav className="navbar navbar-expand-lg menu_three sticky-nav">
@@ -146,4 +168,6 @@ const HeaderNav: FC<any> = observer((_props) => {
   );
 })
 
-export default withAuthUser()(HeaderNav);
+export default dynamic(() => Promise.resolve(withAuthUser()(HeaderNav)), {
+  ssr: false
+})

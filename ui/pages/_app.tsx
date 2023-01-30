@@ -10,23 +10,39 @@ import Script from 'next/script'
 import Footer from "@/components/Footer";
 import HeaderNav from "@/components/Header";
 import initAuth from "@/auth/nextAuth";
-import {withAuthUser} from "next-firebase-auth";
+import {withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import 'react-toastify/dist/ReactToastify.css';
 import {CenterAlignedProgress} from "@/utils/utils";
+import {SITE_IMAGE_URL} from "@/utils/constants";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-
 // Init Next Firebase Auth
 initAuth()
+
+export const getServerSideProps = withAuthUserTokenSSR({
+
+})(async ({ AuthUser }) => {
+  // Optionally, get other props.
+  // const token = await AuthUser.getIdToken()
+  return {
+    props: {
+      title: "Kalico",
+      description: "",
+      siteImage: SITE_IMAGE_URL,
+      userId: AuthUser.id
+    }
+  }
+})
 
 interface DefaultAppProps extends AppProps {
   Component: NextPageWithLayout;
   title: string;
   description: string;
   siteImage: string;
+  userId?: string
 }
 
 const MyApp: FC<DefaultAppProps> = (props) => {
@@ -84,7 +100,8 @@ const MyApp: FC<DefaultAppProps> = (props) => {
     </>
   );
 }
-
 export default withAuthUser({
   LoaderComponent: () => <CenterAlignedProgress/>,
 })(MyApp);
+
+
