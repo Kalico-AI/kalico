@@ -20,14 +20,14 @@ import java.util.List;
 public interface ProjectRepo extends JpaRepository<ProjectEntity, Long> {
   @Query(value = "SELECT * " +
       "FROM project " +
-      "WHERE user_id = ?1 "
+      "WHERE user_id = ?1 AND processed = true "
       + "ORDER BY created_at DESC ",
       nativeQuery = true)
   List<ProjectEntity> findAllProjectsByUserId(String userId);
 
   @Query(value = "SELECT * " +
       "FROM project " +
-      "WHERE user_id = ?1 AND id = ?2",
+      "WHERE user_id = ?1 AND id = ?2 AND processed = true ",
       nativeQuery = true)
   Optional<ProjectEntity> findProjectByUserIdAndProjectId(String userId, Long projectId);
 }

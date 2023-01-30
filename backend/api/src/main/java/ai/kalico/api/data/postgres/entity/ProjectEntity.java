@@ -1,7 +1,5 @@
 package ai.kalico.api.data.postgres.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,6 +40,10 @@ public class ProjectEntity {
     @Basic
     @Column(name = "embed_images")
     private Boolean embedImages = false;
+
+    @Basic
+    @Column(name = "processed")
+    private Boolean processed = false;
 
     @Basic
     @Column(name = "content_type")

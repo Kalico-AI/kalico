@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS public.project (
     paraphrase boolean not null default false,
     embed_images boolean not null default false,
     content_type varchar(255),
+    processed boolean not null default false,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

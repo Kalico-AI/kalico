@@ -104,6 +104,7 @@ public class SeedData {
       entity.setEmbedImages(false);
       entity.setUserId(userId);
       entity.setProjectName("Demo Project " + i);
+      entity.setProcessed(true);
       projectEntities.add(entity);
     }
     projectRepo.saveAll(projectEntities);
