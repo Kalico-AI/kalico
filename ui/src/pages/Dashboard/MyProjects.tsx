@@ -9,14 +9,10 @@ import {PATHS} from "@/utils/constants";
 import PendingJobs from "@/pages/Dashboard/PendingJobs";
 import CreateDialog from "@/pages/Dashboard/CreateDialog";
 import {toast, ToastContainer} from "react-toastify";
+import {Project} from "@/api";
 
 export interface MyProjectsProps {
-
-}
-
-interface Project {
-  name: string,
-  id: number
+  projects?: Project[]
 }
 
 const folderColors = {
@@ -26,7 +22,7 @@ const folderColors = {
   YELLOW: 'yellow'
 }
 
-const MyProjects: FC<MyProjectsProps> = observer((_props) => {
+const MyProjects: FC<MyProjectsProps> = observer((props) => {
   const router = useRouter()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false)
   const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false)
@@ -52,9 +48,9 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
     )
   }
 
-  const onOpenProject = () => {
+  const onOpenProject = (projectId: number) => {
     router.push({
-      pathname: PATHS.PROJECT + '/' + 17
+      pathname: PATHS.PROJECT + '/' + projectId
     }, undefined, {shallow: true})
     .catch(e => console.log(e))
   }
@@ -79,26 +75,6 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
     return title;
   }
 
-  const getProjects = (): Project[] => {
-    const projects = []
-    const count = 120
-    projects.push(
-        {
-          name: 'My demo project',
-          id: 0
-        }
-    )
-    for (let i = 0; i < count; i++) {
-      projects.push(
-          {
-            name: i + 1 + ": What is the meaning of life without one's loved",
-            id: i + 1
-          }
-      )
-    }
-    return projects
-  }
-
   const getProjectComponents = (projects: Project[]) => {
     let prevClassName = ''
     return projects.map((item, index) => {
@@ -116,8 +92,8 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
                   variant='text'
                   onClick={onDeleteProject}
               />
-              <h6 onClick={onOpenProject}
-                  className="folder-title">{abridgedTitle(item.name)}</h6>
+              <h6 onClick={() => onOpenProject(item.id)}
+                  className="folder-title">{abridgedTitle(item.project_name)}</h6>
             </div>
           </Grid>
       )
@@ -174,7 +150,7 @@ const MyProjects: FC<MyProjectsProps> = observer((_props) => {
           <h3>Your Files</h3>
         </Grid>
         {
-          getProjectComponents(getProjects())
+          getProjectComponents(props.projects)
         }
       </Grid>
         <ToastContainer

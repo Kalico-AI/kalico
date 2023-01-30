@@ -1,15 +1,20 @@
 import React from 'react';
 import Head from "next/head";
 import Landing from "@/pages/Landing";
+import {CenterAlignedProgress} from "@/utils/utils";
+import {SITE_IMAGE_URL} from "@/utils/constants";
+import initAuth from "@/auth/nextAuth";
+import {withAuthUser} from "next-firebase-auth";
 export async function getServerSideProps() {
   return {
     props: {
       title: "Kalico",
       description: "",
-      siteImage: "https://"
+      siteImage: SITE_IMAGE_URL
     }
   }
 }
+initAuth()
 
 function Index(props) {
   return (
@@ -24,5 +29,6 @@ function Index(props) {
     </>
   );
 }
-
-export default Index;
+export default withAuthUser({
+  LoaderComponent: () => <CenterAlignedProgress/>,
+})(Index);

@@ -1,6 +1,5 @@
 package ai.kalico.api.service.utils;
 
-import ai.kalico.api.service.av.AVServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ai.kalico.api.data.postgres.entity.ProjectEntity;

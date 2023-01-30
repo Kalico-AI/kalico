@@ -1,19 +1,48 @@
-import React from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import Head from "next/head";
-import {AuthAction, withAuthUser} from "next-firebase-auth";
+import {AuthAction, useAuthUser, withAuthUser} from "next-firebase-auth";
 import MyProjects from "@/pages/Dashboard/MyProjects";
+import {Project, ProjectApi} from "@/api";
+import {headerConfig} from "@/api/headerConfig";
+import {SITE_IMAGE_URL} from "@/utils/constants";
 
 export async function getServerSideProps() {
-    return {
-      props: {
-        title: "Kalico",
-        description: "",
-        siteImage: "https://"
-      }
+  return {
+    props: {
+      title: "Kalico",
+      description: "",
+      siteImage: SITE_IMAGE_URL
     }
+  }
 }
 
-const ProjectsIndex =  (props) => {
+export interface ProjectIndexProps {
+  title?: string,
+  description?: string,
+  siteImage?: string
+}
+
+const ProjectsIndex: FC<ProjectIndexProps> =  (props) => {
+  const [projects, setProjects] = useState<Project[]>([])
+  const user = useAuthUser()
+
+  const fetchProjects = () => {
+    user.getIdToken(false)
+    .then(tokenResult => {
+      const projectApi = new ProjectApi(headerConfig(tokenResult))
+      projectApi.getAllProjects()
+      .then(response => {
+        if (response.data && response.data.records) {
+          setProjects(response.data.records)
+        }
+      }).catch(e => console.log(e))
+    }).catch(e => console.log(e))
+  }
+
+  useEffect(() => {
+    fetchProjects()
+  }, [!projects])
+
     return (
         <>
           <Head>
@@ -26,7 +55,7 @@ const ProjectsIndex =  (props) => {
           </Head>
           <main>
             <section className="container">
-              <MyProjects/>
+              <MyProjects projects={projects}/>
             </section>
           </main>
         </>
