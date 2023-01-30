@@ -48,7 +48,7 @@ public class PostgresDBDataConfiguration {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan(new String[]{"ai.kalico.api.data.postgres.entity"});
-        em.setPersistenceUnitName("mrDb");
+        em.setPersistenceUnitName("kalicoDb");
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
