@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {useStore} from "@/hooks/useStore";
 import {UserApi} from "@/api";
 import {headerConfig} from "@/api/headerConfig";
@@ -14,6 +14,7 @@ import {Button} from "@mui/material";
 import firebase from "firebase/compat";
 import AuthProvider = firebase.auth.AuthProvider;
 import {observer} from "mobx-react";
+import {CenterAlignedProgress} from "@/utils/utils";
 
 export interface SignInProps {
   isSignUp: boolean
@@ -21,6 +22,7 @@ export interface SignInProps {
 
 const SignIn: FC<SignInProps> = observer((props) => {
   const store = useStore()
+  const [showProgress, setShowProgress] = useState(false)
 
   /**
    * Sign in user using Google login pop screen. After login, persist the user
@@ -30,6 +32,7 @@ const SignIn: FC<SignInProps> = observer((props) => {
   const firebaseSignIn = (provider: AuthProvider) => {
     setPersistence(auth, indexedDBLocalPersistence)
     .then(() => {
+      setShowProgress(true)
       // In local persistence will be applied to the signed in Google user
       return signInWithPopup(auth, provider)
       .then((result) => {
@@ -67,6 +70,7 @@ const SignIn: FC<SignInProps> = observer((props) => {
           new UserApi(headerConfig(tokenResult.token))
           .getUserprofile()
           .then(result => {
+            setShowProgress(false)
             if (result.data.profile) {
               store.sessionDataStore.setUser(result.data.profile)
             } else {
@@ -82,7 +86,9 @@ const SignIn: FC<SignInProps> = observer((props) => {
     })
   }
 
-
+  if (showProgress) {
+    return <CenterAlignedProgress/>
+  }
   return (
     <>
       <section className="sign-up-wrapper overflow-hidden pt-215 pb-165">

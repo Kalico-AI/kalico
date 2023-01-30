@@ -14,5 +14,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface SampledImageRepo extends JpaRepository<SampledImageEntity, Long> {
-  List<SampledImageEntity> findByBlogPostIdOrderByImageKeyAsc(Long docId);
+  List<SampledImageEntity> findByProjectIdOrderByImageKeyAsc(Long projectId);
 }

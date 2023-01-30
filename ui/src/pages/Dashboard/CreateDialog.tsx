@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {FC, useCallback, useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -6,29 +7,31 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {FC} from "react";
-import { useDropzone } from 'react-dropzone';
+import {useDropzone} from 'react-dropzone';
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import {
-  Switch,
-  styled,
-  Grid,
+  Avatar,
   Box,
-  Typography,
   Divider,
   FormControl,
   FormControlLabel,
+  Grid,
   InputLabel,
-  Select, Avatar,
+  Select,
+  styled,
+  Switch,
+  Typography,
 } from '@mui/material';
-
+import {CreateProjectRequest, KalicoContentType} from "@/api";
+import {toast, TypeOptions} from "react-toastify";
 
 
 const BoxUploadWrapper = styled(Box)(
     ({ theme }) => `
-    height: 85px;
+    cursor: pointer;
+    height: 120px;
     border-radius: 15px;
     padding: ${theme.spacing(2)};
     background: ${theme.palette.grey["50"]};
@@ -72,9 +75,99 @@ const AvatarSuccess = styled(Avatar)(
 export interface CreateDialogProps {
   open: boolean,
   onClose: () => void,
-  onSubmit: () => void
+  onSubmit: (data: CreateProjectRequest) => void
 }
+
 const CreateDialog: FC<CreateDialogProps> = (props) => {
+  const [paraphrase, setParaphrase] = useState(false)
+  const [embedImages, setEmbedImages] = useState(false)
+  const [projectName, setProjectName] = useState('')
+  const [contentLink, setContentLink] = useState('')
+  const [contentType, setContentType] = useState<KalicoContentType>()
+  const [file, setFile] = useState('')
+  const [fileName, setFileName] = useState('')
+  const [fileExtension, setFileExtension] = useState('')
+  const [showFileName, setShowFileName] = useState(false)
+
+  useEffect(() => {
+    // Reset the previous state
+    setProjectName('')
+    setContentType(KalicoContentType.Other)
+    setContentLink('')
+    setFileName('')
+    setFileExtension('')
+    setFile('')
+    setShowFileName(false)
+    setParaphrase(false)
+    setEmbedImages(false)
+  }, [])
+
+  const handleParaphrase = (event: any) => {
+    event.preventDefault()
+    setParaphrase(event.target.checked)
+  }
+
+  const handleEmbedImages = (event: any) => {
+    event.preventDefault()
+    setEmbedImages(event.target.checked)
+  }
+
+  const handleProjectName = (event: any) => {
+    event.preventDefault()
+    setProjectName(event.target.value)
+  }
+
+  const handleContentLink = (event: any) => {
+    event.preventDefault()
+    setContentLink(event.target.value)
+  }
+
+  const handleContentType = (event: any) => {
+    event.preventDefault()
+    setContentType(event.target.value)
+  }
+
+  const showToast = (msg: string, type: TypeOptions) => {
+    toast(msg, {
+      type: type,
+      position: toast.POSITION.TOP_CENTER
+    });
+  }
+
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const conversionFactor = 1024*1024
+    const maxFileSize = 100*conversionFactor // 100MB
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      const f = acceptedFiles[0]
+      if (f.size > maxFileSize) {
+        showToast(`File size of ${Math.round(f.size/conversionFactor)} MB is too big. Max allowed is 100MB`, 'error')
+      } else {
+        convertBase64(f).then(binaryData => {
+          setFile(binaryData + '')
+          setFileExtension(f.name.split('.').pop())
+          setFileName(f.name)
+          setShowFileName(true)
+        }).catch(e => {
+          showToast(e.message, 'error')
+        })
+      }
+    }
+  }, [])
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file)
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      }
+      fileReader.onerror = (error) => {
+        reject(error);
+      }
+    })
+  }
+
   const {
     isDragActive,
     isDragAccept,
@@ -83,9 +176,27 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
     getInputProps
   } = useDropzone({
     accept: {
-      'image/png': ['.png'],
-    }
+      'audio/aac': ['.aac'],
+      'audio/mpeg': ['.mp3'],
+      'audio/wav': ['.wav'],
+      'video/mp4': ['.mp4'],
+      'video/webm': ['.webm']
+    },
+    multiple: false,
+    onDrop
   });
+
+  const onSubmit = () => {
+    props.onSubmit({
+      project_name: projectName ? projectName : 'Untitled',
+      paraphrase: paraphrase,
+      embed_images: embedImages,
+      content_link: contentLink,
+      content_type: contentType,
+      file: file,
+      file_extension: fileExtension
+    })
+  }
   return (
       <div className="create-project-dialog">
         <Dialog open={props.open} onClose={() => props.onClose()}>
@@ -101,14 +212,14 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
           <DialogContent>
             <Box p={0}>
               <FormControlLabel
-                  control={<Switch color="warning" defaultChecked={false} />}
+                  control={<Switch color="warning" defaultChecked={false} onChange={handleParaphrase}/>}
                   label={'Paraphrase'}
               />
             </Box>
             <Box p={0}>
               <FormControlLabel
                   disabled
-                  control={<Switch color="warning" defaultChecked={false} />}
+                  control={<Switch color="warning" defaultChecked={false} onChange={handleEmbedImages}/>}
                   label={'Intelligently embed images (coming soon)'}
               />
             </Box>
@@ -118,9 +229,11 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                 <Grid item xs={12}>
                   <TextField
                       InputLabelProps={{
-                        style: {background: '#fff'},
+                        style: {background: '#fff', padding: 0},
                         shrink: true,
                       }}
+                      onChange={handleProjectName}
+                      value={projectName}
                       className="create-dialog-textfield"
                       fullWidth
                       name="project_name"
@@ -133,6 +246,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                   <FormControl fullWidth variant="outlined">
                     <InputLabel htmlFor="content_type">{('Content Type')}</InputLabel>
                     <Select
+                        onChange={handleContentType}
                         required
                         native
                         label={('Content Type')}
@@ -141,12 +255,12 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                         }}
                     >
                       <option aria-label="None" value="" />
-                      <option value={0}>{('Food Recipe')}</option>
-                      <option value={1}>{('Interview')}</option>
-                      <option value={2}>{('Podcast')}</option>
-                      <option value={3}>{('Lecture')}</option>
-                      <option value={4}>{('DIY')}</option>
-                      <option value={5}>{('Other')}</option>
+                      <option value={KalicoContentType.Diy}>{('DIY')}</option>
+                      <option value={KalicoContentType.FoodRecipe}>{('Food Recipe')}</option>
+                      <option value={KalicoContentType.Interview}>{('Interview')}</option>
+                      <option value={KalicoContentType.Lecture}>{('Lecture')}</option>
+                      <option value={KalicoContentType.Podcast}>{('Podcast')}</option>
+                      <option value={KalicoContentType.Other}>{('Other')}</option>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -157,6 +271,8 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                         style: {background: '#fff'},
                         shrink: true,
                       }}
+                      onChange={handleContentLink}
+                      value={contentLink}
                       className="create-dialog-textfield"
                       fullWidth
                       name="content_link"
@@ -169,13 +285,13 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
               </Grid>
             </Box>
             <Divider>OR</Divider>
-            <Box p={2}>
+            <Box p={1}>
               <BoxUploadWrapper {...getRootProps()}>
                 <input {...getInputProps()} />
                 {isDragAccept && (
                     <>
                       <AvatarSuccess variant="rounded">
-                        <CheckTwoToneIcon />
+                        <CheckTwoToneIcon/>
                       </AvatarSuccess>
                       <Typography
                           sx={{
@@ -210,7 +326,18 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                             mt: 1
                           }}
                       >
-                        {('Drag & drop files here')}
+                        {
+                          showFileName ? `${fileName}` : `Drag & drop files here`
+                        }
+                      </Typography>
+                      <Typography
+                          sx={{
+                            fontSize: '10px',
+                            mb: 2
+                          }}
+                          variant='body1'
+                      >
+                        {'Supported formats: .aac, .mp3, .wav, .mp4. .webm. Max 100MB'}
                       </Typography>
                     </>
                 )}
@@ -219,7 +346,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => props.onClose()} variant={'contained'} color={'error'}>Cancel</Button>
-            <Button onClick={() => props.onSubmit()} variant={'contained'} color={'success'}>Submit</Button>
+            <Button onClick={onSubmit} variant={'contained'} color={'success'}>Create</Button>
           </DialogActions>
         </Dialog>
       </div>

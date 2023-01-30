@@ -19,17 +19,9 @@ public interface CookieJarRepo extends JpaRepository<CookieJarEntity, Long> {
         nativeQuery = true)
     List<CookieJarEntity> findCookies(String url, String username);
 
-    @Query(value = "select * from cookie_jar where c_key = ?1",
-        nativeQuery = true)
-    List<CookieJarEntity> findCookies(String url);
-
-    @Query(value = "select * from cookie_jar order by updated_dt desc",
+    @Query(value = "select * from cookie_jar order by updated_at desc",
         nativeQuery = true)
     List<CookieJarEntity> findAll();
-
-    @Query(value = "select * from cookie_jar where c_name = 'sessionid' order by updated_dt desc",
-        nativeQuery = true)
-    CookieJarEntity findSessionId();
 
     @Query(value = "select * from cookie_jar where c_username = ?1 and c_key in (?2)",
         nativeQuery = true)

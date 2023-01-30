@@ -1,9 +1,11 @@
 package ai.kalico.api.service.utils;
 
+import ai.kalico.api.data.postgres.entity.ProjectEntity;
 import ai.kalico.api.data.postgres.entity.SampledImageEntity;
-import ai.kalico.api.data.postgres.entity.VideoContentEntity;
+import ai.kalico.api.data.postgres.entity.MediaContentEntity;
+import ai.kalico.api.data.postgres.repo.ProjectRepo;
 import ai.kalico.api.data.postgres.repo.SampledImageRepo;
-import ai.kalico.api.data.postgres.repo.VideoContentRepo;
+import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.dto.Pair;
 import ai.kalico.api.props.AWSProps;
 import ai.kalico.api.props.DockerImageProps;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -40,10 +43,11 @@ public class AVAsyncHelper {
   private final OcrService ocr;
   private final AWSProps awsProps;
   private final S3Service s3Service;
-  private final VideoContentRepo videoContentRepo;
+  private final MediaContentRepo mediaContentRepo;
   private final SampledImageRepo sampledImageRepo;
   private final DockerImageProps dockerImageProps;
   private final DownloadService downloadService;
+  private final ProjectRepo projectRepo;
 
   @Async
   public void uploadImages(OcrRequest ocrRequest) {
@@ -56,7 +60,7 @@ public class AVAsyncHelper {
         String[] tokens = fileName.split("/");
         if (tokens.length > 0) {
           String shortName = tokens[tokens.length - 1];
-          String key = awsProps.getImageFolder() + "/" + ocrRequest.getVideoId() + "/" + shortName;
+          String key = awsProps.getImageFolder() + "/" + ocrRequest.getMediaId() + "/" + shortName;
           Pair<String, String> p = new Pair<>(fileName, key);
           fileNameKeyList.add(p);
           keys.add(key);
@@ -65,7 +69,7 @@ public class AVAsyncHelper {
       if (fileNameKeyList.size() > 0) {
         s3Service.uploadImagesAsync(awsProps.getBucket(), fileNameKeyList, S3Service.IMAGE_TYPE);
       }
-      createSampledImageRecord(ocrRequest.getVideoId(), keys);
+      createSampledImageRecord(ocrRequest.getMediaId(), keys);
     } catch (IOException e) {
       log.error("AVAsyncHelper.uploadImages {}", e.getLocalizedMessage());
     }
@@ -95,10 +99,10 @@ public class AVAsyncHelper {
           builder.append(formattedText);
         }
       }
-      VideoContentEntity entity = videoContentRepo.findByVideoId(request.getVideoId());
+      MediaContentEntity entity = mediaContentRepo.findByMediaId(request.getMediaId());
       if (entity != null) {
         entity.setOnScreenText(builder.toString());
-        videoContentRepo.save(entity);
+        mediaContentRepo.save(entity);
       }
 
     } catch (IOException e) {
@@ -116,19 +120,20 @@ public class AVAsyncHelper {
   }
 
   @Transactional
-  public void createSampledImageRecord(String videoId, List<String> keys) {
-    VideoContentEntity videoContentEntity = videoContentRepo.findByVideoId(videoId);
+  public void createSampledImageRecord(String mediaId, List<String> keys) {
+    MediaContentEntity mediaContentEntity = mediaContentRepo.findByMediaId(mediaId);
     List<SampledImageEntity> sampledImageEntities = new ArrayList<>();
-    if (videoContentEntity != null) {
+    if (mediaContentEntity != null) {
       for (String key : keys) {
         SampledImageEntity sampledImage = new SampledImageEntity();
-        sampledImage.setBlogPostId(videoContentEntity.getBlogPostId());
+        sampledImage.setProjectId(mediaContentEntity.getProjectId());
         sampledImage.setImageKey(key);
         sampledImageEntities.add(sampledImage);
       }
       if (sampledImageEntities.size() > 0) {
         // Delete any existing images
-        List<SampledImageEntity> toDelete = sampledImageRepo.findByBlogPostIdOrderByImageKeyAsc(videoContentEntity.getBlogPostId());
+        List<SampledImageEntity> toDelete = sampledImageRepo.findByProjectIdOrderByImageKeyAsc(
+            mediaContentEntity.getProjectId());
         if (toDelete.size() > 0) {
           sampledImageRepo.deleteAll(toDelete);
         }
@@ -139,9 +144,9 @@ public class AVAsyncHelper {
 
   @SneakyThrows
   @Async
-  public void processAudio(String videoId) {
-    String videoPath = getVideoPath(videoId);
-    String audioPath = getAudioPath(videoId);
+  public void processAudio(String mediaId) {
+    String videoPath = getVideoPath(mediaId);
+    String audioPath = getAudioPath(mediaId);
     log.trace("Extracting audio track from video file {}", videoPath);
     if (Files.exists(Path.of(videoPath)) && !Files.exists(Path.of(audioPath))) {
       //-i input file
@@ -151,8 +156,8 @@ public class AVAsyncHelper {
       //-ab audio bitrate
       //-f output format
       //-acodec bitrate
-      log.info("FFMPEG audio extraction in progress for videoId {}", videoId);
-      String workingDir = FWUtils.getCanonicalPath(new File(videoPath).getParent());
+      log.info("FFMPEG audio extraction in progress for mediaId {}", mediaId);
+      String workingDir = KALUtils.getCanonicalPath(new File(videoPath).getParent());
       String[] command = {
           "docker",
           "run",
@@ -162,7 +167,7 @@ public class AVAsyncHelper {
           workingDir,
           dockerImageProps.getFfmpeg(),
           "-i",
-          FWUtils.getCanonicalPath(videoPath),
+          KALUtils.getCanonicalPath(videoPath),
           "-vn",
           "-ac",
           "1",
@@ -172,35 +177,35 @@ public class AVAsyncHelper {
           "pcm_s16le",
           "-f",
           "wav",
-          FWUtils.getCanonicalPath(audioPath)
+          KALUtils.getCanonicalPath(audioPath)
       };
       log.info("Command: {}", String.join(" ", command));
       shell.exec(command);
-      log.info("FFMPEG audio extraction done for videoId {}", videoId);
+      log.info("FFMPEG audio extraction done for mediaId {}", mediaId);
     }
     else {
       log.trace("Failed to locate video file at {}", videoPath);
     }
-    runStt(videoId, audioPath);
+    runStt(mediaId, audioPath);
   }
 
-  private void runStt(String videoId, String audioPath) {
-    if (!Files.exists(Path.of(getTranscriptPath(videoId)))) {
+  private void runStt(String mediaId, String audioPath) {
+    if (!Files.exists(Path.of(getTranscriptPath(mediaId)))) {
       SttRequest sttRequest = new SttRequest();
       sttRequest.setPath(audioPath);
-      sttRequest.setVideoId(videoId);
+      sttRequest.setMediaId(mediaId);
       sttRequest.setLanguage("English");
       stt.transcribe(sttRequest);
-      saveTranscriptToDb(videoId);
+      saveTranscriptToDb(mediaId);
     }
   }
 
   @Async
-  public void processImages(String videoId) {
+  public void processImages(String mediaId) {
     OcrRequest ocrRequest = new OcrRequest();
-    ocrRequest.setVideoId(videoId);
-    ocrRequest.setVideoPath(getVideoPath(videoId));
-    ocrRequest.setOcrPath(getOcrPath(videoId));
+    ocrRequest.setMediaId(mediaId);
+    ocrRequest.setVideoPath(getVideoPath(mediaId));
+    ocrRequest.setOcrPath(getOcrPath(mediaId));
     ocrRequest.setOcrTesseractPath(getOCrModifiedImagePath(ocrRequest.getOcrPath()));
     ocrRequest.setLanguage("eng");
     ocr.runOcr(ocrRequest);
@@ -208,16 +213,23 @@ public class AVAsyncHelper {
     uploadImages(ocrRequest);
   }
 
-  private void saveTranscriptToDb(String videoId) {
-    String transcriptPath = getTranscriptPath(videoId);
+  private void saveTranscriptToDb(String mediaId) {
+    String transcriptPath = getTranscriptPath(mediaId);
     if (Files.exists(Path.of(transcriptPath))) {
       File file = new File(transcriptPath);
       try {
         String transcript = new String(Files.readAllBytes(file.toPath()));
-        VideoContentEntity entity = videoContentRepo.findByVideoId(videoId);
+        MediaContentEntity entity = mediaContentRepo.findByMediaId(mediaId);
         if (entity != null) {
           entity.setRawTranscript(transcript.replace("\n", "<br>"));
-          videoContentRepo.save(entity);
+          mediaContentRepo.save(entity);
+
+          // Update the completion status
+          Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(entity.getProjectId());
+          if (projectEntityOpt.isPresent()) {
+            projectEntityOpt.get().setProcessed(true);
+            projectRepo.save(projectEntityOpt.get());
+          }
         }
       } catch (IOException e) {
         e.printStackTrace();
@@ -229,42 +241,42 @@ public class AVAsyncHelper {
     return ocrPath + "/tesseract";
   }
 
-  private String getOcrPath(String videoId) {
-    return getParentPath(videoId) + "/" + "ocr";
+  private String getOcrPath(String mediaId) {
+    return getParentPath(mediaId) + "/" + "ocr";
   }
 
-  public String getTranscriptPath(String videoId) {
-    return getParentPath(videoId) + "/" + videoId + ".wav.vtt";
+  public String getTranscriptPath(String mediaId) {
+    return getParentPath(mediaId) + "/" + mediaId + ".wav.vtt";
   }
 
-  public String getAudioPath(String videoId) {
-    return getParentPath(videoId) + "/" + videoId + ".wav";
+  public String getAudioPath(String mediaId) {
+    return getParentPath(mediaId) + "/" + mediaId + ".wav";
   }
 
-  public String getVideoPath(String videoId) {
-    return getParentPath(videoId) + "/" + videoId + ".mp4";
+  public String getVideoPath(String mediaId) {
+    return getParentPath(mediaId) + "/" + mediaId + ".mp4";
   }
 
-  public String getHlsPath(String videoId) {
-    return getParentPath(videoId) + "/hls/" + videoId + ".m3u8";
+  public String getHlsPath(String mediaId) {
+    return getParentPath(mediaId) + "/hls/" + mediaId + ".m3u8";
   }
 
-  public String getGifPath(String videoId, String gifName) {
+  public String getGifPath(String mediaId, String gifName) {
     return String.format("%s/%s",
-        getParentPath(videoId),
+        getParentPath(mediaId),
         gifName);
   }
 
-  public String getGifName(String videoId, String start, String duration) {
+  public String getGifName(String mediaId, String start, String duration) {
     return String.format("%ss%sd%s.gif",
-        videoId,
+        mediaId,
         start.replace(".", ""),
         duration.replace(".", ""));
   }
 
-  public String getParentPath(String videoId) {
+  public String getParentPath(String mediaId) {
     final String baseFilePath = "/tmp/videos";
-    return baseFilePath + "/" + videoId;
+    return baseFilePath + "/" + mediaId;
   }
 
   private List<String> getFileNames(String ext, String path) throws IOException {
@@ -273,7 +285,7 @@ public class AVAsyncHelper {
     if (files != null) {
       for (File file : files) {
         if (file.isFile() && file.getName().contains(ext)) {
-          results.add(FWUtils.getCanonicalPath(file.getPath()));
+          results.add(KALUtils.getCanonicalPath(file.getPath()));
         }
       }
     }
@@ -281,9 +293,9 @@ public class AVAsyncHelper {
   }
 
   @Async
-  public void processHls(String videoId, String path) {
-    String hlsPath = getHlsPath(videoId);
+  public void processHls(String mediaId, String path) {
+    String hlsPath = getHlsPath(mediaId);
     downloadService.generateHlsManifest(path, hlsPath);
-    s3Service.uploadHlsData(awsProps.getBucket(), videoId, hlsPath, awsProps.getStreamFolder());
+    s3Service.uploadHlsData(awsProps.getBucket(), mediaId, hlsPath, awsProps.getStreamFolder());
   }
 }

@@ -13,18 +13,16 @@ import ai.kalico.api.service.instagram4j.IGClient;
 import ai.kalico.api.service.instagram4j.utils.IGUtils;
 import ai.kalico.api.service.instagram4j.utils.SerializableCookieJar;
 import ai.kalico.api.service.mapper.MapperConfiguration;
-import ai.kalico.api.service.utils.Seed;
-import ai.kalico.api.utils.migration.FlywayMigration;
 import ai.kalico.api.utils.migration.FlywayMigrationConfiguration;
-import java.io.IOException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableAsync;
+
 /**
  * @author Bizuwork Melesse
  * created on 2/13/21
@@ -34,6 +32,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @ComponentScan
 @RequiredArgsConstructor
+@EnableAsync
 @Import({
     DataConfiguration.class,
     MapperConfiguration.class,
@@ -55,20 +54,10 @@ public class ServiceConfiguration {
   }
 
   private final InstagramProps instagramProps;
-  private final Seed seed;
 
   @Bean
-  @Qualifier("FlywayDBMigration")
-  public boolean dbMigration(FlywayMigration flywayMigration) {
-    flywayMigration.migrate(false);
-    seed.seed();
-    return true;
-  }
-
-  @Bean
-  public IGClient igClient(@Qualifier(value = "FlywayDBMigration") Boolean dbMigrated, SerializableCookieJar cookieJar) {
+  public IGClient igClient(SerializableCookieJar cookieJar) {
     IGUtils.serializableCookieJar = cookieJar;
-    if (dbMigrated) {
       if (instagramProps.getDoLogin() != null && instagramProps.getDoLogin()) {
         return IGClient.builder()
             .username(instagramProps.getUsername())
@@ -76,7 +65,5 @@ public class ServiceConfiguration {
             .build();
       }
       return IGClient.builder().build();
-    }
-    throw new BeanCreationException("Failed to create igClient bean because DB migration has not happened yet");
   }
 }

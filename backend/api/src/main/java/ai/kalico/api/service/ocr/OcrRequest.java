@@ -12,6 +12,6 @@ public class OcrRequest {
   private String videoPath;
   private String ocrPath;
   private String language;
-  private String videoId;
+  private String mediaId;
   private String ocrTesseractPath;
 }

@@ -20,5 +20,5 @@ public class VideoInfoDto {
   private String imageUrl;
   private String caption;
   private String permalink;
-  private String videoIdOverride;
+  private String mediaIdOverride;
 }

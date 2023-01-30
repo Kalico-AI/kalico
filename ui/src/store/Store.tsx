@@ -5,7 +5,6 @@ export class SessionDataStore {
 
   cookMode: boolean = false;
   portions: number = 1;
-  // os: string = OTHER
   interval: any | undefined;
   user: any | undefined;
 

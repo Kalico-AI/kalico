@@ -60,9 +60,9 @@ public class CookieJarEntity {
     @Column(name = "c_secure")
     private Boolean secure;
 
-    @Column(name = "created_dt")
-    private LocalDateTime createdDt = LocalDateTime.now(ZoneId.of("UTC"));
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("UTC"));
     
-    @Column(name = "updated_dt")
-    private LocalDateTime updatedDt = LocalDateTime.now(ZoneId.of("UTC"));
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now(ZoneId.of("UTC"));
 }

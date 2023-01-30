@@ -4,9 +4,9 @@ import ai.kalico.api.dto.Pair;
 import ai.kalico.api.props.AWSProps;
 import ai.kalico.api.props.DockerImageProps;
 import ai.kalico.api.service.aws.S3Service;
-import ai.kalico.api.service.mapper.BlogPostMapper;
+import ai.kalico.api.service.mapper.ProjectMapper;
 import ai.kalico.api.service.utils.AVAsyncHelper;
-import ai.kalico.api.service.utils.FWUtils;
+import ai.kalico.api.service.utils.KALUtils;
 import ai.kalico.api.service.utils.ShellService;
 import java.io.File;
 import java.nio.file.Files;
@@ -30,42 +30,42 @@ public class GifServiceImpl implements GifService {
   private final DockerImageProps dockerImageProps;
   private final S3Service s3Service;
   private final ShellService shell;
-  private final BlogPostMapper blogPostMapper;
+  private final ProjectMapper projectMapper;
 
   @Override
-  public String generateGif(String videoId, float start, float end) {
+  public String generateGif(String mediaId, float start, float end) {
     // TODO: cleanup the local cache once done processing. We don't know when the user will
     //    be done so need to have a background task that runs every 24 hours or so
-    String videoPath = asyncHelper.getVideoPath(videoId);
+    String videoPath = asyncHelper.getVideoPath(mediaId);
     String gifName = "";
     float duration = end - start;
-    new File(FWUtils.getCanonicalPath(new File(videoPath).getParent())).mkdir();
+    new File(KALUtils.getCanonicalPath(new File(videoPath).getParent())).mkdir();
     if (Files.exists(Path.of(videoPath))) {
-      gifName = doGenerateGif(videoPath, videoId, String.valueOf(start), String.valueOf(duration));
+      gifName = doGenerateGif(videoPath, mediaId, String.valueOf(start), String.valueOf(duration));
 
     } else {
       log.info("Video with id={} does not exist in local cache. Attempting to download from "
-          + "CDN", videoId);
-      String url = blogPostMapper.getCdnUrl(awsProps.getCdn() + "/" + awsProps.getStreamFolder(),
-          videoId, awsProps.getVideoFormat());
+          + "CDN", mediaId);
+      String url = projectMapper.getCdnUrl(awsProps.getCdn() + "/" + awsProps.getStreamFolder(),
+          mediaId, awsProps.getVideoFormat());
       downloadVideo(url, videoPath);
-      gifName = doGenerateGif(videoPath, videoId, String.valueOf(start), String.valueOf(duration));
+      gifName = doGenerateGif(videoPath, mediaId, String.valueOf(start), String.valueOf(duration));
     }
     if (!ObjectUtils.isEmpty(gifName)) {
-      String key = awsProps.getImageFolder() + "/" + videoId + "/" + gifName;
-      String path = asyncHelper.getGifPath(videoId, gifName);
+      String key = awsProps.getImageFolder() + "/" + mediaId + "/" + gifName;
+      String path = asyncHelper.getGifPath(mediaId, gifName);
       s3Service.uploadImagesSync(awsProps.getBucket(), List.of(new Pair<>(path, key)), S3Service.GIF_TYPE);
       return String.format("%s/%s/%s/%s",
-          awsProps.getCdn(), awsProps.getImageFolder(), videoId, gifName);
+          awsProps.getCdn(), awsProps.getImageFolder(), mediaId, gifName);
     }
     return "";
   }
 
-  private String doGenerateGif(String videoPath, String videoId, String start, String duration) {
+  private String doGenerateGif(String videoPath, String mediaId, String start, String duration) {
     log.info("Generating GIF for {}", videoPath);
-    String gifName = asyncHelper.getGifName(videoId, start, duration);
-    String gifPath = FWUtils.getCanonicalPath(asyncHelper.getGifPath(videoId, gifName));
-    String workingDir = FWUtils.getCanonicalPath(new File(videoPath).getParent());
+    String gifName = asyncHelper.getGifName(mediaId, start, duration);
+    String gifPath = KALUtils.getCanonicalPath(asyncHelper.getGifPath(mediaId, gifName));
+    String workingDir = KALUtils.getCanonicalPath(new File(videoPath).getParent());
     String[] command = {
         "docker",
         "run",
@@ -80,7 +80,7 @@ public class GifServiceImpl implements GifService {
         duration,
         "-y",
         "-i",
-        FWUtils.getCanonicalPath(videoPath),
+        KALUtils.getCanonicalPath(videoPath),
         "-filter_complex",
         "[0:v] fps=10,scale=320:-1,split [a][b];[a] palettegen=max_colors=32 [p];[b][p] paletteuse",
         gifPath
@@ -93,7 +93,7 @@ public class GifServiceImpl implements GifService {
 
   private void downloadVideo(String url, String videoPath) {
     log.info("Downloading HLS media from {}", url);
-    String workingDir = FWUtils.getCanonicalPath(new File(videoPath).getParent());
+    String workingDir = KALUtils.getCanonicalPath(new File(videoPath).getParent());
     String[] command = {
         "docker",
         "run",
@@ -113,7 +113,7 @@ public class GifServiceImpl implements GifService {
         "copy",
         "-crf",
         "22",
-        FWUtils.getCanonicalPath(videoPath)
+        KALUtils.getCanonicalPath(videoPath)
     };
     log.info("Command: {}", String.join(" ", command));
     shell.exec(command);

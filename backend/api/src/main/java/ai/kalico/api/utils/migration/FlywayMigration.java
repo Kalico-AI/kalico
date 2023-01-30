@@ -52,7 +52,7 @@ public class FlywayMigration {
                 throw new IllegalArgumentException("Cannot drop schema for non-dev profile");
             }
 
-            List<StackTraceElement> stackTraceElements = Arrays.asList(Thread.currentThread().getStackTrace());
+            StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
             boolean isIntegrationTest = false;
             for (StackTraceElement element : stackTraceElements) {
                 if (element.getClassName().contains("IntegrationTest")) {

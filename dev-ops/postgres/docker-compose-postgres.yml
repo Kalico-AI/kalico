@@ -9,7 +9,7 @@ services:
       - DATABASE_HOST=127.0.0.1
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=mr
+      - POSTGRES_DB=kalico
     ports:
       - "8432:5432"
     volumes:

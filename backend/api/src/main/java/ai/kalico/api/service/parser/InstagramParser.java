@@ -75,7 +75,7 @@ public class InstagramParser implements ParserService {
                 dto.setCaption(mediaMetadata.getDescription());
                 dto.setImageUrl(mediaMetadata.getImageUrl());
                 dto.setPermalink(igUrl);
-                dto.setVideoIdOverride(contentId);
+                dto.setMediaIdOverride(contentId);
                 return dto;
             }
         } else {

@@ -10,6 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@emotion/css": "^11.10.5",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
@@ -20,6 +21,7 @@
     "hls.js": "^1.2.9",
     "image-extensions": "^1.1.0",
     "is-url": "^1.2.4",
+    "lodash": "^4.17.21",
     "mobx": "^6.7.0",
     "mobx-react": "^7.6.0",
     "moment": "^2.29.4",

@@ -1,6 +1,6 @@
 package ai.kalico.api.data.postgres.repo;
 
-import ai.kalico.api.data.postgres.entity.VideoContentEntity;
+import ai.kalico.api.data.postgres.entity.MediaContentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,10 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public interface VideoContentRepo extends JpaRepository<VideoContentEntity, Long> {
-  VideoContentEntity findByBlogPostId(Long docId);
+public interface MediaContentRepo extends JpaRepository<MediaContentEntity, Long> {
+  MediaContentEntity findByProjectId(Long projectId);
 
-  VideoContentEntity findByPermalink(String url);
-
-  VideoContentEntity findByVideoId(String videoId);
+  MediaContentEntity findByMediaId(String mediaId);
 }

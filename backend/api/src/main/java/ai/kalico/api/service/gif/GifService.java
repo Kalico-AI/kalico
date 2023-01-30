@@ -8,12 +8,12 @@ public interface GifService {
   /**
    * Generate a GIF of a video already stored on S3
    *
-   * @param videoId
+   * @param mediaId
    * @param start start time
    * @param end end time
    * @return
    */
-  String generateGif(String videoId, float start, float end);
+  String generateGif(String mediaId, float start, float end);
 
   void deleteGif(String url);
 }
