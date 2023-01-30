@@ -38,25 +38,38 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
     props.user.getIdToken(false)
     .then(tokenResult => {
       const projectApi = new ProjectApi(headerConfig(tokenResult))
-      projectApi.createProject(request)
-      .then(response => {
-        let msg = response.data.error
-        let type: TypeOptions = 'error'
-        if (response.data && response.data.project_id) {
-          msg = 'Your project is now being processed'
-          type = 'success'
-        }
-        toast(msg, {
-          type: type,
-          position: toast.POSITION.TOP_CENTER
-        });
+      if (request.file) {
+        // If there is a file to upload, show upload progress
+        toast.promise(
+            projectApi.createProject(request),
+            {
+              pending: 'Uploading file...',
+              success: 'Your file has been uploaded and processing has begun',
+              error: 'Something went wrong while uploading your file'
+            }
+        )
         setCreateDialogOpen(false)
-      }).catch(e => console.log(e))
+      } else {
+        projectApi.createProject(request)
+        .then(response => {
+          let msg = response.data.error
+          let type: TypeOptions = 'error'
+          if (response.data && response.data.project_id) {
+            msg = 'Your project is now being processed'
+            type = 'success'
+          }
+          toast(msg, {
+            type: type,
+            position: toast.POSITION.TOP_CENTER
+          });
+          setCreateDialogOpen(false)
+        }).catch(e => console.log(e))
+      }
     }).catch(e => console.log(e))
 
 
 
-    //
+
     // const resolveAfter3Sec = new Promise(resolve => setTimeout(resolve, 3000));
     // toast.promise(
     //     resolveAfter3Sec,

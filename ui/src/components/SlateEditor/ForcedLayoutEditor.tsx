@@ -26,6 +26,19 @@ export interface EditorProps {
   user: AuthUserContext,
 }
 
+const initialValue: Descendant[] = [
+  {
+    type: 'title',
+    children: [
+      {
+        text:
+            "Untitled",
+      },
+    ],
+  },
+]
+
+
 const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   const renderElement = useCallback(props => <EditorElement {...props} />, [])
   const [_content, setContent] = useState<Descendant[]>([])
@@ -59,7 +72,9 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   }
   return (
       <Box className="slate-editor-box">
-      <Slate editor={editor} value={props.project.content as Descendant[]} onChange={handleChange}>
+      <Slate editor={editor}
+             value={props.project.content ? props.project.content as Descendant[] : initialValue}
+             onChange={handleChange}>
           <Toolbar>
             <InsertImageButton />
           </Toolbar>
