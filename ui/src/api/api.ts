@@ -343,6 +343,43 @@ export interface ProjectDetail {
 /**
  * 
  * @export
+ * @interface ProjectJobStatus
+ */
+export interface ProjectJobStatus {
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectJobStatus
+     */
+    project_id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectJobStatus
+     */
+    status?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectJobStatus
+     */
+    percent_complete?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectJobStatus
+     */
+    estimated_time?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectJobStatus
+     */
+    error?: string;
+}
+/**
+ * 
+ * @export
  * @interface UpdateProjectContentRequest
  */
 export interface UpdateProjectContentRequest {
@@ -652,6 +689,40 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * Get the progress of a pending job
+         * @summary Get the progress of a pending job
+         * @param {number} projectId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProjectJobStatus: async (projectId: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectId' is not null or undefined
+            assertParamExists('getProjectJobStatus', 'projectId', projectId)
+            const localVarPath = `/project/job-status/{project_id}`
+                .replace(`{${"project_id"}}`, encodeURIComponent(String(projectId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Get video sampled images
          * @summary Get video sampled images
          * @param {number} projectId 
@@ -786,6 +857,17 @@ export const ProjectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Get the progress of a pending job
+         * @summary Get the progress of a pending job
+         * @param {number} projectId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getProjectJobStatus(projectId: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectJobStatus>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectJobStatus(projectId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Get video sampled images
          * @summary Get video sampled images
          * @param {number} projectId 
@@ -865,6 +947,16 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          */
         getProjectById(projectId: number, options?: any): AxiosPromise<ProjectDetail> {
             return localVarFp.getProjectById(projectId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get the progress of a pending job
+         * @summary Get the progress of a pending job
+         * @param {number} projectId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProjectJobStatus(projectId: number, options?: any): AxiosPromise<ProjectJobStatus> {
+            return localVarFp.getProjectJobStatus(projectId, options).then((request) => request(axios, basePath));
         },
         /**
          * Get video sampled images
@@ -953,6 +1045,18 @@ export class ProjectApi extends BaseAPI {
      */
     public getProjectById(projectId: number, options?: any) {
         return ProjectApiFp(this.configuration).getProjectById(projectId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get the progress of a pending job
+     * @summary Get the progress of a pending job
+     * @param {number} projectId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public getProjectJobStatus(projectId: number, options?: any) {
+        return ProjectApiFp(this.configuration).getProjectJobStatus(projectId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

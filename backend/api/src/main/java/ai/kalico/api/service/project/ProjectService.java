@@ -8,6 +8,7 @@ import com.kalico.model.GifResponse;
 import com.kalico.model.MediaContent;
 import com.kalico.model.PageableResponse;
 import com.kalico.model.ProjectDetail;
+import com.kalico.model.ProjectJobStatus;
 import com.kalico.model.UpdateProjectContentRequest;
 import java.util.List;
 
@@ -37,5 +38,7 @@ public interface ProjectService {
   List<String> getSampledImages(Long projectId);
 
   MediaContent getMediaContent(Long projectId);
+
+  ProjectJobStatus getProjectJobStatus(Long projectId);
 
 }

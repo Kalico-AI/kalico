@@ -22,11 +22,7 @@ public class ProjectProps {
     private List<String> supportedDomains;
     private Set<String> supportedVideoFormats;
     private Set<String> supportedAudioFormats;
-
-
-
-
-
+    private long maxJobTime = 60 * 5; // 5 minutes
     private String baseSiteUrl;
     private String baseImageCdnUrl;
     private Double fps;

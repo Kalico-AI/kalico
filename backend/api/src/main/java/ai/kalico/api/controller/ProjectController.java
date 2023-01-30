@@ -8,6 +8,7 @@ import com.kalico.model.GenericResponse;
 import com.kalico.model.MediaContent;
 import com.kalico.model.PageableResponse;
 import com.kalico.model.ProjectDetail;
+import com.kalico.model.ProjectJobStatus;
 import com.kalico.model.UpdateProjectContentRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,11 @@ public class ProjectController implements ProjectApi {
   @Override
   public ResponseEntity<ProjectDetail> getProjectById(Long id) {
     return ResponseEntity.ok(projectService.getProjectById(id));
+  }
+
+  @Override
+  public ResponseEntity<ProjectJobStatus> getProjectJobStatus(Long projectId) {
+    return ResponseEntity.ok(projectService.getProjectJobStatus(projectId));
   }
 
   @Override

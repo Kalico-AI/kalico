@@ -191,6 +191,39 @@
         }
       }
     },
+    "/project/job-status/{project_id}": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Get the progress of a pending job",
+        "description": "Get the progress of a pending job",
+        "operationId": "getProjectJobStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project job status response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectJobStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/project/sampled-images/{project_id}": {
       "get": {
         "tags": [
@@ -270,6 +303,28 @@
       }
     },
     "schemas": {
+      "ProjectJobStatus": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "type": "string"
+          },
+          "percent_complete": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "estimated_time": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
       "CreateProjectResponse": {
         "type": "object",
         "properties": {

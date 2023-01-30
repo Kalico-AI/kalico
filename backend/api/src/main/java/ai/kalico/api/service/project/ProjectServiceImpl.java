@@ -22,10 +22,12 @@ import com.kalico.model.GifResponse;
 import com.kalico.model.MediaContent;
 import com.kalico.model.PageableResponse;
 import com.kalico.model.ProjectDetail;
+import com.kalico.model.ProjectJobStatus;
 import com.kalico.model.UpdateProjectContentRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -212,6 +214,41 @@ public class ProjectServiceImpl implements ProjectService {
   public MediaContent getMediaContent(Long projectId) {
      return projectMapper.mapMediaContent(
         mediaContentRepo.findByProjectId(projectId));
+  }
+
+  @Override
+  public ProjectJobStatus getProjectJobStatus(Long projectId) {
+    // Return percent complete until the processed field is set. If so, return 100%.
+    // Compute the progress by taking the creation time and the elapsed time
+    Optional<ProjectEntity> entityOpt =  projectRepo.findById(projectId);
+    if (entityOpt.isPresent()) {
+      long percent;
+      String status = "In progress";
+      String estimate = "Less than 5 minutes";
+      if (entityOpt.get().getProcessed() != null && entityOpt.get().getProcessed()) {
+        percent = 100;
+        status = "Complete";
+      } else {
+        long delta = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - entityOpt.get().getCreatedAt().toEpochSecond(ZoneOffset.UTC);
+        if (delta > projectProps.getMaxJobTime()) {
+          // If we're still not done with the processing, increase the estimate by 5 minutes every five minutes
+          percent = 95;
+          long res = delta/projectProps.getMaxJobTime();
+          long estimatedTime = (res + 1) * (projectProps.getMaxJobTime()/60);
+          estimate = String.format("Less than %s minutes", estimatedTime);
+        } else {
+          percent = (int)(100 * (delta/(projectProps.getMaxJobTime()* 1.0)));
+        }
+      }
+      return new ProjectJobStatus()
+          .projectId(projectId)
+          .percentComplete(percent)
+          .estimatedTime(estimate)
+          .status(status);
+    }
+    return new ProjectJobStatus()
+        .projectId(projectId)
+        .error("Project not found");
   }
 
   private boolean isSupportedUrl(String url) {

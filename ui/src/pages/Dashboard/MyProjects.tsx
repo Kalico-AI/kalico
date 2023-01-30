@@ -94,6 +94,19 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
     }).catch(e => console.log(e))
   }
 
+  const onNewProjectCreated = (projectId: number) => {
+    props?.user?.getIdToken(false)
+    .then(tokenResult => {
+      const projectApi = new ProjectApi(headerConfig(tokenResult))
+      projectApi.getProjectById(projectId)
+      .then(response => {
+        if (response.data && response.data) {
+          setProjects([response.data, ...projects])
+        }
+      }).catch(e => console.log(e))
+    }).catch(e => console.log(e))
+  }
+
   const onOpenProject = (projectId: number) => {
     router.push({
       pathname: PATHS.PROJECT + '/' + projectId
@@ -108,7 +121,6 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
   const onCloseDeleteDialog = (doDelete: boolean) => {
     setDeleteDialogOpen(false)
     if (doDelete && pendingDeleteProjectId) {
-      console.log("DEBUG delete: ", pendingDeleteProjectId)
       props?.user?.getIdToken(false)
       .then(tokenResult => {
         const projectApi = new ProjectApi(headerConfig(tokenResult))
@@ -203,7 +215,11 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
         </Grid>
         <Grid item sm={12} md={6} justifyContent='flex-end' sx={{display: 'flex'}}>
           <Box className="dashboard-pending-jobs">
-            <PendingJobs project={projectInProgress}/>
+            <PendingJobs
+                project={projectInProgress}
+                user={props.user}
+                onNewProjectCreated={onNewProjectCreated}
+            />
           </Box>
         </Grid>
         <Grid item sm={12} className="files-section">

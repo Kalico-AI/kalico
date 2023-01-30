@@ -188,7 +188,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
 
   const onSubmit = () => {
     props.onSubmit({
-      project_name: projectName,
+      project_name: projectName ? projectName : 'Untitled',
       paraphrase: paraphrase,
       embed_images: embedImages,
       content_link: contentLink,
