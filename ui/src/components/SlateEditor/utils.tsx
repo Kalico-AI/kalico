@@ -1,10 +1,17 @@
 import {Editor, Element as SlateElement, Node, Transforms} from "slate";
 import {ImageElement, ParagraphElement, TitleElement} from "@/components/SlateEditor/custom-types";
-import {useSlateStatic} from "slate-react";
-import {Button, Icon} from "@mui/material";
+import {useFocused, useSelected, useSlateStatic} from "slate-react";
 import isUrl from 'is-url'
 import imageExtensions from 'image-extensions'
-import React from "react";
+import React, {PropsWithChildren, Ref} from "react";
+import { cx, css } from '@emotion/css'
+import {Button} from "@mui/material";
+
+interface BaseProps {
+  className: string
+  [key: string]: unknown
+}
+type OrNull<T> = T | null
 
 export const withLayout = editor => {
   const { normalizeNode } = editor
@@ -76,26 +83,6 @@ export const isImageUrl = url => {
   return imageExtensions.includes(ext)
 }
 
-// @ts-ignore
-export const InsertImageButton = () => {
-  const editor = useSlateStatic()
-  return (
-      <Button
-          onMouseDown={event => {
-    event.preventDefault()
-    const url = window.prompt('Enter the URL of the image:')
-    if (url && !isImageUrl(url)) {
-      alert('URL is not an image')
-      return
-    }
-    url && insertImage(editor, url)
-  }}
->
-  <Icon>image</Icon>
-  </Button>
-)
-}
-
 export const withImages = editor => {
   const { insertData, isVoid } = editor
 
@@ -129,4 +116,129 @@ export const withImages = editor => {
   }
 
   return editor
+}
+
+export const InsertImageButton = () => {
+  const editor = useSlateStatic()
+  return (
+      <Button
+          onMouseDown={event => {
+            event.preventDefault()
+            const url = window.prompt('Enter the URL of the image:')
+            if (url && !isImageUrl(url)) {
+              alert('URL is not an image')
+              return
+            }
+            url && insertImage(editor, url)
+          }}
+      >
+        Insert Image
+        {/*<Icon>image</Icon>*/}
+      </Button>
+  )
+}
+
+export const Menu = React.forwardRef(
+    (
+        { className, ...props }: PropsWithChildren<BaseProps>,
+        ref: Ref<OrNull<HTMLDivElement>>
+    ) => (
+        <div
+            {...props}
+            ref={ref}
+            className={cx(
+                className,
+                css`
+          & > * {
+            display: inline-block;
+          }
+
+          & > * + * {
+            margin-left: 15px;
+          }
+        `
+            )}
+        />
+    )
+)
+
+export const Toolbar = React.forwardRef(
+    (
+        { className, ...props }: PropsWithChildren<BaseProps>,
+        ref: Ref<OrNull<HTMLDivElement>>
+    ) => (
+        <Menu
+            {...props}
+            ref={ref}
+            className={cx(
+                className,
+                css`
+          position: relative;
+          padding: 1px 18px 17px;
+          margin: 0 -20px;
+          border-bottom: 2px solid #eee;
+          margin-bottom: 20px;
+        `
+            )}
+        />
+    )
+)
+
+export const Image = ({ attributes, children, element }) => {
+  // const editor = useSlateStatic()
+  // const path = ReactEditor.findPath(editor, element)
+
+  const selected = useSelected()
+  const focused = useFocused()
+  return (
+      <div {...attributes}>
+        {children}
+        <div
+            contentEditable={false}
+            className={css`
+          position: relative;
+        `}
+        >
+          <img
+              src={element.url}
+              className={css`
+            display: block;
+            max-width: 100%;
+            max-height: 20em;
+            box-shadow: ${selected && focused ? '0 0 0 3px #B4D5FF' : 'none'};
+          `}
+          />
+          {/*<Button*/}
+          {/*    sx={{*/}
+          {/*      width: '32px'*/}
+          {/*    }}*/}
+          {/*    color='warning'*/}
+          {/*    size='large'*/}
+          {/*    variant='text'*/}
+          {/*    startIcon={<DeleteIcon/>}*/}
+          {/*    onClick={() => Transforms.removeNodes(editor, { at: path })}*/}
+          {/*    className={css`*/}
+          {/*  display: ${selected && focused ? 'inline' : 'none'};*/}
+          {/*  position: absolute;*/}
+          {/*  top: 2px;*/}
+          {/*  left: 2px;*/}
+          {/*`}*/}
+          {/*/>*/}
+        </div>
+      </div>
+  )
+}
+
+export const EditorElement = ({ attributes, children, element }) => {
+  const props = { attributes, children, element }
+  switch (element.type) {
+    case 'title':
+      return <h3 {...attributes} className="slate-editor-title">{children}</h3>
+    case 'heading':
+      return <h5 {...attributes} className="slate-editor-heading">{children}</h5>
+    case 'paragraph':
+      return <p {...attributes} className="slate-editor-paragraph">{children}</p>
+    case 'image':
+      return <Image {...props} />
+  }
 }

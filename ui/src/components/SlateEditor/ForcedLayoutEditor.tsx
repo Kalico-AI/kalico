@@ -1,12 +1,21 @@
 import React, {FC, useCallback, useMemo} from 'react'
-import {Slate, Editable, withReact} from 'slate-react'
 import {
-  createEditor,
+  Slate,
+  Editable,
+  withReact
+} from 'slate-react'
+import {
+  createEditor, Descendant,
 } from 'slate'
 import { withHistory } from 'slate-history'
-
 import {Box} from "@mui/material";
-import {withImages, withLayout} from "@/components/SlateEditor/utils";
+import {
+  EditorElement,
+  InsertImageButton,
+  Toolbar,
+  withImages,
+  withLayout
+} from "@/components/SlateEditor/utils";
 import {ProjectDetail} from "@/api";
 import {AuthUserContext} from "next-firebase-auth";
 
@@ -16,14 +25,17 @@ export interface EditorProps {
 }
 
 const ForcedLayoutEditor: FC<EditorProps> = (props) => {
-  const renderElement = useCallback(props => <Element {...props} />, [])
+  const renderElement = useCallback(props => <EditorElement {...props} />, [])
   const editor = useMemo(
       () => withImages(withLayout(withHistory(withReact(createEditor())))),
       []
   )
   return (
       <Box className="slate-editor-box">
-      <Slate editor={editor} value={props.project.content as any}>
+      <Slate editor={editor} value={props.project.content as Descendant[]}>
+          <Toolbar>
+            <InsertImageButton />
+          </Toolbar>
         <Editable
             renderElement={renderElement}
             placeholder="Untitled"
@@ -35,19 +47,6 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   )
 }
 
-const Element = (props) => {
-  const { attributes, children, element } = props
-  switch (element.type) {
-    case 'title':
-      return <h3 {...attributes} className="slate-editor-title">{children}</h3>
-    case 'heading':
-      return <h5 {...attributes} className="slate-editor-heading">{children}</h5>
-    case 'paragraph':
-      return <p {...attributes} className="slate-editor-paragraph">{children}</p>
-    case 'image':
-      return <img {...attributes} alt={''} src={element.url} className="slate-editor-img"/>
-  }
-}
 
 // const initialValue: Descendant[] = [
 //   {
