@@ -1,7 +1,9 @@
 package ai.kalico.api.service.utils;
 
+import ai.kalico.api.data.postgres.entity.ProjectEntity;
 import ai.kalico.api.data.postgres.entity.SampledImageEntity;
 import ai.kalico.api.data.postgres.entity.MediaContentEntity;
+import ai.kalico.api.data.postgres.repo.ProjectRepo;
 import ai.kalico.api.data.postgres.repo.SampledImageRepo;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.dto.Pair;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -44,6 +47,7 @@ public class AVAsyncHelper {
   private final SampledImageRepo sampledImageRepo;
   private final DockerImageProps dockerImageProps;
   private final DownloadService downloadService;
+  private final ProjectRepo projectRepo;
 
   @Async
   public void uploadImages(OcrRequest ocrRequest) {
@@ -219,6 +223,13 @@ public class AVAsyncHelper {
         if (entity != null) {
           entity.setRawTranscript(transcript.replace("\n", "<br>"));
           mediaContentRepo.save(entity);
+
+          // Update the completion status
+          Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(entity.getProjectId());
+          if (projectEntityOpt.isPresent()) {
+            projectEntityOpt.get().setProcessed(true);
+            projectRepo.save(projectEntityOpt.get());
+          }
         }
       } catch (IOException e) {
         e.printStackTrace();

@@ -52,7 +52,6 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
         if (response.data) {
           setPercent(response.data.percent_complete)
           setEstimatedTime(response.data.estimated_time)
-          console.log("data: ", response.data.percent_complete)
           if (response.data.percent_complete === 100) {
             setProgressMessage('Processed')
             props.onNewProjectCreated(props.project.id)
