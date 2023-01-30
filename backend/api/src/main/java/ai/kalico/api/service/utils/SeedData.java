@@ -1,5 +1,6 @@
 package ai.kalico.api.service.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ai.kalico.api.data.postgres.entity.ProjectEntity;
@@ -47,7 +48,7 @@ public class SeedData {
   public void seed(String userId) {
     if (projectProps.getSeedDb() != null && projectProps.getSeedDb()) {
       int numRecords = 5;
-      if (projectRepo.count() != numRecords) {
+      if (projectRepo.count() < numRecords) {
         try {
           if (userId == null) {
             userId = createUserAccounts();
@@ -66,16 +67,23 @@ public class SeedData {
     }
   }
 
-  @SneakyThrows
+
   private String createUserAccounts() {
     TypeReference<List<UserEntity>> typeRef = new TypeReference<>() {};
-    List<UserEntity> userEntities = objectMapper.readValue(loadFromFile("mr_public_user.json"), typeRef);
-    userRepo.saveAll(userEntities);
-    return userEntities.get(1).getFirebaseId();
+    List<UserEntity> userEntities = null;
+    try {
+      userEntities = objectMapper.readValue(loadFromFile("mr_public_user.json"), typeRef);
+      userRepo.saveAll(userEntities);
+    } catch (Exception e) {
+      log.error(e.getLocalizedMessage());
+    }
+   if (userEntities != null) {
+     return userEntities.get(0).getFirebaseId();
+   }
+   return "";
   }
   
 
-  @SneakyThrows
   private List<ProjectEntity> createProject(int count, String userId) {
     List<ProjectEntity> projectEntities = new ArrayList<>();
     for (int i = 0; i < count; i++) {
@@ -85,7 +93,11 @@ public class SeedData {
           .type("title")
           .children(List.of(new ContentItemChildren()
               .text("Hello, World!"))));
-      entity.setContent(objectMapper.writeValueAsString(content));
+      try {
+        entity.setContent(objectMapper.writeValueAsString(content));
+      } catch (JsonProcessingException e) {
+        log.error(e.getLocalizedMessage());
+      }
       entity.setContentLink("https://www.instagram.com/p/CmGPqXuNvYG/?a=5");
       entity.setContentType(KalicoContentType.FOOD_RECIPE.getValue());
       entity.setParaphrase(true);
@@ -118,10 +130,15 @@ public class SeedData {
     mediaContentRepo.saveAll(contentEntities);
   }
 
-  @SneakyThrows
+
   private void createSampledImages(List<Long> projectIds) {
     TypeReference<List<SampledImageEntity>> typeRef = new TypeReference<>() {};
-    List<SampledImageEntity> sampledImageEntities = objectMapper.readValue(loadFromFile("mr_public_sampled_image.json"), typeRef);
+    List<SampledImageEntity> sampledImageEntities = null;
+    try {
+      sampledImageEntities = objectMapper.readValue(loadFromFile("mr_public_sampled_image.json"), typeRef);
+    } catch (JsonProcessingException e) {
+      log.error(e.getLocalizedMessage());
+    }
     sampledImageEntities.sort(Comparator.comparing(SampledImageEntity::getImageKey));
     for (Long projectId : projectIds) {
       for (SampledImageEntity entity : sampledImageEntities) {
