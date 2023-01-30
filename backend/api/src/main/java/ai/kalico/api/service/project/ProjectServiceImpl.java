@@ -95,7 +95,7 @@ public class ProjectServiceImpl implements ProjectService {
       entity.setContentType(createProjectRequest.getContentType().get().getValue());
       entity.setContentLink(url);
       projectRepo.save(entity);
-//      avService.processMedia(url, entity.getId(), file, ext);
+      avService.processMedia(url, entity.getId(), file, ext);
       return new CreateProjectResponse()
           .status("OK")
           .projectName(entity.getProjectName())
