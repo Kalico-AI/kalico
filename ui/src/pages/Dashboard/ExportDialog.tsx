@@ -8,57 +8,67 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import TableRowsIcon from '@mui/icons-material/TableRows';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import DataObjectIcon from '@mui/icons-material/DataObject';
 import InputIcon from '@mui/icons-material/Input';
-import { orange } from '@mui/material/colors';
 
-const fileFormats = ['CSV', 'JSON', 'Text', 'PDF'];
+
+interface ExportTarget {
+  platform: string,
+  logo: any,
+  format: string
+}
+
+const platforms: ExportTarget[] = [
+  {
+    platform: 'WordPress',
+    logo: "/assets/images/wordpress.svg",
+    format: 'html'
+  },
+  {
+    platform: 'Notion',
+    logo: "/assets/images/notion.svg",
+    format: 'html'
+  },
+  {
+    platform: 'PDF',
+    logo: "/assets/images/pdf.svg",
+    format: 'pdf'
+  },
+  {
+    platform: 'Text',
+    logo: "/assets/images/text.svg",
+    format: 'txt'
+  }
+]
 
 export interface SimpleDialogProps {
   open: boolean;
-  selectedValue: string;
-  onClose: (value: string) => void;
+  onClose: () => void;
 }
 
 function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, selectedValue, open } = props;
+  const { onClose, open } = props;
 
   const handleClose = () => {
-    onClose(selectedValue);
+    onClose();
   };
 
   const handleListItemClick = (value: string) => {
-    onClose(value);
+    onClose();
   };
 
   return (
       <Dialog onClose={handleClose} open={open}>
-        <DialogTitle>Select Export Format</DialogTitle>
+        <DialogTitle sx={{textAlign: 'center', p: 4}}>Select Export Target</DialogTitle>
         <List sx={{ pt: 0 }}>
-          {fileFormats.map((format) => (
-              <ListItem disableGutters>
-                <ListItemButton onClick={() => handleListItemClick(format)} key={format}>
+          {platforms.map((p) => (
+              <ListItem  key={p.platform}>
+                <ListItemButton onClick={() => handleListItemClick(p.format)}>
                   <ListItemAvatar>
-                    <Avatar sx={{ bgcolor: orange[50], color: orange[600] }}>
-                      {format.toLowerCase() === 'csv' &&
-                          <TableRowsIcon />
-                      }
-                      {format.toLowerCase() === 'json' &&
-                          <DataObjectIcon />
-                      }
-                      {format.toLowerCase() === 'text' &&
-                          <TextSnippetIcon />
-                      }
-                      {format.toLowerCase() === 'pdf' &&
-                          <PictureAsPdfIcon />
-                      }
-
+                    <Avatar sx={{ bgcolor: '#fff', color: '#fff', borderRadius: '5px' }}>
+                      <img src={p.logo} alt={p.platform} width={256}/>
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary={format} />
+                  <ListItemText primary={p.platform} />
                 </ListItemButton>
               </ListItem>
           ))}
@@ -69,15 +79,13 @@ function SimpleDialog(props: SimpleDialogProps) {
 
 const ExportDialog = () => {
   const [open, setOpen] = React.useState(false);
-  const [selectedValue, setSelectedValue] = React.useState(fileFormats[1]);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = (value: string) => {
+  const handleClose = () => {
     setOpen(false);
-    setSelectedValue(value);
   };
 
   return (
@@ -91,7 +99,6 @@ const ExportDialog = () => {
           Export
         </Button>
         <SimpleDialog
-            selectedValue={selectedValue}
             open={open}
             onClose={handleClose}
         />

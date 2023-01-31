@@ -26,7 +26,7 @@ export interface EditorProps {
   user: AuthUserContext,
 }
 
-const initialValue: Descendant[] = [
+const initialValue: { children: { text: string }[]; type: string }[] = [
   {
     type: 'title',
     children: [
@@ -41,19 +41,20 @@ const initialValue: Descendant[] = [
 
 const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   const renderElement = useCallback(props => <EditorElement {...props} />, [])
-  const [_content, setContent] = useState<Descendant[]>([])
-
   const editor = useMemo(
       () => withImages(withLayout(withHistory(withReact(createEditor())))),
       []
   )
 
   const throttleSave = useCallback(
-      debounce(nextValue => saveToDb(nextValue), 5000),
+
+      debounce((value: Descendant[]) => saveToDb(value), 1000),
       [],
   );
 
+
   const saveToDb = (content: Descendant[]) => {
+
     props.user?.getIdToken(false)
     .then(tokenResult => {
       const projectApi = new ProjectApi(headerConfig(tokenResult))
@@ -67,7 +68,6 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   }
 
   const handleChange = (content: Descendant[]) => {
-    setContent(content)
     throttleSave(content);
   }
   return (
