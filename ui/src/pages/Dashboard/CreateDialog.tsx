@@ -206,7 +206,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
               </p>
             <div style={{display: 'inline-block', width: '100%', margin: '0 auto', textAlign: 'center', padding: '8px'}}>
               <img src="/assets/images/youtube.svg" alt="YouTube" width={128} style={{display: 'inline-block'}}/>
-              <img src="/assets/images/instagram.svg" alt="Instagram" width={64}/>
+              <img src="/assets/images/instagram.svg" alt="Instagram" width={64} style={{display: 'inline-block'}}/>
             </div>
             <Box p={0}>
               <FormControlLabel
