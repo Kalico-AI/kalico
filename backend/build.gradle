@@ -54,6 +54,9 @@ configure(subprojects.findAll(it ->
   apply plugin: 'io.swagger.core.v3.swagger-gradle-plugin'
 
   dependencies {
+    api 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
     implementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.1.1'
     implementation 'com.alibaba:fastjson:2.0.19'
     implementation 'org.jsoup:jsoup:1.15.1'
@@ -82,6 +85,8 @@ configure(subprojects.findAll(it ->
 
 
     // Test dependencies
+    testImplementation(platform('org.junit:junit-bom:5.8.2'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
     testImplementation 'org.testng:testng:7.4.0'

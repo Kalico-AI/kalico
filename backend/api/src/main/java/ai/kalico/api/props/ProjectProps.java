@@ -23,6 +23,7 @@ public class ProjectProps {
     private Set<String> supportedVideoFormats;
     private Set<String> supportedAudioFormats;
     private long maxJobTime = 60 * 5; // 5 minutes
+    private boolean ocrHtmlLineBreaks = false;
     private String baseSiteUrl;
     private String baseImageCdnUrl;
     private Double fps;

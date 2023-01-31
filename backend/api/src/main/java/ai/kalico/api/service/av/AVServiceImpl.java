@@ -120,15 +120,15 @@ public class AVServiceImpl implements AVService {
     if (dto.getVideoInfo() != null && dto.getVideoInfo().details() != null) {
       mediaContent.setMediaId(dto.getVideoInfo().details().videoId());
       if (dto.getVideoInfo().details().title() != null) {
-        mediaContent.setScrapedTitle(dto.getVideoInfo().details().title().replace("\n", "<br>"));
+        mediaContent.setScrapedTitle(dto.getVideoInfo().details().title());
       }
       if (dto.getVideoInfo().details().description() != null) {
-        mediaContent.setScrapedDescription(dto.getVideoInfo().details().description().replace("\n", "<br>"));
+        mediaContent.setScrapedDescription(dto.getVideoInfo().details().description());
       }
     } else {
       if (!ObjectUtils.isEmpty(dto.getMediaIdOverride())) {
         mediaContent.setMediaId(dto.getMediaIdOverride());
-        mediaContent.setScrapedDescription(dto.getCaption().replace("\n", "<br>"));
+        mediaContent.setScrapedDescription(dto.getCaption());
       }
     }
     mediaContent.setProjectId(projectId);

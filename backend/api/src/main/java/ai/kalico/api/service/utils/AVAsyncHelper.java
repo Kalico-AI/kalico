@@ -9,8 +9,10 @@ import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.dto.Pair;
 import ai.kalico.api.props.AWSProps;
 import ai.kalico.api.props.DockerImageProps;
+import ai.kalico.api.props.ProjectProps;
 import ai.kalico.api.service.aws.S3Service;
 import ai.kalico.api.service.download.DownloadService;
+import ai.kalico.api.service.language.LanguageService;
 import ai.kalico.api.service.ocr.OcrRequest;
 import ai.kalico.api.service.ocr.OcrService;
 import ai.kalico.api.service.stt.SpeechToTextService;
@@ -47,7 +49,8 @@ public class AVAsyncHelper {
   private final SampledImageRepo sampledImageRepo;
   private final DockerImageProps dockerImageProps;
   private final DownloadService downloadService;
-  private final ProjectRepo projectRepo;
+  private final LanguageService languageService;
+  private final ProjectProps projectProps;
 
   @Async
   public void uploadImages(OcrRequest ocrRequest) {
@@ -82,7 +85,7 @@ public class AVAsyncHelper {
       fileNames = fileNames
           .stream()
           .sorted().collect(Collectors.toList());
-      StringBuilder builder = new StringBuilder("<br>");
+      StringBuilder builder = new StringBuilder("\n");
       String prevText = "";
       for (String fileName : fileNames) {
         File file = new File(fileName);
@@ -92,11 +95,16 @@ public class AVAsyncHelper {
           continue;
         }
         prevText = ocrText;
-        String[] tokens = fileName.split("/");
-        if (tokens.length > 0) {
-          String shortName = tokens[tokens.length - 1].replace(".txt", "");
-          String formattedText = shortName + "<br>----------<br>" + ocrText.replace("\n", "<br>") + "<br>";
-          builder.append(formattedText);
+        if (projectProps.isOcrHtmlLineBreaks()) {
+          String[] tokens = fileName.split("/");
+          if (tokens.length > 0) {
+            String shortName = tokens[tokens.length - 1].replace(".txt", "");
+            String formattedText =
+                shortName + "<br>----------<br>" + ocrText.replace("\n", "<br>") + "<br>";
+            builder.append(formattedText);
+          }
+        } else {
+          builder.append(ocrText.replace("\n", ""));
         }
       }
       MediaContentEntity entity = mediaContentRepo.findByMediaId(request.getMediaId());
@@ -197,6 +205,7 @@ public class AVAsyncHelper {
       sttRequest.setLanguage("English");
       stt.transcribe(sttRequest);
       saveTranscriptToDb(mediaId);
+      languageService.generateContent(mediaId);
     }
   }
 
@@ -223,13 +232,6 @@ public class AVAsyncHelper {
         if (entity != null) {
           entity.setRawTranscript(transcript.replace("\n", "<br>"));
           mediaContentRepo.save(entity);
-
-          // Update the completion status
-          Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(entity.getProjectId());
-          if (projectEntityOpt.isPresent()) {
-            projectEntityOpt.get().setProcessed(true);
-            projectRepo.save(projectEntityOpt.get());
-          }
         }
       } catch (IOException e) {
         e.printStackTrace();
@@ -246,7 +248,7 @@ public class AVAsyncHelper {
   }
 
   public String getTranscriptPath(String mediaId) {
-    return getParentPath(mediaId) + "/" + mediaId + ".wav.vtt";
+    return getParentPath(mediaId) + "/" + mediaId + ".wav.txt";
   }
 
   public String getAudioPath(String mediaId) {
