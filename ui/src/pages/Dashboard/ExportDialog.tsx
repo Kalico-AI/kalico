@@ -9,6 +9,9 @@ import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import InputIcon from '@mui/icons-material/Input';
+import {FC, RefObject} from "react";
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 
 interface ExportTarget {
@@ -33,51 +36,18 @@ const platforms: ExportTarget[] = [
     logo: "/assets/images/pdf.svg",
     format: 'pdf'
   },
-  {
-    platform: 'Text',
-    logo: "/assets/images/text.svg",
-    format: 'txt'
-  }
+  // {
+  //   platform: 'Text',
+  //   logo: "/assets/images/text.svg",
+  //   format: 'txt'
+  // }
 ]
 
-export interface SimpleDialogProps {
-  open: boolean;
-  onClose: () => void;
+export interface ExportDialogProps {
+  editorRef: RefObject<HTMLElement>,
+  projectName: string
 }
-
-function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, open } = props;
-
-  const handleClose = () => {
-    onClose();
-  };
-
-  const handleListItemClick = (value: string) => {
-    onClose();
-  };
-
-  return (
-      <Dialog onClose={handleClose} open={open}>
-        <DialogTitle sx={{textAlign: 'center', p: 4}}>Select Export Target</DialogTitle>
-        <List sx={{ pt: 0 }}>
-          {platforms.map((p) => (
-              <ListItem  key={p.platform}>
-                <ListItemButton onClick={() => handleListItemClick(p.format)}>
-                  <ListItemAvatar>
-                    <Avatar sx={{ bgcolor: '#fff', color: '#fff', borderRadius: '5px' }}>
-                      <img src={p.logo} alt={p.platform} width={256}/>
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={p.platform} />
-                </ListItemButton>
-              </ListItem>
-          ))}
-        </List>
-      </Dialog>
-  );
-}
-
-const ExportDialog = () => {
+const ExportDialog: FC<ExportDialogProps> = (props) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -86,6 +56,61 @@ const ExportDialog = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleListItemClick = (value: string) => {
+   switch (value) {
+     case 'pdf':
+       handleDownloadPdf().catch(e => console.log(e))
+       break
+     case 'html':
+       handleDownloadHtml().catch(e => console.log(e))
+       break
+   }
+  };
+
+  const handleDownloadHtml = async () => {
+    console.log("DEBUG 0 : about to generate html")
+    if (props.editorRef && props.editorRef.current) {
+      console.log("DEBUG 1 : about to generate html")
+      const element = props.editorRef.current;
+      const link = document.createElement("a");
+      const file = new Blob([element.innerHTML], {type: 'text/html'})
+      link.href = URL.createObjectURL(file);
+      link.download = props.projectName + ".html"
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+  }
+
+  const handleDownloadPdf = async () => {
+    if (props.editorRef && props.editorRef.current) {
+      const element = props.editorRef.current;
+      const canvas = await html2canvas(element);
+      const data = canvas.toDataURL('image/png');
+
+      const doc = new jsPDF({
+        format: 'a4',
+        unit: 'px',
+      });
+
+      doc.html(element, {
+        async callback(doc) {
+          await doc.save(props.projectName + '.pdf');
+        },
+      });
+
+
+      // const pdf = new jsPDF();
+      // const imgProperties = pdf.getImageProperties(data);
+      // const pdfWidth = pdf.internal.pageSize.getWidth();
+      // const pdfHeight =
+      //     (imgProperties.height * pdfWidth) / imgProperties.width;
+      //
+      // pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      // pdf.save(props.projectName + '.pdf');
+    }
+
   };
 
   return (
@@ -98,10 +123,27 @@ const ExportDialog = () => {
             variant='text'>
           Export
         </Button>
-        <SimpleDialog
-            open={open}
-            onClose={handleClose}
-        />
+        <Dialog onClose={handleClose} open={open}>
+          <DialogTitle sx={{textAlign: 'center', p: 4}}>Select Export Target</DialogTitle>
+          <List sx={{ pt: 0 }}>
+            {platforms.map((p) => (
+                <ListItem  key={p.platform}>
+                  <ListItemButton onClick={() => handleListItemClick(p.format)}>
+                    <ListItemAvatar>
+                      <Avatar sx={{ bgcolor: '#fff', color: '#fff', borderRadius: '5px' }}>
+                        <img src={p.logo} alt={p.platform} width={256}/>
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={p.platform} />
+                  </ListItemButton>
+                </ListItem>
+            ))}
+          </List>
+        </Dialog>
+        {/*<SimpleDialog*/}
+        {/*    open={open}*/}
+        {/*    onClose={handleClose}*/}
+        {/*/>*/}
       </div>
   );
 }

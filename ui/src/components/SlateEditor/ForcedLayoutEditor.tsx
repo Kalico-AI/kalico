@@ -1,4 +1,13 @@
-import React, {FC, useCallback, useMemo, useState} from 'react'
+import React, {
+  createRef,
+  FC,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import {
   Slate,
   Editable,
@@ -24,6 +33,7 @@ import {debounce} from "lodash";
 export interface EditorProps {
   project: ProjectDetail,
   user: AuthUserContext,
+  setEditorRef: (ref: RefObject<HTMLElement>) => void
 }
 
 const initialValue: { children: { text: string }[]; type: string }[] = [
@@ -41,16 +51,27 @@ const initialValue: { children: { text: string }[]; type: string }[] = [
 
 const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   const renderElement = useCallback(props => <EditorElement {...props} />, [])
+  const editorRef = useRef<HTMLElement>()
+
   const editor = useMemo(
       () => withImages(withLayout(withHistory(withReact(createEditor())))),
       []
   )
 
   const throttleSave = useCallback(
-
       debounce((value: Descendant[]) => saveToDb(value), 1000),
       [],
   );
+
+  // const throttledSaveToServer = throttle(() => {
+  //   setTimeout(() => {
+  //     this.saveDocument()
+  //   }, 5000);
+  // }, 5000);
+
+  useEffect(() => {
+    props.setEditorRef(editorRef)
+  }, [editorRef !== undefined])
 
 
   const saveToDb = (content: Descendant[]) => {
@@ -71,13 +92,14 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
     throttleSave(content);
   }
   return (
-      <Box className="slate-editor-box">
-      <Slate editor={editor}
+      <Box className="slate-editor-box"  ref={editorRef}>
+      <Slate
+          editor={editor}
              value={props.project.content ? props.project.content as Descendant[] : initialValue}
              onChange={handleChange}>
-          <Toolbar>
-            <InsertImageButton />
-          </Toolbar>
+          {/*<Toolbar>*/}
+          {/*  <InsertImageButton />*/}
+          {/*</Toolbar>*/}
         <Editable
             renderElement={renderElement}
             placeholder="Untitled"

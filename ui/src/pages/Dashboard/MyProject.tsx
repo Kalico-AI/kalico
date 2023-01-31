@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {createRef, FC, RefObject, useState} from 'react';
 import {observer} from "mobx-react";
 import {Grid} from "@mui/material";
 import ForcedLayoutEditor from "@/components/SlateEditor/ForcedLayoutEditor";
@@ -14,14 +14,23 @@ export interface MyProjectsProps {
 }
 
 const MyProject: FC<MyProjectsProps> = observer((props) => {
+  const [editorRef, setEditorRef] = useState<RefObject<HTMLElement> | undefined>(undefined)
+
+  const handleSetEditorRef = (ref: RefObject<HTMLElement>) => {
+    setEditorRef(ref)
+  }
+
   return (
       <Grid container className="dashboard-container editor">
         <Grid item sm={12} sx={{width: '100%'}}>
           {
             props.showProgress ? <CenterAlignedProgress/> :
                 <>
-                  <ExportDialog/>
-                  <ForcedLayoutEditor project={props.project} user={props.user}/>
+                  {/*<ExportDialog editorRef={editorRef} projectName={props.project?.name}/>*/}
+                  <ForcedLayoutEditor
+                      setEditorRef={handleSetEditorRef}
+                      project={props.project}
+                      user={props.user}/>
                 </>
           }
         </Grid>
