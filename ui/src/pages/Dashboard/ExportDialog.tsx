@@ -8,76 +8,109 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import TableRowsIcon from '@mui/icons-material/TableRows';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import DataObjectIcon from '@mui/icons-material/DataObject';
 import InputIcon from '@mui/icons-material/Input';
-import { orange } from '@mui/material/colors';
+import {FC, RefObject} from "react";
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
-const fileFormats = ['CSV', 'JSON', 'Text', 'PDF'];
 
-export interface SimpleDialogProps {
-  open: boolean;
-  selectedValue: string;
-  onClose: (value: string) => void;
+interface ExportTarget {
+  platform: string,
+  logo: any,
+  format: string
 }
 
-function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, selectedValue, open } = props;
+const platforms: ExportTarget[] = [
+  {
+    platform: 'WordPress',
+    logo: "/assets/images/wordpress.svg",
+    format: 'html'
+  },
+  {
+    platform: 'Notion',
+    logo: "/assets/images/notion.svg",
+    format: 'html'
+  },
+  {
+    platform: 'PDF',
+    logo: "/assets/images/pdf.svg",
+    format: 'pdf'
+  },
+  // {
+  //   platform: 'Text',
+  //   logo: "/assets/images/text.svg",
+  //   format: 'txt'
+  // }
+]
 
-  const handleClose = () => {
-    onClose(selectedValue);
-  };
-
-  const handleListItemClick = (value: string) => {
-    onClose(value);
-  };
-
-  return (
-      <Dialog onClose={handleClose} open={open}>
-        <DialogTitle>Select Export Format</DialogTitle>
-        <List sx={{ pt: 0 }}>
-          {fileFormats.map((format) => (
-              <ListItem disableGutters>
-                <ListItemButton onClick={() => handleListItemClick(format)} key={format}>
-                  <ListItemAvatar>
-                    <Avatar sx={{ bgcolor: orange[50], color: orange[600] }}>
-                      {format.toLowerCase() === 'csv' &&
-                          <TableRowsIcon />
-                      }
-                      {format.toLowerCase() === 'json' &&
-                          <DataObjectIcon />
-                      }
-                      {format.toLowerCase() === 'text' &&
-                          <TextSnippetIcon />
-                      }
-                      {format.toLowerCase() === 'pdf' &&
-                          <PictureAsPdfIcon />
-                      }
-
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={format} />
-                </ListItemButton>
-              </ListItem>
-          ))}
-        </List>
-      </Dialog>
-  );
+export interface ExportDialogProps {
+  editorRef: RefObject<HTMLElement>,
+  projectName: string
 }
-
-const ExportDialog = () => {
+const ExportDialog: FC<ExportDialogProps> = (props) => {
   const [open, setOpen] = React.useState(false);
-  const [selectedValue, setSelectedValue] = React.useState(fileFormats[1]);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = (value: string) => {
+  const handleClose = () => {
     setOpen(false);
-    setSelectedValue(value);
+  };
+
+  const handleListItemClick = (value: string) => {
+   switch (value) {
+     case 'pdf':
+       handleDownloadPdf().catch(e => console.log(e))
+       break
+     case 'html':
+       handleDownloadHtml().catch(e => console.log(e))
+       break
+   }
+  };
+
+  const handleDownloadHtml = async () => {
+    console.log("DEBUG 0 : about to generate html")
+    if (props.editorRef && props.editorRef.current) {
+      console.log("DEBUG 1 : about to generate html")
+      const element = props.editorRef.current;
+      const link = document.createElement("a");
+      const file = new Blob([element.innerHTML], {type: 'text/html'})
+      link.href = URL.createObjectURL(file);
+      link.download = props.projectName + ".html"
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+  }
+
+  const handleDownloadPdf = async () => {
+    if (props.editorRef && props.editorRef.current) {
+      const element = props.editorRef.current;
+      const canvas = await html2canvas(element);
+      const data = canvas.toDataURL('image/png');
+
+      const doc = new jsPDF({
+        format: 'a4',
+        unit: 'px',
+      });
+
+      doc.html(element, {
+        async callback(doc) {
+          await doc.save(props.projectName + '.pdf');
+        },
+      });
+
+
+      // const pdf = new jsPDF();
+      // const imgProperties = pdf.getImageProperties(data);
+      // const pdfWidth = pdf.internal.pageSize.getWidth();
+      // const pdfHeight =
+      //     (imgProperties.height * pdfWidth) / imgProperties.width;
+      //
+      // pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      // pdf.save(props.projectName + '.pdf');
+    }
+
   };
 
   return (
@@ -90,11 +123,27 @@ const ExportDialog = () => {
             variant='text'>
           Export
         </Button>
-        <SimpleDialog
-            selectedValue={selectedValue}
-            open={open}
-            onClose={handleClose}
-        />
+        <Dialog onClose={handleClose} open={open}>
+          <DialogTitle sx={{textAlign: 'center', p: 4}}>Select Export Target</DialogTitle>
+          <List sx={{ pt: 0 }}>
+            {platforms.map((p) => (
+                <ListItem  key={p.platform}>
+                  <ListItemButton onClick={() => handleListItemClick(p.format)}>
+                    <ListItemAvatar>
+                      <Avatar sx={{ bgcolor: '#fff', color: '#fff', borderRadius: '5px' }}>
+                        <img src={p.logo} alt={p.platform} width={256}/>
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={p.platform} />
+                  </ListItemButton>
+                </ListItem>
+            ))}
+          </List>
+        </Dialog>
+        {/*<SimpleDialog*/}
+        {/*    open={open}*/}
+        {/*    onClose={handleClose}*/}
+        {/*/>*/}
       </div>
   );
 }

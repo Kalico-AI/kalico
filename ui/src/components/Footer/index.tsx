@@ -59,15 +59,15 @@ const Footer = () => {
                       </ul>
                     </div>
                   </div>
-                  <div className="col-sm-6 col-md-4 wow fadeInUp" data-wow-delay="0.3s">
-                    <div className="footer-menu">
-                      <h4>Legal</h4>
-                      <ul>
-                        <li><a href="/legal/tos">Terms of Service</a></li>
-                        <li><a href="/legal/privacy">Privacy Policy</a></li>
-                      </ul>
-                    </div>
-                  </div>
+                  {/*<div className="col-sm-6 col-md-4 wow fadeInUp" data-wow-delay="0.3s">*/}
+                  {/*  <div className="footer-menu">*/}
+                  {/*    <h4>Legal</h4>*/}
+                  {/*    <ul>*/}
+                  {/*      <li><a href="/legal/tos">Terms of Service</a></li>*/}
+                  {/*      <li><a href="/legal/privacy">Privacy Policy</a></li>*/}
+                  {/*    </ul>*/}
+                  {/*  </div>*/}
+                  {/*</div>*/}
                 </div>
               </div>
             </div>

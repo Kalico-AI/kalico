@@ -26,46 +26,62 @@ const AvatarWrapperError = styled(Avatar)(
 export interface PendingJobsProps {
   project?: Project,
   user?: AuthUserContext,
-  onNewProjectCreated: (projectId: number) => void
+  onRefreshProjectList: () => void
 }
 const PendingJobs: FC<PendingJobsProps> = (props) => {
   const [percent, setPercent] = useState(0)
   const [estimatedTime, setEstimatedTime] = useState('')
-  const [progressMessage, setProgressMessage] = useState('Processing')
+  const [progressMessage, _setProgressMessage] = useState('Processing')
+  const [intervalRef, setIntervalRef] = useState<any|undefined>(undefined)
+  const [showProgress, _setShowProgress] = useState(true)
+  const [pendingJob, setPendingJob] = useState<Project | undefined>(undefined)
 
   useEffect(() => {
     const interval = setInterval(() => {
       getProgress()
     }, 2000)
+    setIntervalRef(interval)
 
     return () => {
       clearInterval(interval)
     }
-  }, [props.project])
-
-  const getProgress = () => {
-    props?.user?.getIdToken(false)
-    .then(tokenResult => {
-      const projectApi = new ProjectApi(headerConfig(tokenResult))
-      projectApi.getProjectJobStatus(props?.project?.id)
-      .then(response => {
-        if (response.data) {
-          setPercent(response.data.percent_complete)
-          setEstimatedTime(response.data.estimated_time)
-          if (response.data.percent_complete === 100) {
-            setProgressMessage('Processed')
-            props.onNewProjectCreated(props.project.id)
-          } else {
-            setProgressMessage('Processing')
-          }
-        }
-      }).catch(e => console.log(e))
-    }).catch(e => console.log(e))
-  }
+  }, [])
 
   useEffect(() => {
+    if (percent === 100 && intervalRef) {
+      clearInterval(intervalRef)
+    }
+  }, [percent])
 
-  }, [props.project])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      props.onRefreshProjectList()
+    }, 5000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
+
+  const getProgress = () => {
+      props?.user?.getIdToken(false)
+      .then(tokenResult => {
+        const projectApi = new ProjectApi(headerConfig(tokenResult))
+        projectApi.getProjectJobStatus(-1)
+        .then(response => {
+          if (response.data) {
+            if (response.data.project_id) {
+              setPercent(response.data.percent_complete)
+              setEstimatedTime(response.data.estimated_time)
+              setPendingJob({
+                project_name: response.data.project_name,
+                id: response.data.project_id
+              })
+            }
+          }
+        }).catch(e => console.log(e))
+      }).catch(e => console.log(e))
+  }
 
   return (
     <Card
@@ -81,7 +97,7 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
       <AvatarWrapperError>
         <CloudSyncIcon />
       </AvatarWrapperError>
-      {props.project ? <>
+      {pendingJob && showProgress ? <>
         <Typography
             variant="body1"
             sx={{
@@ -99,7 +115,7 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
               display: 'inline-flex'
             }}
         >
-          <strong>{props.project.project_name}</strong>
+          <strong>{pendingJob.project_name}</strong>
           {/*<Typography*/}
           {/*    color="text.primary"*/}
           {/*    variant="h4"*/}

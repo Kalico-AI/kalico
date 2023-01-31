@@ -94,14 +94,14 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
     }).catch(e => console.log(e))
   }
 
-  const onNewProjectCreated = (projectId: number) => {
+  const onRefreshProjectList = () => {
     props?.user?.getIdToken(false)
     .then(tokenResult => {
       const projectApi = new ProjectApi(headerConfig(tokenResult))
-      projectApi.getProjectById(projectId)
+      projectApi.getAllProjects()
       .then(response => {
-        if (response.data && response.data) {
-          setProjects([response.data, ...projects])
+        if (response.data && response.data && response.data.records) {
+          setProjects([...response.data.records])
         }
       }).catch(e => console.log(e))
     }).catch(e => console.log(e))
@@ -218,7 +218,7 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
             <PendingJobs
                 project={projectInProgress}
                 user={props.user}
-                onNewProjectCreated={onNewProjectCreated}
+                onRefreshProjectList={onRefreshProjectList}
             />
           </Box>
         </Grid>

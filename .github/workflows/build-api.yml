@@ -23,7 +23,7 @@ env:
   SPRING_APPLICATION_NAME: 'kalico'
   SPRING_PROFILES_ACTIVE: 'prod'
   TEST_SPRING_PROFILES_ACTIVE: 'test'
-  TEST_DB_NAME: 'mr'
+  TEST_DB_NAME: 'kalico'
   TEST_DB_PASSWORD: 'root'
   TEST_DB_USERNAME: 'root'
   ARTIFACT_PATH: 'kalico-api/build'

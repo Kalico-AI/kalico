@@ -5,7 +5,6 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {useDropzone} from 'react-dropzone';
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
@@ -200,16 +199,15 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
   return (
       <div className="create-project-dialog">
         <Dialog open={props.open} onClose={() => props.onClose()}>
-          <DialogTitle>Submit Your Content</DialogTitle>
-          <DialogContentText sx={{p: 2}}>
-            <Typography variant='body1' sx={{fontSize: '13px', p: 0}}>
-              For a video project, submit a YouTube or Instagram Reels link. For an audio project,
-              upload the file. We are in the process of adding support for external audio/podcast
-              links and videos from other platforms.
-            </Typography>
-
-          </DialogContentText>
+          <DialogTitle sx={{textAlign: 'center', p: 4}}>Submit Your Content</DialogTitle>
           <DialogContent>
+              <p style={{fontSize: '12px', textAlign: 'center'}}>
+                Supported Platforms
+              </p>
+            <div style={{display: 'inline-block', width: '100%', margin: '0 auto', textAlign: 'center', padding: '8px'}}>
+              <img src="/assets/images/youtube.svg" alt="YouTube" width={128} style={{display: 'inline-block'}}/>
+              <img src="/assets/images/instagram.svg" alt="Instagram" width={64}/>
+            </div>
             <Box p={0}>
               <FormControlLabel
                   control={<Switch color="warning" defaultChecked={false} onChange={handleParaphrase}/>}

@@ -18,8 +18,12 @@ import { Configuration } from "./configuration";
 // @ts-ignore
 import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 
-// export const BASE_PATH = "https://api.kalico.ai";
-export const BASE_PATH = "http://localhost:8080";
+let path = "http://localhost:8080"
+if ( process.env.NODE_ENV === 'production') {
+    path = "https://api.kalico.ai";
+}
+export const BASE_PATH = path
+
 /**
  *
  * @export

@@ -1,4 +1,13 @@
-import React, {FC, useCallback, useMemo, useState} from 'react'
+import React, {
+  createRef,
+  FC,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import {
   Slate,
   Editable,
@@ -24,9 +33,10 @@ import {debounce} from "lodash";
 export interface EditorProps {
   project: ProjectDetail,
   user: AuthUserContext,
+  setEditorRef: (ref: RefObject<HTMLElement>) => void
 }
 
-const initialValue: Descendant[] = [
+const initialValue: { children: { text: string }[]; type: string }[] = [
   {
     type: 'title',
     children: [
@@ -41,7 +51,7 @@ const initialValue: Descendant[] = [
 
 const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   const renderElement = useCallback(props => <EditorElement {...props} />, [])
-  const [_content, setContent] = useState<Descendant[]>([])
+  const editorRef = useRef<HTMLElement>()
 
   const editor = useMemo(
       () => withImages(withLayout(withHistory(withReact(createEditor())))),
@@ -49,11 +59,23 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   )
 
   const throttleSave = useCallback(
-      debounce(nextValue => saveToDb(nextValue), 5000),
+      debounce((value: Descendant[]) => saveToDb(value), 1000),
       [],
   );
 
+  // const throttledSaveToServer = throttle(() => {
+  //   setTimeout(() => {
+  //     this.saveDocument()
+  //   }, 5000);
+  // }, 5000);
+
+  useEffect(() => {
+    props.setEditorRef(editorRef)
+  }, [editorRef !== undefined])
+
+
   const saveToDb = (content: Descendant[]) => {
+
     props.user?.getIdToken(false)
     .then(tokenResult => {
       const projectApi = new ProjectApi(headerConfig(tokenResult))
@@ -67,17 +89,17 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   }
 
   const handleChange = (content: Descendant[]) => {
-    setContent(content)
     throttleSave(content);
   }
   return (
-      <Box className="slate-editor-box">
-      <Slate editor={editor}
+      <Box className="slate-editor-box"  ref={editorRef}>
+      <Slate
+          editor={editor}
              value={props.project.content ? props.project.content as Descendant[] : initialValue}
              onChange={handleChange}>
-          <Toolbar>
-            <InsertImageButton />
-          </Toolbar>
+          {/*<Toolbar>*/}
+          {/*  <InsertImageButton />*/}
+          {/*</Toolbar>*/}
         <Editable
             renderElement={renderElement}
             placeholder="Untitled"

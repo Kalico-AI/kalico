@@ -4,7 +4,8 @@ import Landing from "@/pages/Landing";
 import {CenterAlignedProgress} from "@/utils/utils";
 import {SITE_IMAGE_URL} from "@/utils/constants";
 import initAuth from "@/auth/nextAuth";
-import {withAuthUser} from "next-firebase-auth";
+import {AuthAction, withAuthUser} from "next-firebase-auth";
+
 export async function getServerSideProps() {
   return {
     props: {
@@ -30,5 +31,6 @@ function Index(props) {
   );
 }
 export default withAuthUser({
+  whenAuthed: AuthAction.REDIRECT_TO_APP,
   LoaderComponent: () => <CenterAlignedProgress/>,
 })(Index);

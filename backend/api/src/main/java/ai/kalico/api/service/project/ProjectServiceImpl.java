@@ -220,7 +220,8 @@ public class ProjectServiceImpl implements ProjectService {
   public ProjectJobStatus getProjectJobStatus(Long projectId) {
     // Return percent complete until the processed field is set. If so, return 100%.
     // Compute the progress by taking the creation time and the elapsed time
-    Optional<ProjectEntity> entityOpt =  projectRepo.findById(projectId);
+    String userId = securityFilter.getUser().getFirebaseId();
+    Optional<ProjectEntity> entityOpt =  projectRepo.findPendingJob(userId);
     if (entityOpt.isPresent()) {
       long percent;
       String status = "In progress";
@@ -238,17 +239,21 @@ public class ProjectServiceImpl implements ProjectService {
           estimate = String.format("Less than %s minutes", estimatedTime);
         } else {
           percent = (int)(100 * (delta/(projectProps.getMaxJobTime()* 1.0)));
+          // Do not reach 100% unless the processing is actually complete
+          if (percent == 100) {
+            percent--;
+          }
         }
       }
       return new ProjectJobStatus()
-          .projectId(projectId)
+          .projectId(entityOpt.get().getId())
+          .projectName(entityOpt.get().getProjectName())
           .percentComplete(percent)
           .estimatedTime(estimate)
           .status(status);
     }
     return new ProjectJobStatus()
-        .projectId(projectId)
-        .error("Project not found");
+        .status("No pending projects found");
   }
 
   private boolean isSupportedUrl(String url) {
