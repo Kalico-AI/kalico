@@ -11,6 +11,7 @@ import {useAuthUser, withAuthUser} from "next-firebase-auth";
 import Link from "next/link";
 import {CenterAlignedProgress} from "@/utils/utils";
 import dynamic from "next/dynamic";
+import BoltIcon from '@mui/icons-material/Bolt';
 
 initAuth()
 
@@ -112,16 +113,16 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                     {/*  </li>*/}
                     {/*</ul>*/}
                     <div className="right-nav">
-                      {/*<Box sx={{mr: 3, mb: 1, mt: 1}}>*/}
-                      {/*<Button*/}
-                      {/*    color="error"*/}
-                      {/*    startIcon={<ShoppingBasketIcon/>}*/}
-                      {/*    className="upgrade-button"*/}
-                      {/*    size='large'*/}
-                      {/*    variant='contained'*/}
-                      {/*    onClick={() => {}}*/}
-                      {/*>Upgrade</Button>*/}
-                      {/*</Box>*/}
+                      <Box sx={{mr: 3, mb: 1, mt: 1}}>
+                      <Button
+                          color="warning"
+                          startIcon={<BoltIcon/>}
+                          className="upgrade-button"
+                          size='large'
+                          variant='contained'
+                          onClick={() => {}}
+                      >Upgrade</Button>
+                      </Box>
                       <Box sx={{ mb: 1, mt: 1}}>
                       <Button
                           color="inherit"
