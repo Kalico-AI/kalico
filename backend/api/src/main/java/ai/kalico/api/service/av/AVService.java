@@ -10,8 +10,8 @@ import ai.kalico.api.dto.VideoInfoDto;
 public interface AVService {
     void processMedia(String url, Long projectId, String file, String fileExtension);
     String extractYouTubeVideoId(String url);
-    void processInstagramVideo(VideoInfoDto videoInfoDto);
-    void processYouTubeVideo(VideoInfoDto videoInfoDto);
-    void processUploadedVideo(String file, String fileExtension, String mediaId);
-    void processUploadedAudio(String file, String fileExtension, String mediaId);
+    void processInstagramVideo(VideoInfoDto videoInfoDto, Long projectId);
+    void processYouTubeVideo(VideoInfoDto videoInfoDto, Long projectId);
+    void processUploadedVideo(String file, String fileExtension, String mediaId, Long projectId);
+    void processUploadedAudio(String file, String fileExtension, String mediaId, Long projectId);
 }

@@ -38,6 +38,11 @@ public class UserEntity {
     private String lastName;
 
     @Basic
+    @JsonProperty("is_premium_user")
+    @Column(name = "is_premium_user")
+    private Boolean isPremiumUser = false;
+
+    @Basic
     @Column(name = "email")
     private String email;
 

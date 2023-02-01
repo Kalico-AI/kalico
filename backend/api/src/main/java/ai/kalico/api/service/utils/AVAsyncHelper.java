@@ -1,9 +1,7 @@
 package ai.kalico.api.service.utils;
 
-import ai.kalico.api.data.postgres.entity.ProjectEntity;
 import ai.kalico.api.data.postgres.entity.SampledImageEntity;
 import ai.kalico.api.data.postgres.entity.MediaContentEntity;
-import ai.kalico.api.data.postgres.repo.ProjectRepo;
 import ai.kalico.api.data.postgres.repo.SampledImageRepo;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.dto.Pair;
@@ -23,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -53,7 +50,7 @@ public class AVAsyncHelper {
   private final ProjectProps projectProps;
 
   @Async
-  public void uploadImages(OcrRequest ocrRequest) {
+  public void uploadImages(OcrRequest ocrRequest, Long projectId) {
     List<String> fileNames;
     try {
       fileNames = getFileNames(".jpg", ocrRequest.getOcrPath());
@@ -72,14 +69,14 @@ public class AVAsyncHelper {
       if (fileNameKeyList.size() > 0) {
         s3Service.uploadImagesAsync(awsProps.getBucket(), fileNameKeyList, S3Service.IMAGE_TYPE);
       }
-      createSampledImageRecord(ocrRequest.getMediaId(), keys);
+      createSampledImageRecord(keys, projectId);
     } catch (IOException e) {
       log.error("AVAsyncHelper.uploadImages {}", e.getLocalizedMessage());
     }
   }
 
   @Async
-  public void saveOcrTextToDB(OcrRequest request, String path) {
+  public void saveOcrTextToDB(String path, Long projectId) {
     try {
       List<String> fileNames = getFileNames(".txt", path);
       fileNames = fileNames
@@ -107,7 +104,7 @@ public class AVAsyncHelper {
           builder.append(ocrText.replace("\n", ""));
         }
       }
-      MediaContentEntity entity = mediaContentRepo.findByMediaId(request.getMediaId());
+      MediaContentEntity entity = mediaContentRepo.findByProjectId(projectId);
       if (entity != null) {
         entity.setOnScreenText(builder.toString());
         mediaContentRepo.save(entity);
@@ -128,8 +125,8 @@ public class AVAsyncHelper {
   }
 
   @Transactional
-  public void createSampledImageRecord(String mediaId, List<String> keys) {
-    MediaContentEntity mediaContentEntity = mediaContentRepo.findByMediaId(mediaId);
+  public void createSampledImageRecord(List<String> keys, Long projectId) {
+    MediaContentEntity mediaContentEntity = mediaContentRepo.findByProjectId(projectId);
     List<SampledImageEntity> sampledImageEntities = new ArrayList<>();
     if (mediaContentEntity != null) {
       for (String key : keys) {
@@ -152,7 +149,7 @@ public class AVAsyncHelper {
 
   @SneakyThrows
   @Async
-  public void processAudio(String mediaId) {
+  public void processAudio(String mediaId, Long projectId) {
     String videoPath = getVideoPath(mediaId);
     String audioPath = getAudioPath(mediaId);
     log.trace("Extracting audio track from video file {}", videoPath);
@@ -194,23 +191,23 @@ public class AVAsyncHelper {
     else {
       log.trace("Failed to locate video file at {}", videoPath);
     }
-    runStt(mediaId, audioPath);
+    runStt(mediaId, audioPath, projectId);
   }
 
-  private void runStt(String mediaId, String audioPath) {
+  private void runStt(String mediaId, String audioPath, Long projectId) {
     if (!Files.exists(Path.of(getTranscriptPath(mediaId)))) {
       SttRequest sttRequest = new SttRequest();
       sttRequest.setPath(audioPath);
       sttRequest.setMediaId(mediaId);
       sttRequest.setLanguage("English");
       stt.transcribe(sttRequest);
-      saveTranscriptToDb(mediaId);
-      languageService.generateContent(mediaId);
+      saveTranscriptToDb(mediaId, projectId);
+      languageService.generateContent(projectId);
     }
   }
 
   @Async
-  public void processImages(String mediaId) {
+  public void processImages(String mediaId, Long projectId) {
     OcrRequest ocrRequest = new OcrRequest();
     ocrRequest.setMediaId(mediaId);
     ocrRequest.setVideoPath(getVideoPath(mediaId));
@@ -218,17 +215,17 @@ public class AVAsyncHelper {
     ocrRequest.setOcrTesseractPath(getOCrModifiedImagePath(ocrRequest.getOcrPath()));
     ocrRequest.setLanguage("eng");
     ocr.runOcr(ocrRequest);
-    saveOcrTextToDB(ocrRequest, ocrRequest.getOcrTesseractPath());
-    uploadImages(ocrRequest);
+    saveOcrTextToDB(ocrRequest.getOcrTesseractPath(), projectId);
+    uploadImages(ocrRequest, projectId);
   }
 
-  private void saveTranscriptToDb(String mediaId) {
+  private void saveTranscriptToDb(String mediaId, Long projectId) {
     String transcriptPath = getTranscriptPath(mediaId);
     if (Files.exists(Path.of(transcriptPath))) {
       File file = new File(transcriptPath);
       try {
         String transcript = new String(Files.readAllBytes(file.toPath()));
-        MediaContentEntity entity = mediaContentRepo.findByMediaId(mediaId);
+        MediaContentEntity entity = mediaContentRepo.findByProjectId(projectId);
         if (entity != null) {
           entity.setRawTranscript(transcript.replace("\n", "<br>"));
           mediaContentRepo.save(entity);

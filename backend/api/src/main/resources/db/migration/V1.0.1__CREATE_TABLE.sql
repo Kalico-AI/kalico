@@ -23,15 +23,16 @@ CREATE SEQUENCE IF NOT EXISTS pk_sequence_cookie_jar
 
 
 CREATE TABLE IF NOT EXISTS public.user (
-  firebase_id varchar(255) NOT NULL PRIMARY KEY,
-  full_name varchar(255),
-  first_name varchar(128),
-  last_name varchar(128),
-  email varchar(255),
-  roles varchar(255)[],
-  updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-UNIQUE(firebase_id)
+    firebase_id varchar(255) NOT NULL PRIMARY KEY,
+    full_name varchar(255),
+    first_name varchar(128),
+    last_name varchar(128),
+    email varchar(255),
+    roles varchar(255)[],
+    is_premium_user boolean not null default false,
+    updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(firebase_id)
 );
 ALTER TABLE public.user OWNER TO root;
 comment on table public.user is 'Basic user information';
