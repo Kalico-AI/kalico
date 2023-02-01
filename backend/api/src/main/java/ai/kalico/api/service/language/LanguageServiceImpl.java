@@ -68,6 +68,7 @@ public class LanguageServiceImpl implements LanguageService {
 
       if (description != null && description.length() > openAiProps.getDescriptionCharacterLimit()) {
         // Extract details from the description
+        // TODO: consolidate the description and the transcript
       }
 
       // Break input transcript into clusters
