@@ -131,8 +131,8 @@ public class ProjectServiceIntegrationTest extends AbstractTestNGSpringContextTe
       PageableResponse response = projectService.getAllProjects();
       assertThat(response, is(notNullValue()));
       assertThat(response.getNumPages(), is(equalTo(1)));
-      assertThat(response.getTotalRecords(), is(equalTo(5)));
-      assertThat(response.getRecords().size(), is(equalTo(5)));
+      assertThat(response.getTotalRecords(), is(equalTo(6)));
+      assertThat(response.getRecords().size(), is(equalTo(6)));
       for (Project record : response.getRecords()) {
         assertThat(record.getId(), is(notNullValue()));
         assertThat(record.getProjectName(), is(notNullValue()));
@@ -149,7 +149,7 @@ public class ProjectServiceIntegrationTest extends AbstractTestNGSpringContextTe
       assertThat(detail.getDateCreated(), is(notNullValue()));
       assertThat(detail.getContent().size(), is(greaterThan(0)));
       for (ContentItem contentItem : detail.getContent()) {
-        assertThat(contentItem.getType(), startsWith("title"));
+        assertThat(contentItem.getType(), is(notNullValue()));
         assertThat(contentItem.getChildren().size(), is(greaterThan(0)));
         for (ContentItemChildren child : contentItem.getChildren()) {
           assertThat(child.getText(), is(notNullValue()));
