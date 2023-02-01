@@ -24,6 +24,12 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
   const router = useRouter()
   const user = useAuthUser()
 
+  const gotoPricing = () => {
+    router.push({
+      pathname: PATHS.PRICING,
+    }).catch(e => console.log(e))
+  }
+
   const logout = () => {
     auth.signOut().then(_ => {
       store.sessionDataStore.setUser(undefined)
@@ -120,7 +126,7 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                           className="upgrade-button"
                           size='large'
                           variant='contained'
-                          onClick={() => {}}
+                          onClick={gotoPricing}
                       >Upgrade</Button>
                       </Box>
                       <Box sx={{ mb: 1, mt: 1}}>
