@@ -1,5 +1,7 @@
 package ai.kalico.api.service.language;
 
+import java.util.List;
+
 /**
  * @author Biz Melesse created on 1/30/23
  */
@@ -19,5 +21,13 @@ public interface LanguageService {
    * @return
    */
   String cleanup(String input);
+
+  /**
+   * Break input text into chunks so we can remain below OpenAI's token limit
+   *
+   * @param input raw transcript or scraped description
+   * @return
+   */
+  List<String> chunkTranscript(String input, int chunkSize);
 
 }

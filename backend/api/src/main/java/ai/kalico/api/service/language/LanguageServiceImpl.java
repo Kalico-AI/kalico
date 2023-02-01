@@ -4,15 +4,17 @@ import ai.kalico.api.data.postgres.entity.MediaContentEntity;
 import ai.kalico.api.data.postgres.entity.ProjectEntity;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.data.postgres.repo.ProjectRepo;
-import com.fasterxml.jackson.databind.JsonNode;
+import ai.kalico.api.props.OpenAiProps;
 import com.kalico.model.ContentItem;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.StringJoiner;
+import java.util.StringTokenizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author Biz Melesse created on 1/30/23
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class LanguageServiceImpl implements LanguageService {
   private final MediaContentRepo mediaContentRepo;
   private final ProjectRepo projectRepo;
+  private final OpenAiProps openAiProps;
 
   @Override
   public void generateContent(String mediaId) {
@@ -54,6 +57,27 @@ public class LanguageServiceImpl implements LanguageService {
 //      return clean;
 //    }
 //    return input;
+  }
+
+  @Override
+  public List<String> chunkTranscript(String input, int chunkSize) {
+    List<String> chunks = new ArrayList<>();
+    StringTokenizer tokenizer = new StringTokenizer(input);
+    int i = 0;
+    StringJoiner joiner = new StringJoiner(" ");
+    while (tokenizer.hasMoreTokens()) {
+      joiner.add(tokenizer.nextToken());
+      i++;
+      if (i == chunkSize) {
+        i = 0;
+        chunks.add(joiner.toString());
+        joiner = new StringJoiner(" ");
+      }
+    }
+    if (!ObjectUtils.isEmpty(joiner.toString())) {
+      chunks.add(joiner.toString());
+    }
+    return chunks;
   }
 
   private void saveContent(Long projectId, List<ContentItem> generatedContent) {
