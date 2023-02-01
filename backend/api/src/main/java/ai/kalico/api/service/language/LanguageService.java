@@ -1,5 +1,7 @@
 package ai.kalico.api.service.language;
 
+import ai.kalico.api.service.openai.completion.CompletionChoice;
+import com.kalico.model.ContentItem;
 import java.util.List;
 
 /**
@@ -11,8 +13,9 @@ public interface LanguageService {
    * Apply GPT-3 or equivalent ML model/s to generate the content from raw
    * data gathered so far.
    * @param mediaId
+   * @return the generated content formatted for rendering in the UI
    */
-  void generateContent(String mediaId);
+  List<ContentItem> generateContent(String mediaId);
 
   /**
    * Cleanup text by extracting texts and number without any special characters
@@ -29,5 +32,12 @@ public interface LanguageService {
    * @return
    */
   List<String> chunkTranscript(String input, int chunkSize);
+
+  /**
+   * Extract the content part of the GPT completion response by dropping the prefix
+   * @param completionChoices
+   * @return
+   */
+  String extractGptResponse(List<CompletionChoice> completionChoices);
 
 }

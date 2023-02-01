@@ -3475,7 +3475,7 @@ textarea:focus {
   padding-top: 20px;
 }
 .slate-editor-paragraph {
-  padding: 0;
+  padding-top: 20px;
 }
 .slate-editor-img {
   padding-top: 20px;

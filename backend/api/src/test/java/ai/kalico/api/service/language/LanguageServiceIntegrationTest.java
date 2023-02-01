@@ -9,9 +9,11 @@ import ai.kalico.api.data.postgres.repo.ProjectRepo;
 import ai.kalico.api.data.postgres.repo.UserRepo;
 import ai.kalico.api.props.OpenAiProps;
 import ai.kalico.api.service.ServiceTestConfiguration;
+import ai.kalico.api.service.openai.completion.CompletionChoice;
 import ai.kalico.api.service.utils.KALUtils;
 import ai.kalico.api.utils.ServiceTestHelper;
 import ai.kalico.api.utils.migration.FlywayMigration;
+import com.kalico.model.ContentItem;
 import com.kalico.model.KalicoContentType;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -100,7 +102,22 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
     @Test
     public void generateContentTest() {
         String mediaId = createProject();
-        languageService.generateContent(mediaId);
+        List<ContentItem> response = languageService.generateContent(mediaId);
+        assertNotNull(response);
+
+    }
+
+    @Test
+    public void extractGptResponseTest() {
+        CompletionChoice choice = new CompletionChoice();
+        choice.setText("Group 1: This Korean brace tofu is one of my favorite tofu dishes because it's super easy to make\n"
+            + "plus it's back full of flavor. It's also very spicy. I love spice but if you don't like it too\n"
+            + "spicy, you can also add less chili powder and it's great with rice for a really hardy and complete meal\n"
+            + "and I really love to prepare this in advance because I usually do meal prep at a serve\n"
+            + "a week and I like to make this in a big batch and store it in the fridge in a container and\n"
+            + "a 3-heat whatever I want to enjoy. ");
+        String response = languageService.extractGptResponse(List.of(choice));
+        assertThat(response.indexOf("Group 1"), is(lessThan(0)));
     }
 
     private String createProject() {

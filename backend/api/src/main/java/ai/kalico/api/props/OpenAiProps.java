@@ -16,13 +16,13 @@ import org.springframework.context.annotation.Primary;
 @ConfigurationProperties(prefix = "openai")
 public class OpenAiProps {
     private String apiKey;
-    private double temp = 0.75;
+    private double temp = 0.5;
     private int maxTokens = 2000;
     private int chunkSize = 1400; //words
     private String model = "text-davinci-003";
-    private String promptCluster = "Cluster the following text.";
-    private String promptParagraph = "Break this text into paragraphs.";
-    private String promptGrammar = "Improve the writing style in this text.";
-    private String promptTitle = "Generate a blog post title for this text.";
+    private String promptCluster = "Cluster the following text:";
+    private String promptParagraph = "Break the following text into paragraphs and improve the writing style:";
+//    private String promptGrammar = "Improve the writing style in this text.";
+    private String promptTitle = "Generate a blog post title for the following text:";
     private String user = "kalico";
 }
