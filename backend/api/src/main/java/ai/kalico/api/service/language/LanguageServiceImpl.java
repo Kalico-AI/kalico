@@ -57,7 +57,9 @@ public class LanguageServiceImpl implements LanguageService {
   @Override
   public List<ContentItem> generateContent(Long projectId) {
     MediaContentEntity contentEntity = mediaContentRepo.findByProjectId(projectId);
-    if (contentEntity != null && contentEntity.getRawTranscript().length() > 0) {
+    if (contentEntity != null &&
+        !ObjectUtils.isEmpty(contentEntity.getRawTranscript()) &&
+        contentEntity.getRawTranscript().length() > 0) {
       log.info("LanguageServiceImpl.generateContent Starting content generation for projectId={}", projectId);
       KalicoContentType contentType = KalicoContentType.OTHER;
       Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(contentEntity.getProjectId());
@@ -121,7 +123,7 @@ public class LanguageServiceImpl implements LanguageService {
     ContentItem item = new ContentItem()
         .type("title")
         .children(List.of(new ContentItemChildren()
-            .text(cleanup(title.completionChoices.get(0).getText()))));
+            .text(cleanup(extractTitle(title.completionChoices.get(0).getText())))));
     content.add(item);
     for (GptResponse paragraphs : paragraphsByCluster) {
       // TODO: This is where we insert the section headers
@@ -143,6 +145,17 @@ public class LanguageServiceImpl implements LanguageService {
     content.addAll(generateRecipe(recipe));
 
     return content;
+  }
+
+  private String extractTitle(String text) {
+    // The title sometimes comes back with a few sentences from the input. It's not clear why.
+    String[] tokens = text.split("\n");
+    List<String> validStrings = new ArrayList<>(List.of(text.split("\n")))
+        .stream()
+        .filter(it -> !ObjectUtils.isEmpty(cleanup(it)))
+        .collect(Collectors.toList());
+    // The last line is the title
+    return validStrings.get(validStrings.size() - 1);
   }
 
   private List<ContentItem> generateRecipe(GptResponse recipe) {
@@ -252,6 +265,7 @@ public class LanguageServiceImpl implements LanguageService {
   @Override
   public String cleanup(String input) {
     return input
+        .replace("Paragraph:", "")
         .replace("\"", "")
         .replace("\n", " ")
         .trim();

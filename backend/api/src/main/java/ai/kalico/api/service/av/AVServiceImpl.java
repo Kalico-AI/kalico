@@ -241,12 +241,16 @@ public class AVServiceImpl implements AVService {
     // Generate audio file for transcoding and perform audio to text
     asyncHelper.processAudio(mediaId, projectId);
 
-    if (isVideo && isPremiumUser(projectId)) {
-      // Generate images from frames and perform image to text
-      asyncHelper.processImages(mediaId, projectId);
+    if (isVideo) {
+      if (isPremiumUser(projectId)) {
+        // Generate images from frames and perform image to text
+        asyncHelper.processImages(mediaId, projectId);
 
-      // Generate HLS files and upload them to S3
-      asyncHelper.processHls(mediaId, path);
+        // Generate HLS files and upload them to S3
+        asyncHelper.processHls(mediaId, path);
+      } else {
+        log.info("Skipping video processing for projectId={}. Not a premium user.", projectId);
+      }
     }
   }
 

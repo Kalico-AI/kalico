@@ -152,6 +152,7 @@ public class AVAsyncHelper {
   public void processAudio(String mediaId, Long projectId) {
     String videoPath = getVideoPath(mediaId);
     String audioPath = getAudioPath(mediaId);
+    log.info("Starting audio processing for mediaId={} projectId={}", mediaId, projectId);
     log.trace("Extracting audio track from video file {}", videoPath);
     if (Files.exists(Path.of(videoPath)) && !Files.exists(Path.of(audioPath))) {
       //-i input file
@@ -195,15 +196,18 @@ public class AVAsyncHelper {
   }
 
   private void runStt(String mediaId, String audioPath, Long projectId) {
+    log.info("Starting STT service for mediaId={} projectId={}", mediaId, projectId);
     if (!Files.exists(Path.of(getTranscriptPath(mediaId)))) {
       SttRequest sttRequest = new SttRequest();
       sttRequest.setPath(audioPath);
       sttRequest.setMediaId(mediaId);
       sttRequest.setLanguage("English");
       stt.transcribe(sttRequest);
-      saveTranscriptToDb(mediaId, projectId);
-      languageService.generateContent(projectId);
+    } else {
+      log.info("Skipping STT for mediaId={} projectId={}. Audio transcript already exists.", mediaId, projectId);
     }
+    saveTranscriptToDb(mediaId, projectId);
+    languageService.generateContent(projectId);
   }
 
   @Async
@@ -227,7 +231,7 @@ public class AVAsyncHelper {
         String transcript = new String(Files.readAllBytes(file.toPath()));
         MediaContentEntity entity = mediaContentRepo.findByProjectId(projectId);
         if (entity != null) {
-          entity.setRawTranscript(transcript.replace("\n", "<br>"));
+          entity.setRawTranscript(transcript);
           mediaContentRepo.save(entity);
         }
       } catch (IOException e) {
