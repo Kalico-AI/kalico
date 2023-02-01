@@ -1,14 +1,24 @@
 package ai.kalico.api.service.language;
 
 
+import ai.kalico.api.data.postgres.entity.MediaContentEntity;
+import ai.kalico.api.data.postgres.entity.ProjectEntity;
+import ai.kalico.api.data.postgres.entity.UserEntity;
+import ai.kalico.api.data.postgres.repo.MediaContentRepo;
+import ai.kalico.api.data.postgres.repo.ProjectRepo;
+import ai.kalico.api.data.postgres.repo.UserRepo;
 import ai.kalico.api.props.OpenAiProps;
 import ai.kalico.api.service.ServiceTestConfiguration;
+import ai.kalico.api.service.utils.KALUtils;
+import ai.kalico.api.utils.ServiceTestHelper;
 import ai.kalico.api.utils.migration.FlywayMigration;
+import com.kalico.model.KalicoContentType;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.UUID;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +28,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.FileCopyUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -38,8 +49,8 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
     @Autowired
     private LanguageService languageService;
 
-//    @Autowired
-//    private ServiceTestHelper testHelper;
+    @Autowired
+    private ServiceTestHelper testHelper;
 
     @Autowired
     private FlywayMigration flywayMigration;
@@ -47,6 +58,29 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
     @Autowired
     private OpenAiProps openAiProps;
 
+    @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
+    private ProjectRepo projectRepo;
+
+    @Autowired
+    private MediaContentRepo mediaContentRepo;
+
+    private final String userId = UUID.randomUUID().toString();
+
+    @BeforeClass
+    public void setup() {
+        flywayMigration.migrate(true);
+        testHelper.prepareSecurity(userId);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail("testng@kalico.ai");
+        userEntity.setFirebaseId(userId);
+        userEntity.setFirstName("Test");
+        userEntity.setFullName("Test NG");
+        userEntity.setLastName("NG");
+        userRepo.save(userEntity);
+    }
 
     @AfterTest
     public void teardown() {
@@ -56,9 +90,6 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
     @BeforeMethod
     public void beforeEachTest(Method method) {
         log.info("  Testcase: " + method.getName() + " has started");
-//        flywayMigration.migrate(true);
-//        userService.getOrCreateUserprofile();
-//        cookieHelper.loadFromFile();
     }
 
     @AfterMethod
@@ -67,8 +98,37 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
     }
 
     @Test
+    public void generateContentTest() {
+        String mediaId = createProject();
+        languageService.generateContent(mediaId);
+    }
+
+    private String createProject() {
+        ProjectEntity entity = new ProjectEntity();
+        entity.setProjectName("Demo TestNG project");
+        entity.setContentLink("https://www.instagram.com/p/CmGPqXuNvYG/?a=5");
+        entity.setContentType(KalicoContentType.FOOD_RECIPE.getValue());
+        entity.setParaphrase(true);
+        entity.setEmbedImages(false);
+        entity.setUserId(userId);
+        entity.setProcessed(true);
+        projectRepo.save(entity);
+
+        MediaContentEntity contentEntity = new MediaContentEntity();
+        contentEntity.setMediaId(KALUtils.generateUid());
+        contentEntity.setScrapedDescription(loadFromFile("text/description.txt"));
+        contentEntity.setScrapedTitle("Spicy egg fried rice");
+        contentEntity.setRawTranscript(loadFromFile("text/transcript.txt"));
+        contentEntity.setOnScreenText("");
+        contentEntity.setPermalink("https://www.instagram.com/reel/CmywGx6MYso/?igshid=YmMyMTA2M2Y=");
+        contentEntity.setProjectId(entity.getId());
+        mediaContentRepo.save(contentEntity);
+        return contentEntity.getMediaId();
+    }
+
+    @Test
     public void chunkTextTest() {
-        String text = loadFromFile("text/recipe.txt");
+        String text = loadFromFile("text/transcript.txt");
         List<String> response = languageService.chunkTranscript(text, 100);
         assertNotNull(response);
         assertEquals(5, response.size());

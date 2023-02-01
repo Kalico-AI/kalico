@@ -78,7 +78,7 @@ export interface CreateDialogProps {
 }
 
 const CreateDialog: FC<CreateDialogProps> = (props) => {
-  const [paraphrase, setParaphrase] = useState(false)
+  const [paraphrase, setParaphrase] = useState(true)
   const [embedImages, setEmbedImages] = useState(false)
   const [projectName, setProjectName] = useState('')
   const [contentLink, setContentLink] = useState('')

@@ -5,8 +5,12 @@ import ai.kalico.api.data.postgres.entity.ProjectEntity;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.data.postgres.repo.ProjectRepo;
 import ai.kalico.api.props.OpenAiProps;
+import ai.kalico.api.service.openai.OpenAiService;
+import ai.kalico.api.service.openai.completion.CompletionChoice;
+import ai.kalico.api.service.openai.completion.CompletionRequest;
 import com.kalico.model.ContentItem;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -31,17 +35,38 @@ public class LanguageServiceImpl implements LanguageService {
   public void generateContent(String mediaId) {
     MediaContentEntity contentEntity = mediaContentRepo.findByMediaId(mediaId);
     if (contentEntity != null) {
-      boolean paraphrase = false;
+      OpenAiService openAiService = new OpenAiService(openAiProps.getApiKey(), 60);
       Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(contentEntity.getProjectId());
-      if (projectEntityOpt.isPresent()) {
-        paraphrase = projectEntityOpt.get().getParaphrase();
-      }
       String title = cleanup(contentEntity.getScrapedTitle());
-      String description = cleanup(contentEntity.getScrapedDescription());
+      List<String> description = chunkTranscript(cleanup(contentEntity.getScrapedDescription()),
+          openAiProps.getChunkSize());
 //      String onScreenText = cleanup(contentEntity.getOnScreenText());
-      String transcript = cleanup(contentEntity.getRawTranscript());
+      List<String> transcript = chunkTranscript(cleanup(contentEntity.getRawTranscript()),
+          openAiProps.getChunkSize());
+
+      for (String s : transcript) {
+        String prompt = String.format("%s\n%s", openAiProps.getPromptCluster(), s);
+        List<CompletionChoice> choices = gptCompletion(prompt, openAiService);
+        int x = 1;
+      }
+
+
 
     }
+  }
+
+  private  List<CompletionChoice> gptCompletion(String prompt, OpenAiService openAiService) {
+    CompletionRequest completionRequest = CompletionRequest.builder()
+        .model(openAiProps.getModel())
+        .prompt(prompt)
+        .echo(false)
+        .temperature(openAiProps.getTemp())
+        .n(1)
+        .maxTokens(openAiProps.getMaxTokens())
+        .user(openAiProps.getUser())
+        .logitBias(new HashMap<>())
+        .build();
+    return openAiService.createCompletion(completionRequest).getChoices();
   }
 
   @Override

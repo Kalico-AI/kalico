@@ -35,7 +35,7 @@ public class ProjectEntity {
 
     @Basic
     @Column(name = "paraphrase")
-    private Boolean paraphrase = false;
+    private Boolean paraphrase = true;
 
     @Basic
     @Column(name = "embed_images")

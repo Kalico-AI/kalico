@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS public.project (
     content varchar,
     project_name varchar not null default 'Untitled',
     content_link varchar,
-    paraphrase boolean not null default false,
+    paraphrase boolean not null default true,
     embed_images boolean not null default false,
     content_type varchar(255),
     processed boolean not null default false,
