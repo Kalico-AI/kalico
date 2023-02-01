@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 @ConfigurationProperties(prefix = "openai")
 public class OpenAiProps {
-    private String apiToken;
+    private String apiKey;
+    private int chunkSize = 1400; //words
 
 }

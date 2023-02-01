@@ -23,7 +23,7 @@ public class ModerationTest extends AbstractTestNGSpringContextTests {
 
     @BeforeClass
     public void setup() {
-        service = new OpenAiService(openAiProps.getApiToken());
+        service = new OpenAiService(openAiProps.getApiKey());
     }
 
     @Test

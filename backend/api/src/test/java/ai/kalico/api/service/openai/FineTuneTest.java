@@ -33,24 +33,13 @@ public class FineTuneTest extends AbstractTestNGSpringContextTests {
     @SneakyThrows
     @BeforeClass
     public void setup() {
-      service = new OpenAiService(openAiProps.getApiToken());
+      service = new OpenAiService(openAiProps.getApiKey());
       fileId = service.uploadFile("fine-tune", "src/test/resources/openai/fine-tuning-data.jsonl").getId();
 
       // wait for file to be processed
       TimeUnit.SECONDS.sleep(10);
     }
 
-
-
-//  @BeforeAll
-//   static void setup() throws Exception {
-//        String token = System.getenv("OPENAI_TOKEN");
-//        service = new OpenAiService(token);
-//        fileId = service.uploadFile("fine-tune", "src/test/resources/fine-tuning-data.jsonl").getId();
-//
-//        // wait for file to be processed
-//        TimeUnit.SECONDS.sleep(10);
-//    }
 
     @AfterClass
     void teardown() {

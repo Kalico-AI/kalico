@@ -27,7 +27,7 @@ public class FileTest extends AbstractTestNGSpringContextTests {
 
     @BeforeClass
     public void setup() {
-        service = new OpenAiService(openAiProps.getApiToken());
+        service = new OpenAiService(openAiProps.getApiKey());
     }
 
     static String fileId;

@@ -25,20 +25,38 @@ public class CompletionTest extends AbstractTestNGSpringContextTests {
 
     @BeforeClass
     public void setup() {
-        service = new OpenAiService(openAiProps.getApiToken());
+        service = new OpenAiService(openAiProps.getApiKey());
     }
 
     @Test
-    void createCompletion() {
+    void createCompletionWithDavinci() {
         CompletionRequest completionRequest = CompletionRequest.builder()
-                .model("ada")
-                .prompt("Somebody once told me the world is gonna roll me")
-                .echo(true)
-                .n(5)
-                .maxTokens(50)
+                .model("text-davinci-003")
+                .prompt("Improve the writing style in this text.\n"
+                    + "This Korean braised tofu is one of my favorite tofu dishes because it's super easy to make, plus it's packed full of flavor. It's also very spicy. I love spice, but if you don't like it too spicy, you can also add less chili powder and it's great with rice for a really hearty and complete meal. I really love to prepare this in advance because I usually do meal prep a week in advance and I like to make this in a big batch and store it in the refrigerator in a container so I can have whatever I want to enjoy.")
+                .echo(false)
+                .temperature(0.75)
+                .n(1)
+                .maxTokens(500)
                 .user("testing")
                 .logitBias(new HashMap<>())
                 .build();
+
+        List<CompletionChoice> choices = service.createCompletion(completionRequest).getChoices();
+        assertEquals(1, choices.size());
+    }
+
+    @Test
+    void createCompletionWithAda() {
+        CompletionRequest completionRequest = CompletionRequest.builder()
+            .model("ada")
+            .prompt("Somebody once told me the world is gonna roll me")
+            .echo(true)
+            .n(5)
+            .maxTokens(50)
+            .user("testing")
+            .logitBias(new HashMap<>())
+            .build();
 
         List<CompletionChoice> choices = service.createCompletion(completionRequest).getChoices();
         assertEquals(5, choices.size());

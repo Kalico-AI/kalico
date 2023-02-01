@@ -32,7 +32,7 @@ public class ImageTest extends AbstractTestNGSpringContextTests {
 
     @BeforeClass
     public void setup() {
-        service = new OpenAiService(openAiProps.getApiToken(), 30);
+        service = new OpenAiService(openAiProps.getApiKey(), 30);
     }
 
 
