@@ -78,7 +78,7 @@ export interface CreateDialogProps {
 }
 
 const CreateDialog: FC<CreateDialogProps> = (props) => {
-  const [paraphrase, setParaphrase] = useState(false)
+  const [paraphrase, setParaphrase] = useState(true)
   const [embedImages, setEmbedImages] = useState(false)
   const [projectName, setProjectName] = useState('')
   const [contentLink, setContentLink] = useState('')
@@ -206,14 +206,14 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
               </p>
             <div style={{display: 'inline-block', width: '100%', margin: '0 auto', textAlign: 'center', padding: '8px'}}>
               <img src="/assets/images/youtube.svg" alt="YouTube" width={128} style={{display: 'inline-block'}}/>
-              <img src="/assets/images/instagram.svg" alt="Instagram" width={64}/>
+              <img src="/assets/images/instagram.svg" alt="Instagram" width={64} style={{display: 'inline-block'}}/>
             </div>
-            <Box p={0}>
-              <FormControlLabel
-                  control={<Switch color="warning" defaultChecked={false} onChange={handleParaphrase}/>}
-                  label={'Paraphrase'}
-              />
-            </Box>
+            {/*<Box p={0}>*/}
+            {/*  <FormControlLabel*/}
+            {/*      control={<Switch color="warning" defaultChecked={false} onChange={handleParaphrase}/>}*/}
+            {/*      label={'Paraphrase'}*/}
+            {/*  />*/}
+            {/*</Box>*/}
             <Box p={0}>
               <FormControlLabel
                   disabled
@@ -241,6 +241,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12}>
+                  {/*<p style={{fontSize: '10px', marginBottom: '10px'}}>We currently support only food recipe videos. More coming soon.</p>*/}
                   <FormControl fullWidth variant="outlined">
                     <InputLabel htmlFor="content_type">{('Content Type')}</InputLabel>
                     <Select

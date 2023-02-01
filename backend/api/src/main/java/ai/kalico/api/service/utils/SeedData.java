@@ -84,26 +84,17 @@ public class SeedData {
   }
   
 
-  private List<ProjectEntity> createProject(int count, String userId) {
+  public List<ProjectEntity> createProject(int count, String userId) {
     List<ProjectEntity> projectEntities = new ArrayList<>();
     for (int i = 0; i < count; i++) {
       ProjectEntity entity = new ProjectEntity();
-      List<ContentItem> content = new ArrayList<>();
-      content.add(new ContentItem()
-          .type("title")
-          .children(List.of(new ContentItemChildren()
-              .text("Hello, World!"))));
-      try {
-        entity.setContent(objectMapper.writeValueAsString(content));
-      } catch (JsonProcessingException e) {
-        log.error(e.getLocalizedMessage());
-      }
-      entity.setContentLink("https://www.instagram.com/p/CmGPqXuNvYG/?a=5");
+      entity.setContentLink("https://www.youtube.com/watch?v=U-0JCdjkREU");
       entity.setContentType(KalicoContentType.FOOD_RECIPE.getValue());
+      entity.setContent(loadFromFile("generated_content.json"));
       entity.setParaphrase(true);
       entity.setEmbedImages(false);
       entity.setUserId(userId);
-      entity.setProjectName("Demo Project " + i);
+      entity.setProjectName("Demo Project: Korean Tofu");
       entity.setProcessed(true);
       projectEntities.add(entity);
     }

@@ -2,6 +2,7 @@ package ai.kalico.api.service.user;
 
 import ai.kalico.api.data.postgres.entity.UserEntity;
 import ai.kalico.api.data.postgres.repo.UserRepo;
+import ai.kalico.api.service.utils.SeedData;
 import com.kalico.model.UserProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceHelperImpl implements UserServiceHelper {
   private final UserRepo userRepo;
+  private final SeedData seedData;
 
   @Async
   @Override
@@ -37,8 +39,9 @@ public class UserServiceHelperImpl implements UserServiceHelper {
       newUser.setFullName(userProfile.getName());
       log.info("Creating new user with firebase ID = {}", newUser.getFirebaseId());
       userRepo.save(newUser);
+
+      // Create a demo project for this user
+      seedData.createProject(1, newUser.getFirebaseId());
     }
   }
-
-
 }

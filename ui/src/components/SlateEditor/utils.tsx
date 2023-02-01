@@ -1,6 +1,6 @@
 import {Editor, Element as SlateElement, Node, Transforms} from "slate";
 import {ImageElement, ParagraphElement, TitleElement} from "@/components/SlateEditor/custom-types";
-import {useFocused, useSelected, useSlateStatic} from "slate-react";
+import {ReactEditor, useFocused, useReadOnly, useSelected, useSlateStatic} from "slate-react";
 import isUrl from 'is-url'
 import imageExtensions from 'image-extensions'
 import React, {PropsWithChildren, Ref} from "react";
@@ -229,6 +229,58 @@ export const Image = ({ attributes, children, element }) => {
   )
 }
 
+const CheckListItemElement = ({ attributes, children, element }) => {
+  const editor = useSlateStatic()
+  const readOnly = useReadOnly()
+  const { checked } = element
+  return (
+      <div
+          {...attributes}
+          className={css`
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        & + & {
+          margin-top: 0;
+        }
+      `}
+      >
+      <span
+          contentEditable={false}
+          className={css`
+          margin-right: 0.75em;
+        `}
+      >
+        <input
+            type="checkbox"
+            checked={checked}
+            onChange={event => {
+              const path = ReactEditor.findPath(editor, element)
+              const newProperties: Partial<SlateElement> = {
+                checked: event.target.checked,
+              }
+              Transforms.setNodes(editor, newProperties, { at: path })
+            }}
+        />
+      </span>
+        <span
+            contentEditable={!readOnly}
+            suppressContentEditableWarning
+            className={css`
+          flex: 1;
+          opacity: ${checked ? 0.666 : 1};
+          text-decoration: ${!checked ? 'none' : 'line-through'};
+          &:focus {
+            outline: none;
+          }
+        `}
+        >
+        {children}
+      </span>
+      </div>
+  )
+}
+
 export const EditorElement = ({ attributes, children, element }) => {
   const props = { attributes, children, element }
   switch (element.type) {
@@ -238,6 +290,8 @@ export const EditorElement = ({ attributes, children, element }) => {
       return <h5 {...attributes} className="slate-editor-heading">{children}</h5>
     case 'paragraph':
       return <p {...attributes} className="slate-editor-paragraph">{children}</p>
+    case 'check-list-item':
+      return <CheckListItemElement {...props} />
     case 'image':
       return <Image {...props} />
   }

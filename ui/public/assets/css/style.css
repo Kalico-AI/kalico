@@ -3472,10 +3472,10 @@ textarea:focus {
   padding-bottom: 2px;
 }
 .slate-editor-heading {
-  padding-top: 20px;
+  padding-top: 40px;
 }
 .slate-editor-paragraph {
-  padding: 0;
+  padding-top: 20px;
 }
 .slate-editor-img {
   padding-top: 20px;
@@ -7273,10 +7273,10 @@ Pricing CSS
   font-weight: 400;
 }
 .pricing-item .pricing-item-user {
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: #5d5d66;
   display: block;
-  margin-top: 0.625rem;
+  margin-top: 0.8rem;
 }
 .pricing-item .pricing-btn {
   display: inline-block;

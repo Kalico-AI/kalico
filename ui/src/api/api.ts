@@ -41,6 +41,12 @@ export interface ContentItem {
     url?: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof ContentItem
+     */
+    checked?: boolean;
+    /**
+     * 
      * @type {Array<ContentItemChildren>}
      * @memberof ContentItem
      */
