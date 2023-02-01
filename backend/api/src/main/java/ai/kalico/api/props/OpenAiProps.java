@@ -22,7 +22,9 @@ public class OpenAiProps {
     private String model = "text-davinci-003";
     private String promptCluster = "Cluster the following text:";
     private String promptParagraph = "Break the following text into paragraphs and improve the writing style:";
-//    private String promptGrammar = "Improve the writing style in this text.";
     private String promptTitle = "Generate a blog post title for the following text:";
+    private String promptRecipe = "Generate  recipe steps and ingredient list with quantity form the following text:";
     private String user = "kalico";
+    private int descriptionCharacterLimit = 256;
+    private int requestTimeoutSeconds = 120;
 }

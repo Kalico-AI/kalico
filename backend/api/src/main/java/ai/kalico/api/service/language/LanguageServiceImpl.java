@@ -13,7 +13,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ContentItem;
 import com.kalico.model.ContentItemChildren;
+import com.kalico.model.KalicoContentType;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +23,10 @@ import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,16 +51,24 @@ public class LanguageServiceImpl implements LanguageService {
 
   @PostConstruct
   public void onStart() {
-    openAiService = new OpenAiService(openAiProps.getApiKey(), 120);
+    openAiService = new OpenAiService(openAiProps.getApiKey(),
+        openAiProps.getRequestTimeoutSeconds());
   }
 
   @Override
   public List<ContentItem> generateContent(String mediaId) {
     MediaContentEntity contentEntity = mediaContentRepo.findByMediaId(mediaId);
     if (contentEntity != null && contentEntity.getRawTranscript().length() > 0) {
+      KalicoContentType contentType = KalicoContentType.OTHER;
       Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(contentEntity.getProjectId());
-//      List<String> description = chunkTranscript(contentEntity.getScrapedDescription(),
-//          openAiProps.getChunkSize());
+      String description = contentEntity.getScrapedDescription();
+      if (projectEntityOpt.isPresent()) {
+        contentType = KalicoContentType.fromValue(projectEntityOpt.get().getContentType());
+      }
+
+      if (description != null && description.length() > openAiProps.getDescriptionCharacterLimit()) {
+        // Extract details from the description
+      }
 
       // Break input transcript into clusters
       List<String> chunkedTranscript = chunkTranscript(contentEntity.getRawTranscript(),
@@ -72,19 +85,30 @@ public class LanguageServiceImpl implements LanguageService {
       // Generate a title using the first chunk of the transcript. This eats into the token usage
       // because who have to send the entire chunk for context.
       // TODO: Design a better prompt to generate the title and do the cluster at the same time
-      GptResponse title = gptCompletion(0, openAiProps.getPromptTitle(), chunkedTranscript.get(0));
+      GptResponse title = gptCompletion(0, openAiProps.getPromptTitle(),
+          chunkedTranscript.get(0));
+
+
+      GptResponse recipe = null;
+      if (contentType != null && contentType.equals(KalicoContentType.FOOD_RECIPE)) {
+        // Extract recipe information
+        // TODO: Not sure how to reconcile food recipes where the detail is spread across multiple chunks
+        recipe = gptCompletion(0, openAiProps.getPromptRecipe(),
+            chunkedTranscript.get(0));
+      }
 
       // For FoodBlog type, do the following:
       // TODO: Extract the ingredients with quantity
       // TODO: Extract recipe steps
-      List<ContentItem> content = generateContent(title, paragraphsByCluster);
+      List<ContentItem> content = generateContent(title, paragraphsByCluster, recipe);
       saveContent(contentEntity.getProjectId(), content);
       return content;
     }
     return new ArrayList<>();
   }
 
-  private List<ContentItem> generateContent(GptResponse title, List<GptResponse> paragraphsByCluster) {
+  private List<ContentItem> generateContent(GptResponse title, List<GptResponse> paragraphsByCluster,
+      GptResponse recipe) {
     List<ContentItem> content = new ArrayList<>();
     ContentItem item = new ContentItem()
         .type("title")
@@ -93,7 +117,6 @@ public class LanguageServiceImpl implements LanguageService {
     content.add(item);
     for (GptResponse paragraphs : paragraphsByCluster) {
       // TODO: This is where we insert the section headers
-
       for (CompletionChoice choice : paragraphs.completionChoices) {
         List<String> eachParagraph = new ArrayList<>(List.of(choice.getText().split("\n")));
         for (String p : eachParagraph) {
@@ -109,8 +132,66 @@ public class LanguageServiceImpl implements LanguageService {
         }
       }
     }
+    content.addAll(generateRecipe(recipe));
+
     return content;
   }
+
+  private List<ContentItem> generateRecipe(GptResponse recipe) {
+    List<ContentItem> content = new ArrayList<>();
+    if (recipe != null) {
+      List<String> recipeDetails = Stream.of(recipe.getCompletionChoices().get(0)
+              .getText().split("\n"))
+          .filter(text -> !ObjectUtils.isEmpty(cleanup(text))).collect(Collectors.toList());
+      // Ingredients start with a hyphen and steps start with a number
+      List<String> ingredients = recipeDetails
+          .stream()
+          .filter(it -> it.startsWith("-")).
+          map(it -> it.replace("-", "")).collect(
+              Collectors.toList());
+      List<String> steps = recipeDetails
+          .stream()
+          .filter(this::startsWithNumber)
+          .map(it -> it + "\n")
+          .collect(Collectors.toList());
+
+      content.add( new ContentItem()
+          .type("heading")
+          .children(List.of(new ContentItemChildren()
+              .text("Ingredients"))));
+
+      content.addAll(ingredients
+          .stream()
+          .map(it -> new ContentItem()
+              .type("check-list-item")
+              .checked(false)
+              .children(List.of(new ContentItemChildren()
+                  .text(it)))).
+          collect(Collectors.toList()));
+
+      content.add( new ContentItem()
+          .type("heading")
+          .children(List.of(new ContentItemChildren()
+              .text("Recipe Steps"))));
+
+      content.add( new ContentItem()
+          .type("paragraph")
+          .children(steps
+              .stream()
+              .map(it -> new ContentItemChildren()
+                  .text(it))
+              .collect(Collectors.toList())));
+    }
+    return content;
+  }
+
+  private boolean startsWithNumber(String input) {
+    String pattern = "(^\\d)";
+    Pattern r = Pattern.compile(pattern);
+    Matcher m = r.matcher(input);
+    return m.find();
+  }
+
 
   private List<GptResponse> clustersIntoParagraphs(List<GptResponse> clusters) {
     List<CompletableFuture<GptResponse>> tasks = new ArrayList<>();

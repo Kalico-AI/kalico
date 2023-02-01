@@ -467,6 +467,9 @@
           "url": {
             "type": "string"
           },
+          "checked": {
+            "type": "boolean"
+          },
           "children": {
             "type": "array",
             "items": {
