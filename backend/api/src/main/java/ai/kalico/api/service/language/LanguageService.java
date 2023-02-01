@@ -12,10 +12,10 @@ public interface LanguageService {
   /**
    * Apply GPT-3 or equivalent ML model/s to generate the content from raw
    * data gathered so far.
-   * @param mediaId
+   * @param projectId
    * @return the generated content formatted for rendering in the UI
    */
-  List<ContentItem> generateContent(String mediaId);
+  List<ContentItem> generateContent(Long projectId);
 
   /**
    * Cleanup text by extracting texts and number without any special characters

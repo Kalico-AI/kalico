@@ -88,7 +88,7 @@ public class S3ServiceImpl implements S3Service {
             List<String> hlsFiles = getSortedHlsFiles(pathnames, contentId, f.getPath());
 
             String folder = folderPrefix + "/" + contentId + "/";
-            log.info("Uploading HLS files to S3 for content ID {}", contentId);
+            log.info("Uploading {} HLS files to S3 for mediaId {}", hlsFile.length(), contentId);
             for (String hls : hlsFiles) {
                 AsyncTask.submit(() -> uploadTask(hls, folder, bucket),
                     () -> cleanup(List.of(hls))
@@ -143,7 +143,6 @@ public class S3ServiceImpl implements S3Service {
                 meta.setContentLength(in.available());
                 meta.setContentType("application/octet-stream");
                 String key = folder + file.getName();
-                log.info("Uploading HLS file to S3: {}", key);
                 s3Client.putObject(new PutObjectRequest(
                     bucket, key, in, meta)
                     .withCannedAcl(CannedAccessControlList.Private));
@@ -157,7 +156,6 @@ public class S3ServiceImpl implements S3Service {
     private Void cleanup(List<String> toDelete) {
         for (String path : toDelete) {
             File file = new File(path);
-            log.info("S3ServiceImpl.cleanup Deleting file {}", path);
             file.delete();
         }
         return null;

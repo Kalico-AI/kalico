@@ -1,7 +1,11 @@
 package ai.kalico.api.service.av;
 
 import ai.kalico.api.data.postgres.entity.MediaContentEntity;
+import ai.kalico.api.data.postgres.entity.ProjectEntity;
+import ai.kalico.api.data.postgres.entity.UserEntity;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
+import ai.kalico.api.data.postgres.repo.ProjectRepo;
+import ai.kalico.api.data.postgres.repo.UserRepo;
 import ai.kalico.api.dto.VideoInfoDto;
 import ai.kalico.api.props.ProjectProps;
 import ai.kalico.api.service.download.DownloadService;
@@ -21,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,6 +55,8 @@ public class AVServiceImpl implements AVService {
   private final InstagramParser instagramParser;
   private final MediaContentRepo mediaContentRepo;
   private final ProjectProps projectProps;
+  private final ProjectRepo projectRepo;
+  private final UserRepo userRepo;
 
 
   // Refer to https://gist.github.com/sidneys/7095afe4da4ae58694d128b1034e01e2 for YouTube
@@ -72,13 +79,13 @@ public class AVServiceImpl implements AVService {
           youtubeDownloader
               .getConfig()
               .getExecutorService()
-              .submit(() -> processYouTubeVideo(dto))
+              .submit(() -> processYouTubeVideo(dto, projectId))
               .get();
         } else if (dto.getPlatform() == Platform.INSTAGRAM) {
           youtubeDownloader
               .getConfig()
               .getExecutorService()
-              .submit(() -> processInstagramVideo(dto))
+              .submit(() -> processInstagramVideo(dto, projectId))
               .get();
         }
       } catch (InterruptedException | ExecutionException e) {
@@ -88,9 +95,9 @@ public class AVServiceImpl implements AVService {
     } else if (file != null && fileExtension != null) {
       String mediaId = createMediaContentFromUpload(projectId);
       if (isVideo(fileExtension)) {
-        processUploadedVideo(file, fileExtension, mediaId);
+        processUploadedVideo(file, fileExtension, mediaId, projectId);
       } else if (isAudio(fileExtension)) {
-        processUploadedAudio(file, fileExtension, mediaId);
+        processUploadedAudio(file, fileExtension, mediaId, projectId);
       } else {
         log.error("File extension not supported for mediaId={}", mediaId);
       }
@@ -165,7 +172,7 @@ public class AVServiceImpl implements AVService {
   }
 
   @Override
-  public void processYouTubeVideo(VideoInfoDto videoInfoDto) {
+  public void processYouTubeVideo(VideoInfoDto videoInfoDto, Long projectId) {
       String mediaId = videoInfoDto.getVideoInfo().details().videoId();
       RequestVideoFileDownload request = new RequestVideoFileDownload(videoInfoDto.getFormat())
           .saveTo(new File(asyncHelper.getParentPath(mediaId)))
@@ -175,25 +182,25 @@ public class AVServiceImpl implements AVService {
       if (!Files.exists(Path.of(path))) {
         youtubeDownloader.downloadVideoFile(request);
       }
-    submitAsyncTasks(path, mediaId, true);
+    submitAsyncTasks(path, mediaId, true, projectId);
   }
 
   @Override
-  public void processUploadedVideo(String file, String fileExtension, String mediaId) {
+  public void processUploadedVideo(String file, String fileExtension, String mediaId, Long projectId) {
     String path = asyncHelper.getVideoPath(mediaId);
     if (!Files.exists(Path.of(path))) {
       saveFile(file, path);
     }
-    submitAsyncTasks(path, mediaId, true);
+    submitAsyncTasks(path, mediaId, true, projectId);
   }
 
   @Override
-  public void processUploadedAudio(String file, String fileExtension, String mediaId) {
+  public void processUploadedAudio(String file, String fileExtension, String mediaId, Long projectId) {
     String path = asyncHelper.getAudioPath(mediaId);
     if (!Files.exists(Path.of(path))) {
       saveFile(file, path);
     }
-    submitAsyncTasks(path, mediaId, false);
+    submitAsyncTasks(path, mediaId, false, projectId);
   }
 
   private void saveFile(String file, String path) {
@@ -217,7 +224,7 @@ public class AVServiceImpl implements AVService {
   }
 
   @Override
-  public void processInstagramVideo(VideoInfoDto videoInfoDto) {
+  public void processInstagramVideo(VideoInfoDto videoInfoDto, Long projectId) {
     String mediaId = videoInfoDto.getMediaIdOverride();
     String path = asyncHelper.getVideoPath(mediaId);
     if (!Files.exists(Path.of(path))) {
@@ -227,20 +234,36 @@ public class AVServiceImpl implements AVService {
           videoInfoDto.getUrl(),
           asyncHelper.getVideoPath(mediaId));
     }
-    submitAsyncTasks(path, mediaId, true);
+    submitAsyncTasks(path, mediaId, true, projectId);
   }
 
-  private void submitAsyncTasks(String path, String mediaId, boolean isVideo) {
+  private void submitAsyncTasks(String path, String mediaId, boolean isVideo, Long projectId) {
     // Generate audio file for transcoding and perform audio to text
-    asyncHelper.processAudio(mediaId);
+    asyncHelper.processAudio(mediaId, projectId);
 
     if (isVideo) {
-      // Generate images from frames and perform image to text
-      asyncHelper.processImages(mediaId);
+      if (isPremiumUser(projectId)) {
+        // Generate images from frames and perform image to text
+        asyncHelper.processImages(mediaId, projectId);
 
-      // Generate HLS files and upload them to S3
-      asyncHelper.processHls(mediaId, path);
+        // Generate HLS files and upload them to S3
+        asyncHelper.processHls(mediaId, path);
+      } else {
+        log.info("Skipping video processing for projectId={}. Not a premium user.", projectId);
+      }
     }
+  }
+
+  private boolean isPremiumUser(Long projectId) {
+    // TODO: Avoid making multiple queries
+    Optional<ProjectEntity> projectEntity = projectRepo.findById(projectId);
+    if (projectEntity.isPresent()) {
+      UserEntity userEntity = userRepo.findByFirebaseId(projectEntity.get().getUserId());
+      if (userEntity != null) {
+        return userEntity.getIsPremiumUser();
+      }
+    }
+    return false;
   }
 
   private VideoInfoDto getYouTubeVideoInfo(String url) {

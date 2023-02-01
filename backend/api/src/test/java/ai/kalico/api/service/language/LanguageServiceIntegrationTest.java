@@ -97,8 +97,8 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
 
     @Test
     public void generateContentTest() {
-        String mediaId = createProject();
-        List<ContentItem> response = languageService.generateContent(mediaId);
+        Long projectId = createProject();
+        List<ContentItem> response = languageService.generateContent(projectId);
         assertNotNull(response);
     }
 
@@ -115,7 +115,7 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
         assertThat(response.indexOf("Group 1"), is(lessThan(0)));
     }
 
-    private String createProject() {
+    private Long createProject() {
         ProjectEntity entity = new ProjectEntity();
         entity.setProjectName("Demo TestNG project");
         entity.setContentLink("https://www.instagram.com/p/CmGPqXuNvYG/?a=5");
@@ -135,7 +135,7 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
         contentEntity.setPermalink("https://www.instagram.com/reel/CmywGx6MYso/?igshid=YmMyMTA2M2Y=");
         contentEntity.setProjectId(entity.getId());
         mediaContentRepo.save(contentEntity);
-        return contentEntity.getMediaId();
+        return entity.getId();
     }
 
     @Test

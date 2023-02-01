@@ -15,7 +15,6 @@ import com.kalico.model.ContentItem;
 import com.kalico.model.ContentItemChildren;
 import com.kalico.model.KalicoContentType;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -56,9 +55,12 @@ public class LanguageServiceImpl implements LanguageService {
   }
 
   @Override
-  public List<ContentItem> generateContent(String mediaId) {
-    MediaContentEntity contentEntity = mediaContentRepo.findByMediaId(mediaId);
-    if (contentEntity != null && contentEntity.getRawTranscript().length() > 0) {
+  public List<ContentItem> generateContent(Long projectId) {
+    MediaContentEntity contentEntity = mediaContentRepo.findByProjectId(projectId);
+    if (contentEntity != null &&
+        !ObjectUtils.isEmpty(contentEntity.getRawTranscript()) &&
+        contentEntity.getRawTranscript().length() > 0) {
+      log.info("LanguageServiceImpl.generateContent Starting content generation for projectId={}", projectId);
       KalicoContentType contentType = KalicoContentType.OTHER;
       Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(contentEntity.getProjectId());
       String description = contentEntity.getScrapedDescription();
@@ -74,6 +76,7 @@ public class LanguageServiceImpl implements LanguageService {
       // Break input transcript into clusters
       List<String> chunkedTranscript = chunkTranscript(contentEntity.getRawTranscript(),
           openAiProps.getChunkSize());
+      log.info("LanguageServiceImpl.generateContent Clustering transcript for projectId={}", projectId);
       List<GptResponse> clusters = clusterTranscript(chunkedTranscript);
 
       // Each cluster is broken down into paragraphs and the grammar and writing style is
@@ -81,11 +84,13 @@ public class LanguageServiceImpl implements LanguageService {
       // Subheadings are needed for longer texts, depending on the niche.
       // TODO: We can correlate the paragraphs back to the timestamped transcript to determine
       //      the best image or GIF for it automatically
+      log.info("LanguageServiceImpl.generateContent Generating paragraphs for projectId={}", projectId);
       List<GptResponse> paragraphsByCluster = clustersIntoParagraphs(clusters);
 
       // Generate a title using the first chunk of the transcript. This eats into the token usage
       // because who have to send the entire chunk for context.
       // TODO: Design a better prompt to generate the title and do the cluster at the same time
+      log.info("LanguageServiceImpl.generateContent Generating title for projectId={}", projectId);
       GptResponse title = gptCompletion(0, openAiProps.getPromptTitle(),
           chunkedTranscript.get(0));
 
@@ -94,6 +99,7 @@ public class LanguageServiceImpl implements LanguageService {
       if (contentType != null && contentType.equals(KalicoContentType.FOOD_RECIPE)) {
         // Extract recipe information
         // TODO: Not sure how to reconcile food recipes where the detail is spread across multiple chunks
+        log.info("LanguageServiceImpl.generateContent Generating recipe for projectId={}", projectId);
         recipe = gptCompletion(0, openAiProps.getPromptRecipe(),
             chunkedTranscript.get(0));
       }
@@ -101,10 +107,13 @@ public class LanguageServiceImpl implements LanguageService {
       // For FoodBlog type, do the following:
       // TODO: Extract the ingredients with quantity
       // TODO: Extract recipe steps
+      log.info("LanguageServiceImpl.generateContent Generating structured content projectId={}", projectId);
       List<ContentItem> content = generateContent(title, paragraphsByCluster, recipe);
       saveContent(contentEntity.getProjectId(), content);
+      log.info("LanguageServiceImpl.generateContent Finished content generation for projectId={}", projectId);
       return content;
     }
+    log.info("LanguageServiceImpl.generateContent Failed to start content generation for projectId={}", projectId);
     return new ArrayList<>();
   }
 
@@ -114,7 +123,7 @@ public class LanguageServiceImpl implements LanguageService {
     ContentItem item = new ContentItem()
         .type("title")
         .children(List.of(new ContentItemChildren()
-            .text(cleanup(title.completionChoices.get(0).getText()))));
+            .text(cleanup(extractTitle(title.completionChoices.get(0).getText())))));
     content.add(item);
     for (GptResponse paragraphs : paragraphsByCluster) {
       // TODO: This is where we insert the section headers
@@ -136,6 +145,17 @@ public class LanguageServiceImpl implements LanguageService {
     content.addAll(generateRecipe(recipe));
 
     return content;
+  }
+
+  private String extractTitle(String text) {
+    // The title sometimes comes back with a few sentences from the input. It's not clear why.
+    String[] tokens = text.split("\n");
+    List<String> validStrings = new ArrayList<>(List.of(text.split("\n")))
+        .stream()
+        .filter(it -> !ObjectUtils.isEmpty(cleanup(it)))
+        .collect(Collectors.toList());
+    // The last line is the title
+    return validStrings.get(validStrings.size() - 1);
   }
 
   private List<ContentItem> generateRecipe(GptResponse recipe) {
@@ -245,6 +265,7 @@ public class LanguageServiceImpl implements LanguageService {
   @Override
   public String cleanup(String input) {
     return input
+        .replace("Paragraph:", "")
         .replace("\"", "")
         .replace("\n", " ")
         .trim();
