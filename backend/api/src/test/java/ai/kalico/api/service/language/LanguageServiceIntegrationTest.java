@@ -38,7 +38,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
-import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * @author Bizuwork Melesse
@@ -56,9 +55,6 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
 
     @Autowired
     private FlywayMigration flywayMigration;
-
-    @Autowired
-    private OpenAiProps openAiProps;
 
     @Autowired
     private UserRepo userRepo;
@@ -104,7 +100,6 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
         String mediaId = createProject();
         List<ContentItem> response = languageService.generateContent(mediaId);
         assertNotNull(response);
-
     }
 
     @Test

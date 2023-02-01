@@ -100,10 +100,11 @@ public class SeedData {
       }
       entity.setContentLink("https://www.instagram.com/p/CmGPqXuNvYG/?a=5");
       entity.setContentType(KalicoContentType.FOOD_RECIPE.getValue());
+      entity.setContent(loadFromFile("generated_content.json"));
       entity.setParaphrase(true);
       entity.setEmbedImages(false);
       entity.setUserId(userId);
-      entity.setProjectName("Demo Project " + i);
+      entity.setProjectName("Korean Tofu " + i);
       entity.setProcessed(true);
       projectEntities.add(entity);
     }

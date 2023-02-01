@@ -254,13 +254,13 @@ const CheckListItemElement = ({ attributes, children, element }) => {
         <input
             type="checkbox"
             checked={checked}
-            // onChange={event => {
-            //   const path = ReactEditor.findPath(editor, element)
-            //   const newProperties: Partial<SlateElement> = {
-            //     checked: event.target.checked,
-            //   }
-            //   Transforms.setNodes(editor, newProperties, { at: path })
-            // }}
+            onChange={event => {
+              const path = ReactEditor.findPath(editor, element)
+              const newProperties: Partial<SlateElement> = {
+                checked: event.target.checked,
+              }
+              Transforms.setNodes(editor, newProperties, { at: path })
+            }}
         />
       </span>
         <span
