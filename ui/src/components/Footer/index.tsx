@@ -26,49 +26,19 @@ const Footer = () => {
   }
 
   return (
-      <footer className="footer-pos footer-software footer-hrm bg-aqua">
-        <div className="footer-top">
+      <footer className="footer-cloud">
+        <div className="footer-copyright pb-10 pt-20">
           <div className="container">
-            <div className="row">
-              <div className="col-lg-12">
-                <div className="row justify-content-between">
-                  <div className="col-sm-6 col-md-4 wow fadeInUp" data-wow-delay="0.1s">
-                    <div className="footer-menu">
-                      <div className="footer_logo">
-                        <a href="/">
-                          <img className="d-md-block d-sm-inline-block"
-                               src="/assets/images/logo.png" alt="Footer Logo"/></a>
-                      </div>
-                      <p>Copyright &copy; 2023 Kalico, Inc.</p>
-                      <p>All Rights Reserved</p>
-                    </div>
-                  </div>
-                  <div className="col-sm-6 col-md-4 wow fadeInUp" data-wow-delay="0.2s">
-                    <div className="footer-menu">
-                      <h4>Getting in Touch</h4>
-                      <ul className="social-link-bg-2">
-                        <li>
-                          <a href="#"><i className="fab fa-facebook-f"></i></a>
-                        </li>
-                        <li>
-                          <a href="#"><i className="fab fa-twitter"></i></a>
-                        </li>
-                        <li>
-                          <a href="#"><i className="fab fa-instagram"></i></a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  {/*<div className="col-sm-6 col-md-4 wow fadeInUp" data-wow-delay="0.3s">*/}
-                  {/*  <div className="footer-menu">*/}
-                  {/*    <h4>Legal</h4>*/}
-                  {/*    <ul>*/}
-                  {/*      <li><a href="/legal/tos">Terms of Service</a></li>*/}
-                  {/*      <li><a href="/legal/privacy">Privacy Policy</a></li>*/}
-                  {/*    </ul>*/}
-                  {/*  </div>*/}
-                  {/*</div>*/}
-                </div>
+            <div className="row align-items-center">
+              <div className="col-md-3">
+                <a href="/"><img className="d-md-block d-sm-inline-block"
+                     src="/assets/images/logo.png" alt="Kalico Logo" width={128}/></a>
+              </div>
+              <div className="col-lg-6 col-md-5">
+                <p className="copyright-text text-md-center">Copyright 2023, All Rights Reserved</p>
+              </div>
+              <div className="col-lg-3 col-md-4">
+                <a href={PATHS.TWITTER_PAGE} style={{textDecoration: 'none', color: 'grey'}}><i className="fab fa-twitter"></i></a>
               </div>
             </div>
           </div>

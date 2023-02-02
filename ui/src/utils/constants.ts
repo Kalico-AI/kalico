@@ -6,5 +6,6 @@ export const PATHS = {
   DASHBOARD: '/dashboard',
   MY_PROJECTS: '/dashboard/projects',
   PROJECT: '/dashboard/project',
-  PRICING: '/pricing'
+  PRICING: '/pricing',
+  TWITTER_PAGE: '/'
 }

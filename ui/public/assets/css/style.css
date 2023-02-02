@@ -10837,7 +10837,7 @@ Why-choose CSS
 }
 
 .hardware-support-area {
-  background-color: #edfaf8;
+  /*background-color: #edfaf8;*/
 }
 .hardware-support-area .section-title-left h2 {
   margin-bottom: 15px;
@@ -14269,7 +14269,7 @@ button:hover .HoverArrow__tipPath {
   border-radius: 30px;
   width: 100%;
   height: 100%;
-  background: rgba(195, 245, 189, 0.35);
+  background: rgb(218 218 218 / 21%);
   position: absolute;
   left: 0;
   top: 0;

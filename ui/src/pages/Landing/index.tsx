@@ -17,7 +17,7 @@ function Landing() {
           <HowItWorks/>
           <Features/>
           <FAQ/>
-          <CallToAction/>
+          {/*<CallToAction/>*/}
         </main>
       </>
   );

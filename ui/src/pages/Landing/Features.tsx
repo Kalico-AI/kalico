@@ -5,84 +5,31 @@ function Features() {
   // Check that the DOM has loaded before rendering the page so that
   // we don't get a page without the CSS
   return (
-      <section className="features-area-9 pt-125 pb-60">
-        <div className="bg-shapes">
-          <div className="shape">
-            <img src="/assets/images/home_4/banner-shape-2.svg" alt="shape"/>
-          </div>
-          <div className="shape">
-            <img src="/assets/images/home_4/banner-shape-4.svg" alt="shape"/>
-          </div>
-          <div className="shape">
-            <img src="/assets/images/home_4/fea-shape.svg" alt="shape"/>
-          </div>
+      <section className="outstanding-feature-area pt-80 pb-130">
+        <div className="section-title-center wow fadeInUp">
+          <h2>Outstanding Features</h2>
         </div>
-
-        <div className="container" id="features">
-          <div className="row">
-            <div className="col-lg-8 offset-lg-2">
-              <div className="section-title-center">
-                <h2 className="wow fadeInUp">Outstanding Features</h2>
-                <p className="wow fadeInUp" data-wow-delay="0.2s">
-                  Features built to repurpose your video content in minutes rather than days
-                </p>
-              </div>
+        <div className="container pt-30">
+          <div className="row gy-lg-0 gy-4">
+            <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+              <img src="/assets/images/home_2/out-feature-1.svg" alt="img"/>
+              <h5>24/7 Support</h5>
+              <p>We'll treat your customers like they're ours · We have an excellent team.</p>
             </div>
-          </div>
-          <div className="row">
-            <div className="col-lg-4 col-md-6">
-              <div className="features-item text-center wow fadeInLeft">
-                <img src="./assets/images/home_4/fea-icon1.svg" alt="Icon"
-                     className="features-icon mx-auto mb-30"/>
-                <h4 className="features-title">Team Collaboration</h4>
-                <p className="features-text">Many desktop publishing packages and web page editors
-                  now use Lorem Ipsum as their default model text.</p>
-              </div>
+            <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+              <img src="/assets/images/home_2/out-feature-2.svg" alt="img"/>
+              <h5>Tested Security</h5>
+              <p>The tested Security here. To review and adjust your security settings.</p>
             </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="features-item text-center wow fadeInUp">
-                <img src="./assets/images/home_4/fea-icon2.svg" alt="Icon"
-                     className="features-icon mx-auto mb-30"/>
-                <h4 className="features-title">Time & Attendance</h4>
-                <p className="features-text">Many desktop publishing packages and web page editors
-                  now use Lorem Ipsum as their default model text.</p>
-              </div>
+            <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+              <img src="/assets/images/home_2/out-feature-3.svg" alt="img"/>
+              <h5>Smart Dashboard</h5>
+              <p>The Best Mobile App Awards honors the best mobile apps on iPhone,</p>
             </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="features-item text-center wow fadeInRight">
-                <img src="./assets/images/home_4/fea-icon3.svg" alt="Icon"
-                     className="features-icon mx-auto mb-30"/>
-                <h4 className="features-title">Cloud-Based HR</h4>
-                <p className="features-text">Many desktop publishing packages and web page editors
-                  now use Lorem Ipsum as their default model text.</p>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="features-item text-center wow fadeInLeft">
-                <img src="./assets/images/home_4/fea-icon4.svg" alt="Icon"
-                     className="features-icon mx-auto mb-30"/>
-                <h4 className="features-title">Customizable Payroll</h4>
-                <p className="features-text">Many desktop publishing packages and web page editors
-                  now use Lorem Ipsum as their default model text.</p>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="features-item text-center wow fadeInUp">
-                <img src="./assets/images/home_4/fea-icon5.svg" alt="Icon"
-                     className="features-icon mx-auto mb-30"/>
-                <h4 className="features-title">Email & Scheduling</h4>
-                <p className="features-text">Many desktop publishing packages and web page editors
-                  now use Lorem Ipsum as their default model text.</p>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="features-item text-center wow fadeInRight">
-                <img src="./assets/images/home_4/fea-icon6.svg" alt="Icon"
-                     className="features-icon mx-auto mb-30"/>
-                <h4 className="features-title">Career Portal</h4>
-                <p className="features-text">Many desktop publishing packages and web page editors
-                  now use Lorem Ipsum as their default model text.</p>
-              </div>
+            <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
+              <img src="/assets/images/home_2/out-feature-4.svg" alt="img"/>
+              <h5>XO Award 2021</h5>
+              <p>The Best Mobile App Awards honors the best mobile apps on iPhone,</p>
             </div>
           </div>
         </div>
