@@ -145,8 +145,8 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                   </ul>
                     <div className="right-nav">
                       {/*<a href="#" className="language-bar mr-50"><span className="active">En.</span><span>Ru</span></a>*/}
-                      <Link href={PATHS.LOGIN}>Sign in</Link>
-                      <Link className="btn btn-red" href={PATHS.SIGN_UP}>Sign Up</Link>
+                      <Link className="btn btn-red" href={PATHS.LOGIN}>Sign in</Link>
+                      {/*<Link className="btn btn-red" href={PATHS.SIGN_UP}>Sign Up</Link>*/}
                     </div>
                   </>
                  )}

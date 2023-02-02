@@ -20340,9 +20340,12 @@ Contact Page Two CSS
   max-width: 450px;
   margin: 0 auto;
 }
+.sign-in-message {
+  font-size: 13px;
+}
 .sign-in-logo {
   max-width: 164px;
-  margin: 0 auto 20px;
+  margin: 0 auto 30px;
 }
 .sign-in-button {
   background: #fff;
@@ -20437,8 +20440,8 @@ Contact Page Two CSS
   line-height: 27px;
 }
 .form-wrapper .create-with-list li {
-  display: inline-block;
-  margin-right: 10px;
+  max-width: 300px;
+  margin: 24px auto;
 }
 .form-wrapper .create-with-list li a {
   background: #fff;
@@ -20473,6 +20476,10 @@ Contact Page Two CSS
   left: 10%;
 }
 
+.sign-up-form {
+  max-width: 300px;
+  margin: auto;
+}
 .sign-up-form .meta-text {
   font-size: 12px;
   line-height: 16px;
