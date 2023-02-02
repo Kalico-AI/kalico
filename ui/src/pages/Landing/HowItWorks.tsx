@@ -4,7 +4,7 @@ import React from 'react';
 function HowItWorks() {
   return (
       <>
-        <section className="process-area-3 overflow-hidden pt-140 pb-140">
+        <section className="process-area-3 overflow-hidden pt-140 pb-140" id="how-it-works">
           <div className="container">
             <div className="process-item-3 pb-105">
               <div className="row">

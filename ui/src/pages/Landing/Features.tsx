@@ -3,7 +3,7 @@ import React from 'react';
 
 function Features() {
   return (
-      <section className="outstanding-feature-area pt-80 pb-130">
+      <section className="outstanding-feature-area pt-80 pb-130" id="features">
         <div className="section-title-center wow fadeInUp">
           <h2>Outstanding Features</h2>
         </div>

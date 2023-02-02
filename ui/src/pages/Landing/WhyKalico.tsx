@@ -3,7 +3,7 @@ import React from 'react';
 
 function WhyKalico() {
   return (
-      <section className="hardware-support-area pt-150 pb-150">
+      <section className="hardware-support-area pt-150 pb-150" id="why-kalico">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-6">
