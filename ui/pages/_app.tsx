@@ -91,9 +91,20 @@ const MyApp: FC<DefaultAppProps> = (props) => {
       </Head>
         <RootStoreProvider>
           <HeaderNav/>
+          <div className="global-container">
           {getLayout(<Component {...pageProps} />)}
+          </div>
           <Footer/>
         </RootStoreProvider>
+      <style jsx global>
+        {`
+
+            .global-container {
+              min-height: 90vh;
+            }
+
+          `}
+      </style>
     </>
   );
 }
