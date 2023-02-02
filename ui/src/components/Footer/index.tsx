@@ -1,27 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {useAuthUser, withAuthUser} from "next-firebase-auth";
+import React from 'react';
+import {useAuthUser} from "next-firebase-auth";
 import {useRouter} from "next/router";
 import {PATHS} from "@/utils/constants";
-import dynamic from "next/dynamic";
 
 const Footer = () => {
   const user = useAuthUser()
   const router = useRouter()
-  const [hide, setHide] = useState(true)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHide(false)
-    }, 2000)
-    if (user.id) {
-      setHide(false)
-    }
-    return () => {
-      clearInterval(interval)
-    }
-  }, [user.id])
-
-  if (user && user.id && router.pathname.includes(PATHS.DASHBOARD) || hide) {
+  if (user && user.id && router.pathname.includes(PATHS.DASHBOARD)) {
     return <></>
   }
 
@@ -46,7 +32,5 @@ const Footer = () => {
       </footer>
   );
 }
-export default dynamic(() => Promise.resolve(withAuthUser()(Footer)), {
-  ssr: false
-})
+export default Footer
 

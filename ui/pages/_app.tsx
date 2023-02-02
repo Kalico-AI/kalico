@@ -10,9 +10,8 @@ import Script from 'next/script'
 import Footer from "@/components/Footer";
 import HeaderNav from "@/components/Header";
 import initAuth from "@/auth/nextAuth";
-import {withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
+import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import 'react-toastify/dist/ReactToastify.css';
-import {CenterAlignedProgress} from "@/utils/utils";
 import {SITE_IMAGE_URL} from "@/utils/constants";
 
 type NextPageWithLayout = NextPage & {
@@ -23,10 +22,7 @@ type NextPageWithLayout = NextPage & {
 initAuth()
 
 export const getServerSideProps = withAuthUserTokenSSR({
-
 })(async ({ AuthUser }) => {
-  // Optionally, get other props.
-  // const token = await AuthUser.getIdToken()
   return {
     props: {
       title: "Kalico",
@@ -100,8 +96,11 @@ const MyApp: FC<DefaultAppProps> = (props) => {
     </>
   );
 }
+
 export default withAuthUser({
-  LoaderComponent: () => <CenterAlignedProgress/>,
+  whenAuthed: AuthAction.RENDER,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.RENDER
 })(MyApp);
 
 

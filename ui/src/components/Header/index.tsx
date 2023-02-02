@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC} from 'react';
 import {observer} from "mobx-react";
 import {useStore} from "@/hooks/useStore";
 import {Box, Button} from "@mui/material";
@@ -7,10 +7,8 @@ import {auth} from "@/utils/firebase-setup";
 import {useRouter} from "next/router";
 import {PATHS} from "@/utils/constants";
 import initAuth from "@/auth/nextAuth";
-import {useAuthUser, withAuthUser} from "next-firebase-auth";
+import {useAuthUser} from "next-firebase-auth";
 import Link from "next/link";
-import {CenterAlignedProgress} from "@/utils/utils";
-import dynamic from "next/dynamic";
 import BoltIcon from '@mui/icons-material/Bolt';
 
 initAuth()
@@ -19,7 +17,6 @@ export interface HeaderNavProps {
 }
 
 const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
-  const [hide, setHide] = useState(true)
   const store = useStore()
   const router = useRouter()
   const user = useAuthUser()
@@ -40,24 +37,9 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
     }).catch(e => console.log(e))
   }
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHide(false)
-    }, 2000)
-    if (user.id) {
-      setHide(false)
-    }
-    return () => {
-      clearInterval(interval)
-    }
-  }, [user.id])
-
   let navbarClasses = "container-fluid"
   if (user && user.id) {
     navbarClasses = "container-fluid dashboard-navbar"
-  }
-  if (hide) {
-    return <CenterAlignedProgress/>
   }
 
   return (
@@ -174,7 +156,4 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
       </header>
   );
 })
-
-export default dynamic(() => Promise.resolve(withAuthUser()(HeaderNav)), {
-  ssr: false
-})
+export default HeaderNav;
