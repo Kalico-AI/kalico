@@ -7,5 +7,6 @@ export const PATHS = {
   MY_PROJECTS: '/dashboard/projects',
   PROJECT: '/dashboard/project',
   PRICING: '/pricing',
-  TWITTER_PAGE: 'https://twitter.com/kalicoai'
+  TWITTER_PAGE: 'https://twitter.com/kalicoai',
+  EMAIL_CONFIRMATION: '/account/sign-in-confirmation'
 }

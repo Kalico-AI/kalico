@@ -18,6 +18,7 @@ import {
 } from "react-social-login-buttons";
 import {toast, ToastContainer} from "react-toastify";
 import {registerUser} from "@/utils/utils";
+import {PATHS} from "@/utils/constants";
 
 export interface SignInProps {
   isSignUp: boolean
@@ -26,7 +27,7 @@ export interface SignInProps {
 const actionCodeSettings = {
   // URL you want to redirect back to. The domain (www.example.com) for this
   // URL must be in the authorized domains list in the Firebase Console.
-  url: 'https://kalico.ai/account/sign-in-confirmation',
+  url: process.env.NODE_ENV === 'production' ? 'https://kalico.ai' + PATHS.EMAIL_CONFIRMATION : 'http://localhost:3000' + PATHS.EMAIL_CONFIRMATION,
   // This must be true.
   handleCodeInApp: true
 };
