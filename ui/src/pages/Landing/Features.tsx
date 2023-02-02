@@ -2,8 +2,6 @@ import React from 'react';
 
 
 function Features() {
-  // Check that the DOM has loaded before rendering the page so that
-  // we don't get a page without the CSS
   return (
       <section className="outstanding-feature-area pt-80 pb-130">
         <div className="section-title-center wow fadeInUp">

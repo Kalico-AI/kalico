@@ -2,8 +2,6 @@ import React from 'react';
 
 
 function HowItWorks() {
-  // Check that the DOM has loaded before rendering the page so that
-  // we don't get a page without the CSS
   return (
       <>
         <section className="process-area-3 overflow-hidden pt-140 pb-140">

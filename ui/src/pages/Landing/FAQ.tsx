@@ -2,8 +2,6 @@ import React from 'react';
 
 
 function FAQ() {
-  // Check that the DOM has loaded before rendering the page so that
-  // we don't get a page without the CSS
   return (
       <section className="faq-area wow fadeInUp animate__fast">
         <div className="container" id="support">
