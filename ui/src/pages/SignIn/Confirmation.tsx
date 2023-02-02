@@ -1,32 +1,14 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useStore} from "@/hooks/useStore";
-import {UserApi} from "@/api";
-import {headerConfig} from "@/api/headerConfig";
 import {
-  GoogleAuthProvider,
-  indexedDBLocalPersistence, isSignInWithEmailLink, sendSignInLinkToEmail,
-  setPersistence, signInWithEmailLink,
-  signInWithPopup, TwitterAuthProvider
+  isSignInWithEmailLink,
+  signInWithEmailLink,
 } from "firebase/auth";
 import {auth} from "@/utils/firebase-setup";
-import firebase from "firebase/compat";
-import AuthProvider = firebase.auth.AuthProvider;
 import {observer} from "mobx-react";
-import {
-  GoogleLoginButton,
-  TwitterLoginButton
-} from "react-social-login-buttons";
 import {toast, ToastContainer} from "react-toastify";
 import {registerUser} from "@/utils/utils";
 
-
-const actionCodeSettings = {
-  // URL you want to redirect back to. The domain (www.example.com) for this
-  // URL must be in the authorized domains list in the Firebase Console.
-  url: 'https://kalico.ai/account/sign-in-confirmation',
-  // This must be true.
-  handleCodeInApp: true
-};
 
 const SignInConfirmation: FC<any> = observer((props) => {
   const store = useStore()

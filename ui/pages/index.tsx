@@ -32,5 +32,7 @@ function Index(props) {
 }
 export default withAuthUser({
   whenAuthed: AuthAction.REDIRECT_TO_APP,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.RENDER,
   LoaderComponent: () => <CenterAlignedProgress/>,
 })(Index);

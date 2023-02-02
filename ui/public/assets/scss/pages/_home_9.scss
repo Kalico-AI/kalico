@@ -885,8 +885,9 @@
 }
 
 .footer-cloud {
-  position: relative;
-  z-index: 1;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
   .shape {
     position: absolute;
     z-index: -1;

@@ -7,6 +7,7 @@ import {headerConfig} from "@/api/headerConfig";
 import MyProject from "@/pages/Dashboard/MyProject";
 import {toast} from "react-toastify";
 import {useRouter} from "next/router";
+import {CenterAlignedProgress} from "@/utils/utils";
 
 export async function getServerSideProps(context) {
   return {
@@ -84,6 +85,8 @@ const ProjectByIdIndex: FC<ProjectByIdProps> =  (props) => {
 
 export default withAuthUser({
   whenAuthed: AuthAction.RENDER,
-  whenUnauthedBeforeInit: AuthAction.RETURN_NULL,
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  LoaderComponent: () => <CenterAlignedProgress/>,
+
 })(ProjectByIdIndex);

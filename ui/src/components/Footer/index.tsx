@@ -11,6 +11,10 @@ const Footer = () => {
     return <></>
   }
 
+  // if (typeof window === 'undefined') {
+  //   return <></>
+  // }
+
   return (
       <footer className="footer-cloud">
         <div className="footer-copyright pb-10 pt-20">

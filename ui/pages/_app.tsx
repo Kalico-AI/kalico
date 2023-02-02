@@ -13,6 +13,7 @@ import initAuth from "@/auth/nextAuth";
 import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import 'react-toastify/dist/ReactToastify.css';
 import {SITE_IMAGE_URL} from "@/utils/constants";
+import {CenterAlignedProgress} from "@/utils/utils";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -100,7 +101,8 @@ const MyApp: FC<DefaultAppProps> = (props) => {
 export default withAuthUser({
   whenAuthed: AuthAction.RENDER,
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
-  whenUnauthedAfterInit: AuthAction.RENDER
+  whenUnauthedAfterInit: AuthAction.RENDER,
+  LoaderComponent: () => <CenterAlignedProgress/>
 })(MyApp);
 
 

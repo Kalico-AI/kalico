@@ -13955,8 +13955,9 @@ button:hover .HoverArrow__tipPath {
 }
 
 .footer-cloud {
-  position: relative;
-  z-index: 1;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
 }
 .footer-cloud .shape {
   position: absolute;
