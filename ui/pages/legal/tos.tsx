@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from "next/head";
-import Legal from "@/pages/Legal";
+import ToS from "@/pages/Legal/ToS";
 export async function getServerSideProps() {
   return {
     props: {
@@ -11,7 +11,7 @@ export async function getServerSideProps() {
   }
 }
 
-function ToS(props) {
+function LegalTosIndex(props) {
   return (
     <>
       <Head>
@@ -20,9 +20,9 @@ function ToS(props) {
         <meta property="og:description" content={props.description} name="description" key="description"/>
         <meta property="og:image:secure" content={props.siteImage} name="image" key="image:secure"/>
       </Head>
-      <Legal title="Terms of Service" body=""/>
+      <ToS title="Terms of Service" body=""/>
     </>
   );
 }
 
-export default ToS;
+export default LegalTosIndex;

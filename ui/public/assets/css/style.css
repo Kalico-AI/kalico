@@ -2369,6 +2369,29 @@ a {
   padding-top: 15px;
 }
 
+.process-item-content .content p {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.process-item-content .content li {
+  list-style: disc;
+  margin-left: 30px;
+}
+.process-item-content .content h5 {
+  padding-top: 50px;
+}
+.process-item-content .content h4 {
+  padding-top: 20px;
+}
+.legal-updated-date {
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+}
+.legal-title {
+  padding-top: 40px;
+}
+
 .nav .nav-link {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
