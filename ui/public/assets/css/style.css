@@ -20120,7 +20120,7 @@ Contact Page Two CSS
 
 .process-item-3:nth-child(1) .process-images-3 {
   position: relative;
-  height: 480px;
+  height: 330px;
 }
 .process-item-3:nth-child(1) .process-images-3 .shape {
   position: absolute;
@@ -20163,6 +20163,12 @@ Contact Page Two CSS
 .process-item-3:nth-child(3) .process-images-3 {
   position: relative;
   height: 395px;
+}
+.process-images-3 img {
+  max-width: 360px;
+}
+.process-item-3 .process-images-3 .shape {
+  height: 336px !important;
 }
 .process-item-3:nth-child(3) .process-images-3 .shape {
   position: absolute;
