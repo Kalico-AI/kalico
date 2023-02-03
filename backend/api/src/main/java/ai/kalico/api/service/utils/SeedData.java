@@ -13,8 +13,6 @@ import ai.kalico.api.data.postgres.repo.UserRepo;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.props.AWSProps;
 import ai.kalico.api.props.ProjectProps;
-import com.kalico.model.ContentItem;
-import com.kalico.model.ContentItemChildren;
 import com.kalico.model.KalicoContentType;
 import java.io.BufferedReader;
 import java.io.InputStream;

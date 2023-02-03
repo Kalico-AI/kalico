@@ -1,14 +1,7 @@
-import {
-  Card,
-  Box,
-  Typography,
-  Avatar,
-  LinearProgress,
-  styled
-} from '@mui/material';
+import {Avatar, Box, Card, LinearProgress, styled, Typography} from '@mui/material';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import {FC, useEffect, useState} from "react";
-import {Project, ProjectApi} from "@/api";
+import {JobStatus, Project, ProjectApi} from "@/api";
 import {AuthUserContext} from "next-firebase-auth";
 import {headerConfig} from "@/api/headerConfig";
 
@@ -34,6 +27,8 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
   const [progressMessage, _setProgressMessage] = useState('Processing')
   const [intervalRef, setIntervalRef] = useState<any|undefined>(undefined)
   const [showProgress, _setShowProgress] = useState(true)
+  const [failed, setFailed] = useState(false)
+  const [reasonFailed, setReasonFailed] = useState('')
   const [pendingJob, setPendingJob] = useState<Project | undefined>(undefined)
 
   useEffect(() => {
@@ -71,8 +66,15 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
         .then(response => {
           if (response.data) {
             if (response.data.project_id) {
-              setPercent(response.data.percent_complete)
-              setEstimatedTime(response.data.estimated_time)
+              if (response.data.status === JobStatus.Failed) {
+                setFailed(true)
+                setReasonFailed(response.data.message)
+              } else {
+                setPercent(response.data.percent_complete)
+                setEstimatedTime(response.data.estimated_time)
+                setFailed(failed)
+                setReasonFailed('')
+              }
               setPendingJob({
                 project_name: response.data.project_name,
                 id: response.data.project_id
@@ -97,7 +99,7 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
       <AvatarWrapperError>
         <CloudSyncIcon />
       </AvatarWrapperError>
-      {pendingJob && showProgress ? <>
+      {pendingJob && showProgress && !failed ? <>
         <Typography
             variant="body1"
             sx={{
@@ -116,16 +118,6 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
             }}
         >
           <strong>{pendingJob.project_name}</strong>
-          {/*<Typography*/}
-          {/*    color="text.primary"*/}
-          {/*    variant="h4"*/}
-          {/*    sx={{*/}
-          {/*      pr: 0.5,*/}
-          {/*      display: 'block'*/}
-          {/*    }}*/}
-          {/*>*/}
-          {/*  {percent}%*/}
-          {/*</Typography>*/}
         </Typography>
             <Box pt={2}>
               <LinearProgress value={percent} color="error" variant="determinate" />
@@ -136,15 +128,38 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
               </Typography>
             </Box>
       </> :
-          <Typography
-              variant="body1"
-              sx={{
-                pb: 1,
-                display: 'inline-flex'
-              }}
-          >
-            No pending jobs
-          </Typography>
+          <>
+            {
+              failed ? <>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                          color: 'inherit',
+                          display: 'inline-flex'
+                        }}
+                    >
+                     {pendingJob.project_name + ' has failed'}
+
+                </Typography>
+                    <Box>
+                      <Typography sx={{fontSize: '14px', pt: 1}} color="error">
+                        {reasonFailed}
+                      </Typography>
+                    </Box>
+
+
+              </> :
+                  <Typography
+                      variant="body1"
+                      sx={{
+                        pb: 1,
+                        display: 'inline-flex'
+                      }}
+                  >
+                    No pending jobs
+                  </Typography>
+            }
+          </>
       }
     </Card>
   );

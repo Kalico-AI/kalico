@@ -46,8 +46,16 @@ public class ProjectEntity {
     private Boolean processed = false;
 
     @Basic
+    @Column(name = "failed")
+    private Boolean failed = false;
+
+    @Basic
     @Column(name = "content_type")
     private String contentType;
+
+    @Basic
+    @Column(name = "reason_failed")
+    private String reasonFailed;
 
     @Basic
     @Column(name = "content")

@@ -4,7 +4,6 @@ import ai.kalico.api.controller.ControllerConfiguration;
 import ai.kalico.api.data.DataConfiguration;
 import ai.kalico.api.props.PropConfiguration;
 import ai.kalico.api.service.ServiceConfiguration;
-import ai.kalico.api.service.utils.SeedData;
 import ai.kalico.api.utils.migration.FlywayMigration;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +28,11 @@ import java.util.concurrent.Executors;
 })
 @RequiredArgsConstructor
 public class RootConfiguration {
-
-  private final SeedData seedData;
   private final FlywayMigration flywayMigration;
   public static final ExecutorService executor = Executors.newCachedThreadPool();
 
   @PostConstruct
   public void onStart() {
     flywayMigration.migrate(false);
-    seedData.seed(null);
   }
-
-
 }

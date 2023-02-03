@@ -314,6 +314,9 @@
             "format": "int64"
           },
           "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "message": {
             "type": "string"
           },
           "percent_complete": {
@@ -392,6 +395,16 @@
           "LECTURE",
           "PODCAST",
           "OTHER"
+        ]
+      },
+      "JobStatus": {
+        "type": "string",
+        "nullable": true,
+        "enum": [
+          "IN_PROGRESS",
+          "COMPLETE",
+          "FAILED",
+          "PROJECT_NOT_FOUND"
         ]
       },
       "UpdateProjectContentRequest": {

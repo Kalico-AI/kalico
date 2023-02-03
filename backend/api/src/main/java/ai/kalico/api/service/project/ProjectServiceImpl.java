@@ -19,6 +19,7 @@ import com.kalico.model.CreateProjectResponse;
 import com.kalico.model.GenericResponse;
 import com.kalico.model.GifRequest;
 import com.kalico.model.GifResponse;
+import com.kalico.model.JobStatus;
 import com.kalico.model.MediaContent;
 import com.kalico.model.PageableResponse;
 import com.kalico.model.ProjectDetail;
@@ -223,14 +224,20 @@ public class ProjectServiceImpl implements ProjectService {
     String userId = securityFilter.getUser().getFirebaseId();
     Optional<ProjectEntity> entityOpt =  projectRepo.findPendingJob(userId);
     if (entityOpt.isPresent()) {
+      ProjectEntity projectEntity = entityOpt.get();
       long percent;
-      String status = "In progress";
+      String message = "";
+      JobStatus status = JobStatus.IN_PROGRESS;
       String estimate = "Less than 5 minutes";
-      if (entityOpt.get().getProcessed() != null && entityOpt.get().getProcessed()) {
+      if (projectEntity.getFailed() != null && projectEntity.getFailed()) {
+        status = JobStatus.FAILED;
+        message = projectEntity.getReasonFailed();
+        percent = 0;
+      } else if (projectEntity.getProcessed() != null && projectEntity.getProcessed()) {
         percent = 100;
-        status = "Complete";
+        status = JobStatus.COMPLETE;
       } else {
-        long delta = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - entityOpt.get().getCreatedAt().toEpochSecond(ZoneOffset.UTC);
+        long delta = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - projectEntity.getCreatedAt().toEpochSecond(ZoneOffset.UTC);
         if (delta > projectProps.getMaxJobTime()) {
           // If we're still not done with the processing, increase the estimate by 5 minutes every five minutes
           percent = 95;
@@ -246,14 +253,15 @@ public class ProjectServiceImpl implements ProjectService {
         }
       }
       return new ProjectJobStatus()
-          .projectId(entityOpt.get().getId())
-          .projectName(entityOpt.get().getProjectName())
+          .projectId(projectEntity.getId())
+          .projectName(projectEntity.getProjectName())
           .percentComplete(percent)
           .estimatedTime(estimate)
+          .message(message)
           .status(status);
     }
     return new ProjectJobStatus()
-        .status("No pending projects found");
+        .status(JobStatus.PROJECT_NOT_FOUND);
   }
 
   private boolean isSupportedUrl(String url) {
