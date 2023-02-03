@@ -2,6 +2,7 @@ package ai.kalico.api.service.av;
 
 
 import ai.kalico.api.dto.VideoInfoDto;
+import com.kalico.model.ContentPreviewResponse;
 
 /**
  * @author Bizuwork Melesse
@@ -14,4 +15,6 @@ public interface AVService {
     void processYouTubeVideo(VideoInfoDto videoInfoDto, Long projectId);
     void processUploadedVideo(String file, String fileExtension, String mediaId, Long projectId);
     void processUploadedAudio(String file, String fileExtension, String mediaId, Long projectId);
+
+    ContentPreviewResponse downloadContentMetadata(String url);
 }

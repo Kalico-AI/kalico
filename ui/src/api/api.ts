@@ -68,6 +68,31 @@ export interface ContentItemChildren {
 /**
  * 
  * @export
+ * @interface ContentPreviewResponse
+ */
+export interface ContentPreviewResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof ContentPreviewResponse
+     */
+    title?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ContentPreviewResponse
+     */
+    duration?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ContentPreviewResponse
+     */
+    thumbnail?: string;
+}
+/**
+ * 
+ * @export
  * @interface CreateProjectRequest
  */
 export interface CreateProjectRequest {
@@ -651,6 +676,43 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * Get OpenGraph preview of a video or audio link
+         * @summary Get OpenGraph preview of a video or audio link
+         * @param {string} url 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getContentPreview: async (url: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'url' is not null or undefined
+            assertParamExists('getContentPreview', 'url', url)
+            const localVarPath = `/project/content/preview`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (url !== undefined) {
+                localVarQueryParameter['url'] = url;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Get full media content metadata
          * @summary Get full media content metadata
          * @param {number} projectId 
@@ -865,6 +927,17 @@ export const ProjectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Get OpenGraph preview of a video or audio link
+         * @summary Get OpenGraph preview of a video or audio link
+         * @param {string} url 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getContentPreview(url: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ContentPreviewResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getContentPreview(url, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Get full media content metadata
          * @summary Get full media content metadata
          * @param {number} projectId 
@@ -959,6 +1032,16 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.getAllProjects(options).then((request) => request(axios, basePath));
         },
         /**
+         * Get OpenGraph preview of a video or audio link
+         * @summary Get OpenGraph preview of a video or audio link
+         * @param {string} url 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getContentPreview(url: string, options?: any): AxiosPromise<ContentPreviewResponse> {
+            return localVarFp.getContentPreview(url, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Get full media content metadata
          * @summary Get full media content metadata
          * @param {number} projectId 
@@ -1051,6 +1134,18 @@ export class ProjectApi extends BaseAPI {
      */
     public getAllProjects(options?: any) {
         return ProjectApiFp(this.configuration).getAllProjects(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get OpenGraph preview of a video or audio link
+     * @summary Get OpenGraph preview of a video or audio link
+     * @param {string} url 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public getContentPreview(url: string, options?: any) {
+        return ProjectApiFp(this.configuration).getContentPreview(url, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -14,6 +14,7 @@ import ai.kalico.api.service.mapper.ProjectMapper;
 import ai.kalico.api.utils.security.firebase.SecurityFilter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kalico.model.ContentPreviewResponse;
 import com.kalico.model.CreateProjectRequest;
 import com.kalico.model.CreateProjectResponse;
 import com.kalico.model.GenericResponse;
@@ -262,6 +263,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
     return new ProjectJobStatus()
         .status(JobStatus.PROJECT_NOT_FOUND);
+  }
+
+  @Override
+  public ContentPreviewResponse getContentPreview(String url) {
+    return avService.downloadContentMetadata(url);
   }
 
   private boolean isSupportedUrl(String url) {

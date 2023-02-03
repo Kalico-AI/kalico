@@ -20079,7 +20079,16 @@ Contact Page Two CSS
   border: 4px solid #ecb3b4;
   border-radius: 2px;
 }
-
+.content-link-preview {
+  padding-right: 20px;
+}
+.content-link-preview img {
+  max-width: 130px;
+  border-radius: 10px;
+}
+.content-link-preview span {
+  font-size: 16px;
+}
 .process-content-3 {
   padding-left: 55px;
 }

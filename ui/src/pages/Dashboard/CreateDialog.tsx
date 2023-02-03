@@ -15,16 +15,16 @@ import {
   Box,
   Divider,
   FormControl,
-  FormControlLabel,
   Grid,
   InputLabel,
   Select,
   styled,
-  Switch,
   Typography,
 } from '@mui/material';
-import {CreateProjectRequest, KalicoContentType} from "@/api";
+import {CreateProjectRequest, KalicoContentType, ProjectApi} from "@/api";
 import {toast, TypeOptions} from "react-toastify";
+import {headerConfig} from "@/api/headerConfig";
+import {AuthUserContext} from "next-firebase-auth";
 
 
 const BoxUploadWrapper = styled(Box)(
@@ -72,6 +72,7 @@ const AvatarSuccess = styled(Avatar)(
 );
 
 export interface CreateDialogProps {
+  user?: AuthUserContext,
   open: boolean,
   onClose: () => void,
   onSubmit: (data: CreateProjectRequest) => void
@@ -87,6 +88,9 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
   const [fileName, setFileName] = useState('')
   const [fileExtension, setFileExtension] = useState('')
   const [showFileName, setShowFileName] = useState(false)
+  const [contentThumbnail, setContentThumbnail] = useState<string | undefined>(undefined)
+  const [contentTitle, setContentTitle] = useState<string | undefined>(undefined)
+  const [contentDuration, setContentDuration] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     // Reset the previous state
@@ -100,6 +104,34 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
     setParaphrase(false)
     setEmbedImages(false)
   }, [])
+
+  const getContentPreview = (url: string) => {
+    if (url && url.includes("http")) {
+      props?.user?.getIdToken(false)
+      .then(tokenResult => {
+        const projectApi = new ProjectApi(headerConfig(tokenResult))
+        projectApi.getContentPreview(url)
+        .then(response => {
+          if (response.data.title) {
+            let shortTitle = response.data.title.substring(0, 100) + "..."
+            setContentTitle(shortTitle)
+          } else {
+            setContentTitle('')
+          }
+          if (response.data.thumbnail) {
+            setContentThumbnail(response.data.thumbnail)
+          } else {
+            setContentThumbnail('')
+          }
+          if (response.data.duration) {
+            setContentDuration(response.data.duration)
+          } else {
+            setContentDuration('')
+          }
+        }).catch(e => console.log(e))
+      }).catch(e => console.log(e))
+    }
+  }
 
   const handleParaphrase = (event: any) => {
     event.preventDefault()
@@ -119,6 +151,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
   const handleContentLink = (event: any) => {
     event.preventDefault()
     setContentLink(event.target.value)
+    getContentPreview(event.target.value)
   }
 
   const handleContentType = (event: any) => {
@@ -281,6 +314,17 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                       placeholder={('https://www.youtube.com/watch?v=91BUM...')}
                   />
                 </Grid>
+                {contentThumbnail &&
+                    <Grid item xs={12} sx={{display: 'inline-flex'}}>
+                      <Box className="content-link-preview">
+                        <img src={contentThumbnail} alt={''}/>
+                      </Box>
+                      <Box className="content-link-preview">
+                        {contentTitle && <h6>{contentTitle}</h6>}
+                        {contentDuration && <span>{contentDuration}</span>}
+                      </Box>
+                    </Grid>
+                }
               </Grid>
             </Box>
             <Divider>OR</Divider>

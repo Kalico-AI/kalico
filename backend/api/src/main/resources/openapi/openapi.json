@@ -126,6 +126,38 @@
         }
       }
     },
+    "/project/content/preview": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Get OpenGraph preview of a video or audio link",
+        "description": "Get OpenGraph preview of a video or audio link",
+        "operationId": "getContentPreview",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "url",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Content preview response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentPreviewResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/project/delete/{project_id}": {
       "delete": {
         "tags": [
@@ -303,6 +335,20 @@
       }
     },
     "schemas": {
+      "ContentPreviewResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          }
+        }
+      },
       "ProjectJobStatus": {
         "type": "object",
         "properties": {

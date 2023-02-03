@@ -1,5 +1,6 @@
 package ai.kalico.api.service.project;
 
+import com.kalico.model.ContentPreviewResponse;
 import com.kalico.model.CreateProjectRequest;
 import com.kalico.model.CreateProjectResponse;
 import com.kalico.model.GenericResponse;
@@ -40,5 +41,12 @@ public interface ProjectService {
   MediaContent getMediaContent(Long projectId);
 
   ProjectJobStatus getProjectJobStatus(Long projectId);
+
+  /**
+   * Get OpenGraph social preview links for the given content
+   * @param url
+   * @return
+   */
+  ContentPreviewResponse getContentPreview(String url);
 
 }
