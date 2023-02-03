@@ -5,12 +5,13 @@ import {SITE_IMAGE_URL} from "@/utils/constants";
 import {AuthAction, withAuthUser} from "next-firebase-auth";
 import {CenterAlignedProgress} from "@/utils/utils";
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   return {
     props: {
       title: "Kalico | Sign In",
       description: "Sign in to your Kalico account",
-      siteImage: SITE_IMAGE_URL
+      siteImage: SITE_IMAGE_URL,
+      confirmationFailed: context.query.confirmationFailed ? context.query.confirmationFailed : false
     }
   }
 }
@@ -24,7 +25,7 @@ function SignInIndex(props) {
         <meta property="og:description" content={props.description} name="description" key="description"/>
         <meta property="og:image:secure" content={props.siteImage} name="image" key="image:secure"/>
       </Head>
-      <SignIn isSignUp={false}/>
+      <SignIn confirmationFailed={props.confirmationFailed}/>
     </>
   );
 }

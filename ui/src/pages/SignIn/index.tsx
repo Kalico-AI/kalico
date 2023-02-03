@@ -21,7 +21,7 @@ import {registerUser} from "@/utils/utils";
 import {PATHS} from "@/utils/constants";
 
 export interface SignInProps {
-  isSignUp: boolean
+  confirmationFailed?: boolean
 }
 
 const actionCodeSettings = {
@@ -42,11 +42,23 @@ const SignIn: FC<SignInProps> = observer((props) => {
     setEmail(event.target.value)
   }
 
+  useEffect(() => {
+    if (props.confirmationFailed) {
+      toast("Invalid confirmation link", {
+        type: 'error',
+        position: toast.POSITION.TOP_CENTER
+      });
+    }
+  }, [])
+
   const signInWithEmail = (): void => {
+    console.log("DEBUG 1: signing in with email: ", email)
     setPersistence(auth, indexedDBLocalPersistence)
     .then(() => {
+      console.log("DEBUG 2: signing in with email: ", email)
       sendSignInLinkToEmail(auth, email, actionCodeSettings)
       .then(() => {
+        console.log("DEBUG 3: signing in with email: ", email)
         window.localStorage.setItem('emailForSignIn', email);
         toast("Please check your email and follow the instructions to login", {
           type: 'success',
@@ -135,7 +147,7 @@ const SignIn: FC<SignInProps> = observer((props) => {
                       {/*  <a className="forgot-link float-end" href="#">Forgot Password?</a>*/}
                       {/*</div>*/}
                       <div className="col-md-12 mt-30">
-                        <input className="btn btn-red" type="submit" value="Sign In" onClick={signInWithEmail}/>
+                        <input className="btn btn-red" value="Sign In" onClick={signInWithEmail}/>
                       </div>
                     </div>
                   </form>

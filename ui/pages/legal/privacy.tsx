@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from "next/head";
-import Legal from "@/pages/Legal";
+import Privacy from "@/pages/Legal/Privacy";
 export async function getServerSideProps() {
   return {
     props: {
@@ -11,7 +11,7 @@ export async function getServerSideProps() {
   }
 }
 
-function Privacy(props) {
+function LegalPrivacyIndex(props) {
   return (
       <>
         <Head>
@@ -20,9 +20,9 @@ function Privacy(props) {
           <meta property="og:description" content={props.description} name="description" key="description"/>
           <meta property="og:image:secure" content={props.siteImage} name="image" key="image:secure"/>
         </Head>
-        <Legal title="Privacy Policy" body=""/>
+        <Privacy title="Privacy Policy" body=""/>
       </>
   );
 }
 
-export default Privacy;
+export default LegalPrivacyIndex;

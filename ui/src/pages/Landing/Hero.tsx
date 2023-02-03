@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from "next/link";
+import {PATHS} from "@/utils/constants";
 
 
 function Hero() {
@@ -11,14 +13,19 @@ function Hero() {
             <div className="col-md-12">
               <div className="banner-left text-center">
                 <h2>
-                  Give your video content another life{' '}
+                  Give your video content another {' '}
                   <span style={{color: '#ee8e3b'}}>
-                    with AI
+                    life
                   </span>
                 </h2>
-                <p className="banner-para">Instantly create high quality blog posts and articles from your videos</p>
+                <span className="banner-para">Maximize the reach of your videos and podcasts by turning them into engaging and shareable articles instantly.</span>
                 <div className="hero-cta">
-                <button type="submit" className="btn btn-red">Get Started for Free</button>
+                  {/*<div className="right-nav">*/}
+                    {/*<a href="#" className="language-bar mr-50"><span className="active">En.</span><span>Ru</span></a>*/}
+                    <Link className="btn btn-red" href={PATHS.DASHBOARD}>Get Started for Free</Link>
+                    {/*<Link className="btn btn-red" href={PATHS.SIGN_UP}>Sign Up</Link>*/}
+                  {/*</div>*/}
+                {/*<button  className="btn btn-red">Get Started for Free</button>*/}
 
                 </div>
               </div>

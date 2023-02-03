@@ -143,7 +143,7 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
                 </Typography>
                     <Box>
                       <Typography sx={{fontSize: '14px', pt: 1}} color="error">
-                        {reasonFailed}
+                        <strong>{reasonFailed}</strong>
                       </Typography>
                     </Box>
 

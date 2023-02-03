@@ -8,5 +8,7 @@ export const PATHS = {
   PROJECT: '/dashboard/project',
   PRICING: '/pricing',
   TWITTER_PAGE: 'https://twitter.com/kalicoai',
-  EMAIL_CONFIRMATION: '/account/sign-in-confirmation'
+  EMAIL_CONFIRMATION: '/account/sign-in-confirmation',
+  TOS: '/legal/tos',
+  PRIVACY: '/legal/privacy'
 }

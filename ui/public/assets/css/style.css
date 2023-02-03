@@ -2369,6 +2369,29 @@ a {
   padding-top: 15px;
 }
 
+.process-item-content .content p {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.process-item-content .content li {
+  list-style: disc;
+  margin-left: 30px;
+}
+.process-item-content .content h5 {
+  padding-top: 50px;
+}
+.process-item-content .content h4 {
+  padding-top: 20px;
+}
+.legal-updated-date {
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+}
+.legal-title {
+  padding-top: 40px;
+}
+
 .nav .nav-link {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
@@ -20097,7 +20120,7 @@ Contact Page Two CSS
 
 .process-item-3:nth-child(1) .process-images-3 {
   position: relative;
-  height: 480px;
+  height: 330px;
 }
 .process-item-3:nth-child(1) .process-images-3 .shape {
   position: absolute;
@@ -20140,6 +20163,12 @@ Contact Page Two CSS
 .process-item-3:nth-child(3) .process-images-3 {
   position: relative;
   height: 395px;
+}
+.process-images-3 img {
+  max-width: 360px;
+}
+.process-item-3 .process-images-3 .shape {
+  height: 336px !important;
 }
 .process-item-3:nth-child(3) .process-images-3 .shape {
   position: absolute;

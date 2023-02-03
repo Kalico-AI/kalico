@@ -51,6 +51,7 @@ const Pricing = () => {
                           <li><i className="icon-close fas fa-times-circle"></i>Additional rewrites</li>
                           <li><i className="icon-close fas fa-times-circle"></i>Intelligent image and GIF embedding</li>
                           <li><i className="icon-close fas fa-times-circle"></i>Image and GIF hosting</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>Summarize</li>
                           <li><i className="icon-close fas fa-times-circle"></i>Publish to WordPress</li>
                           <li><i className="icon-close fas fa-times-circle"></i>Premium support</li>
                           <li><i className="icon-close fas fa-times-circle"></i>Access to latest features</li>
@@ -77,6 +78,7 @@ const Pricing = () => {
                           <li><i className="icon-check fas fa-check-circle"></i>Additional rewrites</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Intelligent image and GIF embedding</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Image and GIF hosting</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Summarize</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Publish to WordPress</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Premium support</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Access to latest features</li>
@@ -103,6 +105,7 @@ const Pricing = () => {
                           <li><i className="icon-check fas fa-check-circle"></i>Additional rewrites</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Intelligent image and GIF embedding</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Image and GIF hosting</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Summarize</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Publish to WordPress</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Premium support</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Access to latest features</li>

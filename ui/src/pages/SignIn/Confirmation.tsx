@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect} from 'react';
 import {useStore} from "@/hooks/useStore";
 import {
   isSignInWithEmailLink,
@@ -6,33 +6,20 @@ import {
 } from "firebase/auth";
 import {auth} from "@/utils/firebase-setup";
 import {observer} from "mobx-react";
-import {toast, ToastContainer} from "react-toastify";
+import {ToastContainer} from "react-toastify";
 import {registerUser} from "@/utils/utils";
+import {Box, CircularProgress} from "@mui/material";
+import {useRouter} from "next/router";
+import {PATHS} from "@/utils/constants";
 
 
 const SignInConfirmation: FC<any> = observer((props) => {
   const store = useStore()
-  const [error, setError] = useState<string | undefined>(undefined)
-  const [email, setEmail] = useState<string | undefined>(undefined)
+  const router = useRouter()
 
   useEffect(() => {
     confirmEmail()
   }, [])
-
-  useEffect(() => {
-    if (error) {
-      toast(error, {
-        type: 'error',
-        position: toast.POSITION.TOP_CENTER
-      });
-      setError(undefined)
-    }
-  }, [error])
-
-  const handleEmail = (event: any): void => {
-    event.preventDefault()
-    setEmail(event.target.value)
-  }
 
   const confirmEmail = (): void => {
     if (isSignInWithEmailLink(auth, window.location.href)) {
@@ -56,10 +43,13 @@ const SignInConfirmation: FC<any> = observer((props) => {
           registerUser(store.sessionDataStore)
         })
         .catch((error) => {
-          console.log(error)
-          setError(error)
-          // Some error occurred, you can inspect the code: error.code
-          // Common errors could be invalid email and invalid or expired OTPs.
+          const errorMessage = error.message;
+          if (errorMessage.includes("invalid")) {
+            router.push({
+              pathname: PATHS.LOGIN,
+              query: {confirmationFailed: true}
+            }).catch(e => console.log(e))
+          }
         });
       }
     }
@@ -74,15 +64,14 @@ const SignInConfirmation: FC<any> = observer((props) => {
                 <div className="form-wrapper form-wrapper-signin">
                   <div className="text-center">
                     <img className="sign-in-logo" src="/assets/images/logo.png" alt="logo"/>
-                    <span className="sign-in-message">Please confirm your email address</span>
+                    <span className="sign-in-message">Confirming email address...</span>
                   </div>
                       <form action="#" className="sign-up-form">
-                    <div className="row">
+                    <div className="row" style={{minHeight: '400px'}}>
                       <div className="col-md-12">
-                        <input type="email" placeholder="Email" onChange={handleEmail}/>
-                      </div>
-                      <div className="col-md-12 mt-30">
-                        <input className="btn btn-red" type="submit" value="Confirm" onClick={confirmEmail}/>
+                        <Box sx={{position: 'relative', top: '35%', left: '40%'}}>
+                          <CircularProgress />
+                        </Box>
                       </div>
                     </div>
                   </form>
