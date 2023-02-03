@@ -214,14 +214,14 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
             {/*      label={'Paraphrase'}*/}
             {/*  />*/}
             {/*</Box>*/}
-            <Box p={0}>
-              <FormControlLabel
-                  disabled
-                  control={<Switch color="warning" defaultChecked={false} onChange={handleEmbedImages}/>}
-                  label={'Intelligently embed images (coming soon)'}
-              />
-            </Box>
-            <Divider sx={{width: '100%'}}/>
+            {/*<Box p={0}>*/}
+            {/*  <FormControlLabel*/}
+            {/*      disabled*/}
+            {/*      control={<Switch color="warning" defaultChecked={false} onChange={handleEmbedImages}/>}*/}
+            {/*      label={'Intelligently embed images (coming soon)'}*/}
+            {/*  />*/}
+            {/*</Box>*/}
+            {/*<Divider sx={{width: '100%'}}/>*/}
             <Box p={3}>
               <Grid container spacing={3}>
                 <Grid item xs={12}>

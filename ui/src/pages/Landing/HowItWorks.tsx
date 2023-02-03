@@ -37,7 +37,7 @@ function HowItWorks() {
                     <span className="item-number">02</span>
                     <h3 className="item-title">Kalico converts your audio or video into an article</h3>
                     <p className="item-text">
-                      Our AI utilizes state-of-the-art speech-to-text technology to extract a transcript from which it then creates a high quality article. Typically, it takes 2-3 minutes to process an average-length food recipe video.
+                      Our AI utilizes state-of-the-art speech-to-text technology to extract a transcript from which it then creates a high quality article. Typically, it takes 2-4 minutes to process an average-length food recipe video.
                     </p>
                   </div>
                 </div>

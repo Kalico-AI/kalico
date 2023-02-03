@@ -33,7 +33,7 @@ function WhyKalico() {
                         <h4 style={{marginLeft: '10px'}}>10X your content's reach</h4>
                       </Box>
                       <Box sx={{ml: 4, pb: 1, fontSize: '14px'}}>
-                        <p>Reach more audience and potential customers through SEO by with Kalico-generated content. We also support accurate translation across numerous languages, including English, Spanish, Hindi, and many more, for a strong global presence (coming soon). </p>
+                        <p>Reach more audience and potential customers through SEO with Kalico-generated content. We also support accurate translation across numerous languages, including English, Spanish, Hindi, and many more, for a strong global presence (coming soon). </p>
                       </Box>
                     </li>
                   </ul>

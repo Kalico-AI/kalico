@@ -87,7 +87,7 @@ const Pricing = () => {
                           <li><i className="icon-close fas fa-times-circle"></i>Integrations</li>
                         </ul>
                       </div>
-                      <a href=""  className="pricing-btn">Coming Soon</a>
+                      <a href="#"  className="pricing-btn">Coming Soon</a>
                     </div>
                   </div>
                   <div className="col-xl-4 col-md-6 mx-auto">
@@ -114,7 +114,7 @@ const Pricing = () => {
                           <li><i className="icon-check fas fa-check-circle"></i>Integrations</li>
                         </ul>
                       </div>
-                      <a href="" className="pricing-btn">Coming Soon</a>
+                      <a href="#" className="pricing-btn">Coming Soon</a>
                     </div>
                   </div>
                 </div>
