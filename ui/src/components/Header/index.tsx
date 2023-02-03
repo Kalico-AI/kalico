@@ -142,6 +142,9 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                     <li className="nav-item dropdown submenu mega-menu active">
                       <Link href="/#support" className="nav-link dropdown-toggle">Support</Link>
                     </li>
+                      <li className="nav-item dropdown submenu mega-menu active">
+                        <Link href="/pricing" className="nav-link dropdown-toggle">Pricing</Link>
+                      </li>
                   </ul>
                     <div className="right-nav">
                       {/*<a href="#" className="language-bar mr-50"><span className="active">En.</span><span>Ru</span></a>*/}

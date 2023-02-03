@@ -10916,7 +10916,7 @@ Why-choose CSS
   border: none;
 }
 .choose-plan-area-three .pricing-item.active h4, .choose-plan-area-three .pricing-item:hover h4 {
-  color: #3c73f0;
+  color: #ed6c03;
 }
 .choose-plan-area-three .pricing-item.active .btn, .choose-plan-area-three .pricing-item:hover .btn {
   color: #fff;
@@ -10958,8 +10958,8 @@ Why-choose CSS
 }
 .choose-plan-area-three .pricing-item .list-wrapp ul li {
   display: flex;
-  font-size: 17px;
-  line-height: 1;
+  font-size: 16px;
+  line-height: 21px;
   color: var(--text-color-2);
   text-align: left;
   padding: 0;
