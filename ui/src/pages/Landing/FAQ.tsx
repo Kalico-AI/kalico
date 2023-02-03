@@ -31,14 +31,33 @@ function FAQ() {
                        aria-labelledby="project-headingOne" data-bs-parent="#projectAccordion">
                     <div className="accordion-body">
                       <p>
-                        Our AI works by extracting audio and text contained in the video to write the article. This means
-                        your video must have spoken audio or an accompanying description. In addition, the AI takes snapshots of meaningful segments
-                        from the video and intelligently places them throughout the blog post or article.
+                        Our AI works by extracting audio contained in the video to write the article. We use a combination of state-of-the-art open source AI tools and our own models.
                       </p>
                     </div>
                   </div>
                 </div>
-
+                <div className="accordion-item">
+                  <h2 className="accordion-header" id="project-headingOneHalf">
+                    <button
+                        className="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#project-collapseOneHalf"
+                        aria-expanded="false"
+                        aria-controls="project-collapseOneHalf"
+                    >
+                      Is the article plagiarism free?
+                    </button>
+                  </h2>
+                  <div id="project-collapseOneHalf" className="accordion-collapse collapse"
+                       aria-labelledby="project-headingOneHalf" data-bs-parent="#projectAccordion">
+                    <div className="accordion-body">
+                      <p>
+                        Our AI ensures 100% plagiarism-free output by using your original content to maintain contextual integrity while significantly improving it, instead of inventing content like other well-known content writing platforms.
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
                 <div className="accordion-item">
                   <h2 className="accordion-header" id="project-headingTwo">
@@ -57,8 +76,7 @@ function FAQ() {
                        aria-labelledby="project-headingTwo" data-bs-parent="#projectAccordion">
                     <div className="accordion-body">
                       <p>
-                       We support YouTube and Instagram links right now. We will be adding support for
-                        more links in the future.
+                       We support YouTube and Instagram links right now. Support for other platforms coming soon.
                       </p>
                     </div>
                   </div>
@@ -81,30 +99,7 @@ function FAQ() {
                        data-bs-parent="#projectAccordion">
                     <div className="accordion-body">
                       <p>
-                        Kalico supports English. We hope to support more languages in the near future.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="accordion-item">
-                  <h2 className="accordion-header" id="project-headingFour">
-                    <button
-                        className="accordion-button collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#project-collapseFour"
-                        aria-expanded="false"
-                        aria-controls="project-collapseFour"
-                    >
-                     What kinds of integrations are available?
-                    </button>
-                  </h2>
-                  <div id="project-collapseFour" className="accordion-collapse collapse"
-                       aria-labelledby="project-collapseFour"
-                       data-bs-parent="#projectAccordion">
-                    <div className="accordion-body">
-                      <p>
-                       We currently support CSV export for WordPress. We will be adding support for other platforms in the future.
+                        Kalico supports English. We will be adding support for more languages soon.
                       </p>
                     </div>
                   </div>

@@ -35,9 +35,9 @@ function HowItWorks() {
                 <div className="col-lg-6 col-md-7">
                   <div className="process-content-3 wow fadeInRight" data-wow-delay="0.2s">
                     <span className="item-number">02</span>
-                    <h3 className="item-title">AI content processing</h3>
+                    <h3 className="item-title">Kalico converts your audio or video into an article</h3>
                     <p className="item-text">
-                      Our AI extracts the transcript and uses it to generate the content. We do this while improving the grammar and writing style. Typically, processing an average-length food recipe video takes 2-3 minutes.
+                      Our AI utilizes state-of-the-art speech-to-text technology to extract a transcript from which it then creates a high quality article. Typically, it takes 2-3 minutes to process an average-length food recipe video.
                     </p>
                   </div>
                 </div>
@@ -53,9 +53,9 @@ function HowItWorks() {
                 <div className="col-lg-6 col-md-7">
                   <div className="process-content-3 wow fadeInLeft" data-wow-delay="0.2s">
                     <span className="item-number">03</span>
-                    <h3 className="item-title">Polished article delivered</h3>
+                    <h3 className="item-title">View publication-ready article</h3>
                     <p className="item-text">
-                      You start using a fully formatted and polished article within minutes right from the dashboard.
+                      The end result is an article that has been beautifully enhanced with rich formatting and structure. You can make any minor adjustments as needed directly in the dashboard, and then copy it into your desired blog or publishing platform.
                     </p>
                   </div>
                 </div>

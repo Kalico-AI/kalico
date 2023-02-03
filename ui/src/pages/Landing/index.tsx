@@ -14,7 +14,7 @@ function Landing() {
           <VideoDemo/>
           <WhyKalico/>
           <HowItWorks/>
-          <Features/>
+          {/*<Features/>*/}
           <FAQ/>
           {/*<CallToAction/>*/}
         </main>

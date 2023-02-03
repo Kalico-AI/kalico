@@ -1,102 +1,71 @@
 import React from 'react';
+import LanguageIcon from '@mui/icons-material/Language';
+import PaidIcon from '@mui/icons-material/Paid';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import {Box} from "@mui/material";
 
 
 function WhyKalico() {
   return (
-      <section className="hardware-support-area pt-150 pb-150" id="why-kalico">
+      <section className="hardware-support-area pt-150 pb-40" id="why-kalico">
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-lg-6">
-              <div className="section-title-left">
+            <div className="col-lg-8">
+              <div className="section-title-left pb-30">
                 <h2>Why use Kalico?</h2>
               </div>
-
-              <p className="hardware-text">
-                Some point of sale systems lock you into their hardwares devices. This may not best
-                suit your needs or budget. Landpagy POS allows you to choose
-                the best hardware for your needs.
-              </p>
-
               <div className="row">
                 <div className="col-md-6">
                   <ul className="hardware-list">
                     <li>
-                      <p>
-                        <img src="/assets/images/home_5/icons/hardware-icon1.svg" alt="Icon"
-                             className="hardware-icon"/>
-                        Printers
-                      </p>
+                      <Box sx={{display: 'inline-flex'}}>
+                        <PaidIcon color="warning"/>
+                        <h4 style={{marginLeft: '10px'}}>Save time and money</h4>
+                      </Box>
+                      <Box sx={{ml: 4, pb: 1, fontSize: '14px'}}>
+                        <p>On average, Fiverr freelancers charges $125 for a 6-hour turnaround time per article. In contrast, Kalico can generate superior quality content in mere minutes for less than 1% of the cost!</p>
+                      </Box>
                     </li>
                     <li>
-                      <p>
-                        <img src="/assets/images/home_5/icons/hardware-icon2.svg" alt="Icon"
-                             className="hardware-icon"/>
-                        Customer Display
-                      </p>
-                    </li>
-                    <li>
-                      <p>
-                        <img src="/assets/images/home_5/icons/hardware-icon3.svg" alt="Icon"
-                             className="hardware-icon"/>
-                        Payment Terminals
-                      </p>
+                      <Box sx={{display: 'inline-flex'}}>
+                        <TrendingUpIcon color="warning"/>
+                        <h4 style={{marginLeft: '10px'}}>10X your content's reach</h4>
+                      </Box>
+                      <Box sx={{ml: 4, pb: 1, fontSize: '14px'}}>
+                        <p>Reach more audience and potential customers through SEO by with Kalico-generated content. We also support accurate translation across numerous languages, including English, Spanish, Hindi, and many more, for a strong global presence (coming soon). </p>
+                      </Box>
                     </li>
                   </ul>
                 </div>
                 <div className="col-md-6">
                   <ul className="hardware-list">
                     <li>
-                      <p>
-                        <img src="/assets/images/home_5/icons/hardware-icon4.svg" alt="Icon"
-                             className="hardware-icon"/>
-                        Cash Drawer
-                      </p>
+                      <Box sx={{display: 'inline-flex'}}>
+                        <CreditCardIcon color="warning"/>
+                        <h4 style={{marginLeft: '10px'}}>Monetize your content</h4>
+                      </Box>
+                      <Box sx={{ml: 4, pb: 1, fontSize: '14px'}}>
+                        <p>Syndicate the generated articles throughout your niche or turn them into eBooks.</p>
+                      </Box>
                     </li>
                     <li>
-                      <p>
-                        <img src="/assets/images/home_5/icons/hardware-icon5.svg" alt="Icon"
-                             className="hardware-icon"/>
-                        Barcode Scanner
-                      </p>
-                    </li>
-                    <li>
-                      <p>
-                        <img src="/assets/images/home_5/icons/hardware-icon6.svg" alt="Icon"
-                             className="hardware-icon"/>
-                        NFC / RFID Readers
-                      </p>
+                      <Box sx={{display: 'inline-flex'}}>
+                        <LanguageIcon color="warning"/>
+                        <h4 style={{marginLeft: '10px'}}>Make the Internet a better place</h4>
+                      </Box>
+                      <Box sx={{ml: 4, pb: 1, fontSize: '14px'}}>
+                        <p>Popular AI writing tools often invent content, reducing the artistic and cultural value of the Internet. In stark contrast, Kalico's content generation retains the contextual integrity of your work and makes it accessible to a wider audience, amplifying our unique cultural identity.</p>
+                      </Box>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
-            <div className="col-lg-5 offset-lg-1">
+            <div className="col-lg-4">
               <div className="available">
-                <div>
-                  <h4 className="item-title">Available now</h4>
-                </div>
-                <div className="app-wrapp">
-                  <ul>
-                    <li>
-                      <a href="#">
-                        <img src="/assets/images/home_5/icons/apple-icon.svg" alt="Icon"
-                             className="app-icon"/>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src="/assets/images/home_5/icons/android-icon.svg" alt="Icon"
-                             className="app-icon"/>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src="/assets/images/home_5/icons/windows-icon.svg" alt="Icon"
-                             className="app-icon"/>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                <img src="/assets/images/landing/undraw_super_woman.svg" alt="Icon"
+                     className="app-icon"/>
               </div>
             </div>
           </div>

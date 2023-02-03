@@ -136,9 +136,9 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                       <Link href="/#how-it-works" className="nav-link dropdown-toggle">How It Works</Link>
                     </li>
 
-                    <li className="nav-item dropdown submenu mega-menu active">
-                      <Link href="/#features" className="nav-link dropdown-toggle">Features</Link>
-                    </li>
+                    {/*<li className="nav-item dropdown submenu mega-menu active">*/}
+                    {/*  <Link href="/#features" className="nav-link dropdown-toggle">Features</Link>*/}
+                    {/*</li>*/}
                     <li className="nav-item dropdown submenu mega-menu active">
                       <Link href="/#support" className="nav-link dropdown-toggle">Support</Link>
                     </li>

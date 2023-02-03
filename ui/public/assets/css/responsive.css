@@ -2804,6 +2804,9 @@
   .hardware-list {
     margin-left: 0;
   }
+  .hardware-list img {
+    width: 64px;
+  }
   .choose-plan-area-three .pricing-item.active,
   .choose-plan-area-three .pricing-item:hover {
     margin-top: 30px;
