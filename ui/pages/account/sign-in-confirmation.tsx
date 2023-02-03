@@ -1,23 +1,21 @@
 import React from 'react';
 import Head from "next/head";
-import Landing from "@/pages/Landing";
-import {CenterAlignedProgress} from "@/utils/utils";
 import {SITE_IMAGE_URL} from "@/utils/constants";
-import initAuth from "@/auth/nextAuth";
 import {AuthAction, withAuthUser} from "next-firebase-auth";
+import {CenterAlignedProgress} from "@/utils/utils";
+import SignInConfirmation from "@/pages/SignIn/Confirmation";
 
 export async function getServerSideProps() {
   return {
     props: {
-      title: "Kalico",
-      description: "",
+      title: "Kalico | Email confirmation",
+      description: "Confirm your email address",
       siteImage: SITE_IMAGE_URL
     }
   }
 }
-initAuth()
 
-function Index(props) {
+function SignInConfirmationIndex(props) {
   return (
     <>
       <Head>
@@ -26,13 +24,15 @@ function Index(props) {
         <meta property="og:description" content={props.description} name="description" key="description"/>
         <meta property="og:image:secure" content={props.siteImage} name="image" key="image:secure"/>
       </Head>
-      <Landing/>
+      <SignInConfirmation/>
     </>
   );
 }
+
+
 export default withAuthUser({
   whenAuthed: AuthAction.REDIRECT_TO_APP,
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.RENDER,
-  LoaderComponent: () => <CenterAlignedProgress/>,
-})(Index);
+  LoaderComponent: () => <CenterAlignedProgress/>
+})(SignInConfirmationIndex);

@@ -10,10 +10,10 @@ import Script from 'next/script'
 import Footer from "@/components/Footer";
 import HeaderNav from "@/components/Header";
 import initAuth from "@/auth/nextAuth";
-import {withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
+import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import 'react-toastify/dist/ReactToastify.css';
-import {CenterAlignedProgress} from "@/utils/utils";
 import {SITE_IMAGE_URL} from "@/utils/constants";
+import {CenterAlignedProgress} from "@/utils/utils";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -23,10 +23,7 @@ type NextPageWithLayout = NextPage & {
 initAuth()
 
 export const getServerSideProps = withAuthUserTokenSSR({
-
 })(async ({ AuthUser }) => {
-  // Optionally, get other props.
-  // const token = await AuthUser.getIdToken()
   return {
     props: {
       title: "Kalico",
@@ -94,14 +91,29 @@ const MyApp: FC<DefaultAppProps> = (props) => {
       </Head>
         <RootStoreProvider>
           <HeaderNav/>
+          <div className="global-container">
           {getLayout(<Component {...pageProps} />)}
+          </div>
           <Footer/>
         </RootStoreProvider>
+      <style jsx global>
+        {`
+
+            .global-container {
+              min-height: 90vh;
+            }
+
+          `}
+      </style>
     </>
   );
 }
+
 export default withAuthUser({
-  LoaderComponent: () => <CenterAlignedProgress/>,
+  whenAuthed: AuthAction.RENDER,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.RENDER,
+  LoaderComponent: () => <CenterAlignedProgress/>
 })(MyApp);
 
 

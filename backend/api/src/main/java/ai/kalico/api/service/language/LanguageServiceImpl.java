@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ContentItem;
 import com.kalico.model.ContentItemChildren;
 import com.kalico.model.KalicoContentType;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -57,62 +58,74 @@ public class LanguageServiceImpl implements LanguageService {
   @Override
   public List<ContentItem> generateContent(Long projectId) {
     MediaContentEntity contentEntity = mediaContentRepo.findByProjectId(projectId);
-    if (contentEntity != null &&
-        !ObjectUtils.isEmpty(contentEntity.getRawTranscript()) &&
-        contentEntity.getRawTranscript().length() > 0) {
-      log.info("LanguageServiceImpl.generateContent Starting content generation for projectId={}", projectId);
-      KalicoContentType contentType = KalicoContentType.OTHER;
-      Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(contentEntity.getProjectId());
-      String description = contentEntity.getScrapedDescription();
-      if (projectEntityOpt.isPresent()) {
-        contentType = KalicoContentType.fromValue(projectEntityOpt.get().getContentType());
-      }
+    if (contentEntity != null) {
+      if (!ObjectUtils.isEmpty(contentEntity.getRawTranscript()) &&
+          contentEntity.getRawTranscript().length() > 0) {
+        log.info("LanguageServiceImpl.generateContent Starting content generation for projectId={}",
+            projectId);
+        KalicoContentType contentType = KalicoContentType.OTHER;
+        Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(
+            contentEntity.getProjectId());
+        String description = contentEntity.getScrapedDescription();
+        if (projectEntityOpt.isPresent()) {
+          contentType = KalicoContentType.fromValue(projectEntityOpt.get().getContentType());
+        }
 
-      if (description != null && description.length() > openAiProps.getDescriptionCharacterLimit()) {
-        // Extract details from the description
-        // TODO: consolidate the description and the transcript
-      }
+        if (description != null
+            && description.length() > openAiProps.getDescriptionCharacterLimit()) {
+          // Extract details from the description
+          // TODO: consolidate the description and the transcript
+        }
 
-      // Break input transcript into clusters
-      List<String> chunkedTranscript = chunkTranscript(contentEntity.getRawTranscript(),
-          openAiProps.getChunkSize());
-      log.info("LanguageServiceImpl.generateContent Clustering transcript for projectId={}", projectId);
-      List<GptResponse> clusters = clusterTranscript(chunkedTranscript);
+        // Break input transcript into clusters
+        List<String> chunkedTranscript = chunkTranscript(contentEntity.getRawTranscript(),
+            openAiProps.getChunkSize());
+        log.info("LanguageServiceImpl.generateContent Clustering transcript for projectId={}",
+            projectId);
+        List<GptResponse> clusters = clusterTranscript(chunkedTranscript);
 
-      // Each cluster is broken down into paragraphs and the grammar and writing style is
-      // improved. This acts as a section in the final output with its own subheading.
-      // Subheadings are needed for longer texts, depending on the niche.
-      // TODO: We can correlate the paragraphs back to the timestamped transcript to determine
-      //      the best image or GIF for it automatically
-      log.info("LanguageServiceImpl.generateContent Generating paragraphs for projectId={}", projectId);
-      List<GptResponse> paragraphsByCluster = clustersIntoParagraphs(clusters);
+        // Each cluster is broken down into paragraphs and the grammar and writing style is
+        // improved. This acts as a section in the final output with its own subheading.
+        // Subheadings are needed for longer texts, depending on the niche.
+        // TODO: We can correlate the paragraphs back to the timestamped transcript to determine
+        //      the best image or GIF for it automatically
+        log.info("LanguageServiceImpl.generateContent Generating paragraphs for projectId={}",
+            projectId);
+        List<GptResponse> paragraphsByCluster = clustersIntoParagraphs(clusters);
 
-      // Generate a title using the first chunk of the transcript. This eats into the token usage
-      // because who have to send the entire chunk for context.
-      // TODO: Design a better prompt to generate the title and do the cluster at the same time
-      log.info("LanguageServiceImpl.generateContent Generating title for projectId={}", projectId);
-      GptResponse title = gptCompletion(0, openAiProps.getPromptTitle(),
-          chunkedTranscript.get(0));
-
-
-      GptResponse recipe = null;
-      if (contentType != null && contentType.equals(KalicoContentType.FOOD_RECIPE)) {
-        // Extract recipe information
-        // TODO: Not sure how to reconcile food recipes where the detail is spread across multiple chunks
-        log.info("LanguageServiceImpl.generateContent Generating recipe for projectId={}", projectId);
-        recipe = gptCompletion(0, openAiProps.getPromptRecipe(),
+        // Generate a title using the first chunk of the transcript. This eats into the token usage
+        // because who have to send the entire chunk for context.
+        // TODO: Design a better prompt to generate the title and do the cluster at the same time
+        log.info("LanguageServiceImpl.generateContent Generating title for projectId={}",
+            projectId);
+        GptResponse title = gptCompletion(0, openAiProps.getPromptTitle(),
             chunkedTranscript.get(0));
-      }
 
-      // For FoodBlog type, do the following:
-      // TODO: Extract the ingredients with quantity
-      // TODO: Extract recipe steps
-      log.info("LanguageServiceImpl.generateContent Generating structured content projectId={}", projectId);
-      List<ContentItem> content = generateContent(title, paragraphsByCluster, recipe);
-      saveContent(contentEntity.getProjectId(), content);
-      log.info("LanguageServiceImpl.generateContent Finished content generation for projectId={}", projectId);
-      return content;
+        GptResponse recipe = null;
+        if (contentType != null && contentType.equals(KalicoContentType.FOOD_RECIPE)) {
+          // Extract recipe information
+          // TODO: Not sure how to reconcile food recipes where the detail is spread across multiple chunks
+          log.info("LanguageServiceImpl.generateContent Generating recipe for projectId={}",
+              projectId);
+          recipe = gptCompletion(0, openAiProps.getPromptRecipe(),
+              chunkedTranscript.get(0));
+        }
+
+        // For FoodBlog type, do the following:
+        // TODO: Extract the ingredients with quantity
+        // TODO: Extract recipe steps
+        log.info("LanguageServiceImpl.generateContent Generating structured content projectId={}",
+            projectId);
+        List<ContentItem> content = generateContent(title, paragraphsByCluster, recipe);
+        saveContent(contentEntity.getProjectId(), content);
+        log.info("LanguageServiceImpl.generateContent Finished content generation for projectId={}",
+            projectId);
+        return content;
+      } else {
+        setProjectFailure(contentEntity.getProjectId(), "Submitted audio/video does not contain any spoken words");
+      }
     }
+
     log.info("LanguageServiceImpl.generateContent Failed to start content generation for projectId={}", projectId);
     return new ArrayList<>();
   }
@@ -321,12 +334,27 @@ public class LanguageServiceImpl implements LanguageService {
     Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(projectId);
     if (projectEntityOpt.isPresent()) {
       try {
-        projectEntityOpt.get().setContent(objectMapper.writeValueAsString(generatedContent));
-        projectEntityOpt.get().setProcessed(true);
-        projectRepo.save(projectEntityOpt.get());
+        ProjectEntity entity = projectEntityOpt.get();
+        entity.setContent(objectMapper.writeValueAsString(generatedContent));
+        entity.setProcessed(true);
+        entity.setUpdatedAt(LocalDateTime.now());
+        projectRepo.save(entity);
       } catch (JsonProcessingException e) {
         log.error("LanguageServiceImpl.saveContent: {}", e.getLocalizedMessage());
       }
+    }
+  }
+
+  private void setProjectFailure(long projectId, String reason) {
+    Optional<ProjectEntity> projectEntityOpt = projectRepo.findById(projectId);
+    if (projectEntityOpt.isPresent()) {
+      // Do not set processed=true so that the pending job query can find it.
+      // In the future we will add the option to delete failed jobs
+        ProjectEntity entity = projectEntityOpt.get();
+        entity.setFailed(true);
+        entity.setReasonFailed(reason);
+        entity.setUpdatedAt(LocalDateTime.now());
+        projectRepo.save(entity);
     }
   }
 

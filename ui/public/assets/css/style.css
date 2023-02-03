@@ -2477,7 +2477,6 @@ textarea {
   font-size: 1rem;
   color: #a0a1a3;
   background: #fff;
-  text-transform: capitalize;
   padding: 0.75rem 1.5625rem;
   margin: 0 0;
   width: 100%;
@@ -10917,7 +10916,7 @@ Why-choose CSS
   border: none;
 }
 .choose-plan-area-three .pricing-item.active h4, .choose-plan-area-three .pricing-item:hover h4 {
-  color: #3c73f0;
+  color: #ed6c03;
 }
 .choose-plan-area-three .pricing-item.active .btn, .choose-plan-area-three .pricing-item:hover .btn {
   color: #fff;
@@ -10959,8 +10958,8 @@ Why-choose CSS
 }
 .choose-plan-area-three .pricing-item .list-wrapp ul li {
   display: flex;
-  font-size: 17px;
-  line-height: 1;
+  font-size: 16px;
+  line-height: 21px;
   color: var(--text-color-2);
   text-align: left;
   padding: 0;
@@ -13957,7 +13956,8 @@ button:hover .HoverArrow__tipPath {
 
 .footer-cloud {
   position: relative;
-  z-index: 1;
+  width: 100%;
+  bottom: 0;
 }
 .footer-cloud .shape {
   position: absolute;
@@ -20340,9 +20340,12 @@ Contact Page Two CSS
   max-width: 450px;
   margin: 0 auto;
 }
+.sign-in-message {
+  font-size: 13px;
+}
 .sign-in-logo {
   max-width: 164px;
-  margin: 0 auto 20px;
+  margin: 0 auto 30px;
 }
 .sign-in-button {
   background: #fff;
@@ -20437,8 +20440,8 @@ Contact Page Two CSS
   line-height: 27px;
 }
 .form-wrapper .create-with-list li {
-  display: inline-block;
-  margin-right: 10px;
+  max-width: 300px;
+  margin: 24px auto;
 }
 .form-wrapper .create-with-list li a {
   background: #fff;
@@ -20473,6 +20476,10 @@ Contact Page Two CSS
   left: 10%;
 }
 
+.sign-up-form {
+  max-width: 300px;
+  margin: auto;
+}
 .sign-up-form .meta-text {
   font-size: 12px;
   line-height: 16px;

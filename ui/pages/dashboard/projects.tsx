@@ -5,6 +5,7 @@ import MyProjects from "@/pages/Dashboard/MyProjects";
 import {Project, ProjectApi} from "@/api";
 import {headerConfig} from "@/api/headerConfig";
 import {SITE_IMAGE_URL} from "@/utils/constants";
+import {CenterAlignedProgress} from "@/utils/utils";
 
 export async function getServerSideProps() {
   return {
@@ -65,5 +66,6 @@ const ProjectsIndex: FC<ProjectIndexProps> =  (props) => {
 export default withAuthUser({
   whenAuthed: AuthAction.RENDER,
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  LoaderComponent: () => <CenterAlignedProgress/>,
 })(ProjectsIndex);

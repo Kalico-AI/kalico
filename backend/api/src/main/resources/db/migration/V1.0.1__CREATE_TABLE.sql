@@ -48,6 +48,8 @@ CREATE TABLE IF NOT EXISTS public.project (
     embed_images boolean not null default false,
     content_type varchar(255),
     processed boolean not null default false,
+    failed boolean not null default false,
+    reason_failed varchar(255),
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

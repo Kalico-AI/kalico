@@ -23,79 +23,99 @@ const Pricing = () => {
 
 
   return (
-      <section className="pricing-area section-padding-2">
+      <section className="choose-plan-area-three bg-price pt-150 pb-150">
         <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <div className="section-title-center">
-                <h2 className="mt-n3">Choose a plan that works for you</h2>
-              </div>
-            </div>
+          <div className="section-title-center">
+            <h2 className="wow fadeInUp">Choose a plan that works for you</h2>
+            <p className="wow fadeInUp" data-wow-delay="0.2s">
+             Try Kalico for free. No credit card required. Or upgrade to our paid plans (coming soon).
+            </p>
           </div>
-          <div className="tab-content" id="myTabContent">
-            <div className="tab-pane fade show active" id="home" role="tabpanel"
-                 aria-labelledby="home-tab">
-              <div className="row">
-                <div className="col-sm-6 col-xl-4">
-                  <div className="pricing-item" style={{minHeight: '750px'}}>
-                    <h3 className="pricing-title">Free</h3>
-                    <div className="price"><span>Always Free</span></div>
-                    <span className="pricing-item-user">Try out what Kalico has to offer</span>
-                    <a href={PATHS.DASHBOARD} className="pricing-btn">Continue</a>
-                    <ul style={{minHeight: '350px'}}>
-                      <li className="text-black">1 user</li>
-                      <li className="text-black">AI Content Repurposing</li>
-                      <li className="text-black">Text Rewording</li>
-                      <li className="text-black">Topic Discovery</li>
-                      <li className="text-black">Human-like output</li>
-                      <li className="text-black">5 Projects or 60 minutes of audio/video</li>
-                    </ul>
-                    <a href={PATHS.DASHBOARD} className="pricing-btn">Continue</a>
-                  </div>
-                </div>
-                <div className="col-sm-6 col-xl-4">
-                  <div className="pricing-item active" style={{minHeight: '750px'}}>
-                    {/*<div className="badge">35%off</div>*/}
-                    <h3 className="pricing-title">Premium</h3>
-                    <div className="price">
-                      {/*<span className="dollar">$59</span>*/}
-                      {/*<span className="euro">&euro;7.09</span><sup> /user/mo</sup>*/}
+          <div className="col-12 wow fadeInUp" data-wow-delay="0.1s">
+            <div className="tab-content features-tab-content pt-100 pb-100" id="nav-tabContent">
+              <div className="tab-pane fade show active" id="nav-monthly" role="tabpanel"
+                   aria-labelledby="nav-monthly-tab">
+                <div className="row gy-xl-0 gy-4 pricing-item-two-cotnainer">
+                  <div className="col-xl-4 col-md-6">
+                    <div className="pricing-item wow fadeInUp" data-wow-delay="0.1s">
+                      <h4>Free</h4>
+                      <div className="price">$0<span>/mo</span></div>
+                      <div className="list-wrapp">
+                        <p className="list-title">Includes:</p>
+                        <ul>
+                          <li><i className="icon-check fas fa-check-circle"></i>1 User</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>3 Projects or 30 minutes</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>AI content repurposing</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Text rewording</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Topic discovery</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>Additional rewrites</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>Intelligent image and GIF embedding</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>Image and GIF hosting</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>Publish to WordPress</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>Premium support</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>Access to latest features</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>5X faster processing</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>API access</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>Integrations</li>
+                        </ul>
+                      </div>
+                      <a href={PATHS.DASHBOARD}  className="pricing-btn">Continue</a>
                     </div>
-                    <span className="pricing-item-user">For content creators and freelancers</span>
-                    {/*<span className="pricing-item-user">Starts at $10.4 Includes 2 users</span>*/}
-                    <a href="#" className="pricing-btn">Coming Soon</a>
-                    <ul style={{minHeight: '350px'}}>
-                      <li className="text-black">All of the features from the Free plan</li>
-                      <li className="text-black">2 Additional Rewrites/project</li>
-                      <li className="text-black">AI Image and GIF generation and embedding</li>
-                      <li className="text-black">Publish to WordPress</li>
-                      <li className="text-black">Premium Support</li>
-                      <li className="text-black">Access to the latest features</li>
-                      <li className="text-black">150 Projects or 1500 minutes of audio/video</li>
-                    </ul>
-                    <a href="#" className="pricing-btn">Coming Soon</a>
                   </div>
-                </div>
-                <div className="col-sm-6 col-xl-4">
-                  <div className="pricing-item bg-yellow-200" style={{minHeight: '750px'}}>
-                    {/*<div className="badge">50%off</div>*/}
-                    <h3 className="pricing-title">Custom</h3>
-                    <div className="price">
-                      {/*<span className="dollar">$16</span>*/}
-                      {/*<span className="euro">&euro;14.17</span><sup> /user/mo</sup>*/}
+                  <div className="col-xl-4 col-md-6">
+                    <div className="pricing-item active wow fadeInUp" data-wow-delay="0.3s">
+                      <h4>Premium</h4>
+                      <div className="price">$99<span>/mo</span></div>
+                      <div className="list-wrapp">
+                        <p className="list-title">Includes:</p>
+                        <ul>
+                          <li><i className="icon-check fas fa-check-circle"></i>1 User</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>100 Projects or 1,000 minutes</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>AI content repurposing</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Text rewording</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Topic discovery</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Additional rewrites</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Intelligent image and GIF embedding</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Image and GIF hosting</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Publish to WordPress</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Premium support</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Access to latest features</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>5X faster processing</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>API access</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>Integrations</li>
+                        </ul>
+                      </div>
+                      <a href=""  className="pricing-btn">Coming Soon</a>
                     </div>
-                    <span className="pricing-item-user">For enterprise users</span>
-                    <a href="#" className="pricing-btn">Coming Soon</a>
-                    <ul style={{minHeight: '370px'}}>
-                      <li className="text-black">All Premium features</li>
-                      <li className="text-black">Unlimited projects</li>
-                      <li className="text-black">API Access</li>
-                    </ul>
-                    <a href="#" className="pricing-btn">Coming Soon</a>
+                  </div>
+                  <div className="col-xl-4 col-md-6 mx-auto">
+                    <div className="pricing-item wow fadeInUp" data-wow-delay="0.5s">
+                      <h4>Custom</h4>
+                      <div className="price">Contact Us<span></span></div>
+                      <div className="list-wrapp">
+                        <p className="list-title">Includes:</p>
+                        <ul>
+                          <li><i className="icon-check fas fa-check-circle"></i>1 User</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Unlimited Projects and unlimited minutes</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>AI content repurposing</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Text rewording</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Topic discovery</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Additional rewrites</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Intelligent image and GIF embedding</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Image and GIF hosting</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Publish to WordPress</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Premium support</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Access to latest features</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>5X faster processing</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>API access</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>Integrations</li>
+                        </ul>
+                      </div>
+                      <a href="" className="pricing-btn">Coming Soon</a>
+                    </div>
                   </div>
                 </div>
               </div>
-              {/*<img src="/assets/images/most.png" alt="" className="popular d-none d-lg-block"/>*/}
             </div>
           </div>
         </div>

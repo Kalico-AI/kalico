@@ -219,6 +219,18 @@ export interface GifResponse {
  * @export
  * @enum {string}
  */
+export enum JobStatus {
+    InProgress = 'IN_PROGRESS',
+    Complete = 'COMPLETE',
+    Failed = 'FAILED',
+    ProjectNotFound = 'PROJECT_NOT_FOUND'
+}
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
 export enum KalicoContentType {
     Diy = 'DIY',
     FoodRecipe = 'FOOD_RECIPE',
@@ -366,10 +378,16 @@ export interface ProjectJobStatus {
     project_id?: number;
     /**
      * 
+     * @type {JobStatus}
+     * @memberof ProjectJobStatus
+     */
+    status?: JobStatus | null;
+    /**
+     * 
      * @type {string}
      * @memberof ProjectJobStatus
      */
-    status?: string;
+    message?: string;
     /**
      * 
      * @type {number}

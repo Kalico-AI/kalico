@@ -3,6 +3,7 @@ import Head from "next/head";
 import SignIn from "@/pages/SignIn";
 import {SITE_IMAGE_URL} from "@/utils/constants";
 import {AuthAction, withAuthUser} from "next-firebase-auth";
+import {CenterAlignedProgress} from "@/utils/utils";
 
 export async function getServerSideProps() {
   return {
@@ -31,6 +32,7 @@ function SignInIndex(props) {
 
 export default withAuthUser({
   whenAuthed: AuthAction.REDIRECT_TO_APP,
-  whenUnauthedBeforeInit: AuthAction.RETURN_NULL,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.RENDER,
+  LoaderComponent: () => <CenterAlignedProgress/>,
 })(SignInIndex);
