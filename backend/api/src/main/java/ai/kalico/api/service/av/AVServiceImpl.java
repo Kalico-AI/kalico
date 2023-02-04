@@ -19,6 +19,7 @@ import ai.kalico.api.service.youtubej.downloader.response.Response;
 import ai.kalico.api.service.youtubej.model.videos.VideoInfo;
 import ai.kalico.api.service.youtubej.model.videos.formats.Format;
 import ai.kalico.api.service.utils.Platform;
+import com.kalico.model.ContentPreviewResponse;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -26,7 +27,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.Optional;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -154,7 +154,7 @@ public class AVServiceImpl implements AVService {
    */
   private VideoInfoDto getContent(String url) {
       Platform platform = getPlatform(url);
-      log.info("About to process URL for {}: {}", platform.name(), url);
+      log.info("Fetching content metadata for {}", url);
       VideoInfoDto videoInfoDto  = null;
       if (platform == Platform.YOUTUBE) {
            videoInfoDto = getYouTubeVideoInfo(url);
@@ -201,6 +201,67 @@ public class AVServiceImpl implements AVService {
       saveFile(file, path);
     }
     submitAsyncTasks(path, mediaId, false, projectId);
+  }
+
+  @Override
+  public ContentPreviewResponse downloadContentMetadata(String url) {
+    VideoInfoDto dto = getContent(url);
+    if (dto != null) {
+      ContentPreviewResponse response = new ContentPreviewResponse();
+      try {
+        if (dto.getVideoInfo() != null &&
+            dto.getVideoInfo().details() != null &&
+            dto.getVideoInfo().details().title() != null) {
+          response.setTitle(dto.getVideoInfo().details().title());
+        } else if (dto.getCaption() != null) {
+          response.setTitle(dto.getCaption());
+        }
+      } catch (NullPointerException e) {
+        // pass
+      }
+
+      try {
+        if (dto.getVideoInfo() != null &&
+            dto.getVideoInfo().details() != null &&
+            dto.getVideoInfo().details().thumbnails() != null &&
+            dto.getVideoInfo().details().thumbnails().get(0) != null) {
+          List<String> thumbnails =  dto.getVideoInfo().details().thumbnails();
+          int index = thumbnails.size() - 1;
+          String thumbnail = thumbnails.get(index);
+          for (String _thumbnail : thumbnails) {
+            if (_thumbnail.contains("hqdefault") || _thumbnail.contains("hddefault")) {
+              thumbnail = _thumbnail;
+              break;
+            }
+          }
+          response.setThumbnail(thumbnail); // The biggest thumbnail
+        }
+//        else {
+//           Instagram thumbnails require same origin
+//          if (dto.getImageUrl() != null)  {
+//            response.setThumbnail(dto.getImageUrl());
+//          }
+//        }
+
+      } catch (NullPointerException e) {
+        // pass
+      }
+
+      try {
+        if (dto.getVideoInfo() != null &&
+            dto.getVideoInfo().formats() != null &&
+            dto.getVideoInfo().formats().get(0).duration() != null) {
+          long duration = dto.getVideoInfo().formats().get(0).duration();
+          String durationStr = String.format("Duration: %.1f minutes", duration/(1000 * 60.0));
+          response.setDuration(durationStr);
+        }
+      } catch (NullPointerException e) {
+        // pass
+      }
+      return response;
+    }
+
+    return new ContentPreviewResponse();
   }
 
   private void saveFile(String file, String path) {
@@ -305,7 +366,7 @@ public class AVServiceImpl implements AVService {
     try {
       parsedUrl = new URL(url);
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      log.error(e.getLocalizedMessage());
     }
     if (parsedUrl != null) {
       if (parsedUrl.getHost().toLowerCase().contains("youtube")) {
@@ -315,6 +376,6 @@ public class AVServiceImpl implements AVService {
         return Platform.INSTAGRAM;
       }
     }
-    return Platform.INSTAGRAM;
+    return Platform.INVALID;
   }
 }

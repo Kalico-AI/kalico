@@ -199,6 +199,7 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
       <Grid container className="dashboard-container">
         <Grid item sm={12} md={6}>
           <CreateDialog open={createDialogOpen}
+                        user={props.user}
                         onSubmit={onSubmitProject}
                         onClose={onCloseCreateDialog}/>
           <Box className="create-project-btn-box" onClick={onCreate}>

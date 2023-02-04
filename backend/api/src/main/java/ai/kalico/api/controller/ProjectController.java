@@ -2,6 +2,7 @@ package ai.kalico.api.controller;
 
 import ai.kalico.api.ProjectApi;
 import ai.kalico.api.service.project.ProjectService;
+import com.kalico.model.ContentPreviewResponse;
 import com.kalico.model.CreateProjectRequest;
 import com.kalico.model.CreateProjectResponse;
 import com.kalico.model.GenericResponse;
@@ -39,6 +40,11 @@ public class ProjectController implements ProjectApi {
   @Override
   public ResponseEntity<PageableResponse> getAllProjects() {
     return ResponseEntity.ok(projectService.getAllProjects());
+  }
+
+  @Override
+  public ResponseEntity<ContentPreviewResponse> getContentPreview(String url) {
+    return ResponseEntity.ok(projectService.getContentPreview(url));
   }
 
   @Override

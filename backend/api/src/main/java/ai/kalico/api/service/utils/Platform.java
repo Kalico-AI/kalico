@@ -6,5 +6,6 @@ package ai.kalico.api.service.utils;
  */
 public enum Platform {
     YOUTUBE,
-    INSTAGRAM
+    INSTAGRAM,
+    INVALID
 }
