@@ -3414,6 +3414,15 @@ textarea:focus {
   margin-top: 16px;
   margin-bottom: 16px;
 }
+.create-project-btn-box img {
+  /*border: 3px solid #ed6c03;*/
+  padding: 15px;
+  margin: 30px auto;
+  /*border-radius: 5px;*/
+}
+.create-project-btn-box h6 {
+  margin-top: -20px;
+}
 .create-project-btn-box:hover {
   background: #f5ebdc
 }

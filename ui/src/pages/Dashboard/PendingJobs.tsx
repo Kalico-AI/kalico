@@ -85,6 +85,10 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
       }).catch(e => console.log(e))
   }
 
+  if (!pendingJob) {
+    return <></>
+  }
+
   return (
     <Card
       sx={{
