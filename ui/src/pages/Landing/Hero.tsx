@@ -7,7 +7,7 @@ function Hero() {
   // Check that the DOM has loaded before rendering the page so that
   // we don't get a page without the CSS
   return (
-      <section className="banner-area-4 pb-140">
+      <section className="banner-area-4 pb-60">
         <div className="container">
           <div className="row flex-column-reverse flex-md-row align-items-center">
             <div className="col-md-12">

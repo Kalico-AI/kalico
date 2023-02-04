@@ -14274,26 +14274,46 @@ button:hover .HoverArrow__tipPath {
   line-height: 27px;
 }
 
+
 .app-video-wrapp {
-  background-image: url("../images/home_9/banner.png");
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-radius: 30px;
+  border-radius: 25px;
   text-align: center;
-  padding: 280px 0;
   position: relative;
+  border: 12px solid #ee8e3b;
+  z-index: 999999;
 }
-.app-video-wrapp:before {
-  content: "";
-  border-radius: 30px;
+.video-container video {
   width: 100%;
   height: 100%;
-  background: rgb(218 218 218 / 21%);
-  position: absolute;
-  left: 0;
-  top: 0;
+  border-radius: 20px;
+  display: block;
+  object-fit: cover;
+  background-color: rgba(0, 0, 0, 0);
+  object-position: 50% 50%;
 }
+.video-container .play-btn {
+  position: absolute;
+  cursor: pointer;
+  top: 50%;
+  left: 50%;
+  color: #ee8e3b;
+  z-index: 999999;
+}
+.video-player {
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 20px;
+  box-shadow: hwb(31deg 64% 0%) 0px 0px 12px 15px, rgb(255 211 163 / 96%) 0px 1px 60px 14px;
+  opacity: 1;
+}
+.video-box-btn-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
 .app-video-wrapp .play-btn {
   width: 90px;
   height: 90px;
@@ -14303,10 +14323,11 @@ button:hover .HoverArrow__tipPath {
   font-size: 28px;
   text-align: center;
   line-height: 90px;
-  position: relative;
+  position: absolute;
+  cursor: pointer;
   color: var(--brand);
 }
-.app-video-wrapp .play-btn i {
+.video-container .play-btn i {
   font-size: 30px;
   margin-left: 4px;
 }

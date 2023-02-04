@@ -287,11 +287,11 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                         }}
                     >
                       <option aria-label="None" value="" />
-                      <option value={KalicoContentType.Diy}>{('DIY')}</option>
+                      {/*<option value={KalicoContentType.Diy}>{('DIY')}</option>*/}
                       <option value={KalicoContentType.FoodRecipe}>{('Food Recipe')}</option>
-                      <option value={KalicoContentType.Interview}>{('Interview')}</option>
-                      <option value={KalicoContentType.Lecture}>{('Lecture')}</option>
-                      <option value={KalicoContentType.Podcast}>{('Podcast')}</option>
+                      {/*<option value={KalicoContentType.Interview}>{('Interview')}</option>*/}
+                      {/*<option value={KalicoContentType.Lecture}>{('Lecture')}</option>*/}
+                      {/*<option value={KalicoContentType.Podcast}>{('Podcast')}</option>*/}
                       <option value={KalicoContentType.Other}>{('Other')}</option>
                     </Select>
                   </FormControl>
