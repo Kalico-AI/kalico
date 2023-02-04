@@ -225,7 +225,16 @@ public class AVServiceImpl implements AVService {
             dto.getVideoInfo().details() != null &&
             dto.getVideoInfo().details().thumbnails() != null &&
             dto.getVideoInfo().details().thumbnails().get(0) != null) {
-          response.setThumbnail(dto.getVideoInfo().details().thumbnails().get(0));
+          List<String> thumbnails =  dto.getVideoInfo().details().thumbnails();
+          int index = thumbnails.size() - 1;
+          String thumbnail = thumbnails.get(index);
+          for (String _thumbnail : thumbnails) {
+            if (_thumbnail.contains("hqdefault") || _thumbnail.contains("hddefault")) {
+              thumbnail = _thumbnail;
+              break;
+            }
+          }
+          response.setThumbnail(thumbnail); // The biggest thumbnail
         }
 //        else {
           // Instagram thumbnails require same origin

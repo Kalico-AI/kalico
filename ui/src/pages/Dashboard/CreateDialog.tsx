@@ -113,7 +113,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
         projectApi.getContentPreview(url)
         .then(response => {
           if (response.data.title) {
-            let shortTitle = response.data.title.substring(0, 100) + "..."
+            let shortTitle = response.data.title.substring(0, 200) + "..."
             setContentTitle(shortTitle)
           } else {
             setContentTitle('')
@@ -314,11 +314,13 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
                       placeholder={('https://www.youtube.com/watch?v=91BUM...')}
                   />
                 </Grid>
-                {contentThumbnail &&
+                {contentTitle &&
                     <Grid item xs={12} sx={{display: 'inline-flex'}}>
-                      <Box className="content-link-preview">
-                        <img src={contentThumbnail} alt={''}/>
-                      </Box>
+                      {contentThumbnail &&
+                          <Box className="content-link-preview">
+                            <img src={contentThumbnail} alt={''}/>
+                          </Box>
+                      }
                       <Box className="content-link-preview">
                         {contentTitle && <h6>{contentTitle}</h6>}
                         {contentDuration && <span>{contentDuration}</span>}
