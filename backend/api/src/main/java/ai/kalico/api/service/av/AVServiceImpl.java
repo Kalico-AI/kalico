@@ -72,6 +72,7 @@ public class AVServiceImpl implements AVService {
   public void processMedia(String url, Long projectId, String file, String fileExtension) {
     log.info("Starting video processing for url {}", url);
     if (url != null) {
+      url = normalizeUrl(url);
       VideoInfoDto dto = getContent(url);
       createMediaContentFromUrl(dto, projectId);
       try {
@@ -102,6 +103,15 @@ public class AVServiceImpl implements AVService {
         log.error("File extension not supported for mediaId={}", mediaId);
       }
     }
+  }
+
+  @Override
+  public String normalizeUrl(String url) {
+    if (url.toLowerCase().contains("youtube")) {
+      // Turn youtube mobile url into regular url
+      return url.replace("m.youtube", "www.youtube");
+    }
+    return url;
   }
 
   private boolean isAudio(String fileExtension) {

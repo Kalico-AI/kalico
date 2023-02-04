@@ -15,6 +15,13 @@ public interface AVService {
     void processYouTubeVideo(VideoInfoDto videoInfoDto, Long projectId);
     void processUploadedVideo(String file, String fileExtension, String mediaId, Long projectId);
     void processUploadedAudio(String file, String fileExtension, String mediaId, Long projectId);
-
     ContentPreviewResponse downloadContentMetadata(String url);
+
+    /**
+     * Turn any mobile urls into regular urls and perform additional pre-processing as necessary
+     *
+     * @param url
+     * @return
+     */
+    String normalizeUrl(String url);
 }
