@@ -262,7 +262,9 @@ public class AVServiceImpl implements AVService {
             dto.getVideoInfo().formats() != null &&
             dto.getVideoInfo().formats().get(0).duration() != null) {
           long duration = dto.getVideoInfo().formats().get(0).duration();
-          String durationStr = String.format("Duration: %.1f minutes", duration/(1000 * 60.0));
+          double minutes = duration/(1000 * 60.0);
+          long seconds = Math.round((minutes % Math.floor(minutes) * 60));
+          String durationStr = String.format("Duration: %s minutes %s seconds", Math.round(minutes), seconds);
           response.setDuration(durationStr);
         }
       } catch (NullPointerException e) {
