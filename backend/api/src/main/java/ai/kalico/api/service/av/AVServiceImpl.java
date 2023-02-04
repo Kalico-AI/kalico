@@ -237,7 +237,7 @@ public class AVServiceImpl implements AVService {
           response.setThumbnail(thumbnail); // The biggest thumbnail
         }
 //        else {
-          // Instagram thumbnails require same origin
+//           Instagram thumbnails require same origin
 //          if (dto.getImageUrl() != null)  {
 //            response.setThumbnail(dto.getImageUrl());
 //          }
