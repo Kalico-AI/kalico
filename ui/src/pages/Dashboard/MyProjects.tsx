@@ -202,17 +202,14 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
                         user={props.user}
                         onSubmit={onSubmitProject}
                         onClose={onCloseCreateDialog}/>
-          <Box className="create-project-btn-box" onClick={onCreate}>
-            <Button
-                sx={{width: '30px'}}
-                color="inherit"
-                startIcon={<AddIcon/>}
-                className="create-project-btn"
-                size='large'
-                variant='text'
-            />
-            <Typography variant='subtitle2' sx={{mt: 7, textAlign: 'center', p: 1}}>Create a new project</Typography>
+          <button
+              onClick={onCreate}
+          >
+          <Box className="create-project-btn-box">
+            <img src="/assets/images/plus.png" alt="" width={64}/>
+            <Typography variant='subtitle2' sx={{ textAlign: 'center', p: 1, fontSize: '12px'}}>Create a new project</Typography>
           </Box>
+          </button>
         </Grid>
         <Grid item sm={12} md={6} justifyContent='flex-end' sx={{display: 'flex'}}>
           <Box className="dashboard-pending-jobs">

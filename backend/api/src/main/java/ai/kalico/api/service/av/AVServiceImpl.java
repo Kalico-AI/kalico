@@ -72,6 +72,7 @@ public class AVServiceImpl implements AVService {
   public void processMedia(String url, Long projectId, String file, String fileExtension) {
     log.info("Starting video processing for url {}", url);
     if (url != null) {
+      url = normalizeUrl(url);
       VideoInfoDto dto = getContent(url);
       createMediaContentFromUrl(dto, projectId);
       try {
@@ -102,6 +103,15 @@ public class AVServiceImpl implements AVService {
         log.error("File extension not supported for mediaId={}", mediaId);
       }
     }
+  }
+
+  @Override
+  public String normalizeUrl(String url) {
+    if (url.toLowerCase().contains("youtube")) {
+      // Turn youtube mobile url into regular url
+      return url.replace("m.youtube", "www.youtube");
+    }
+    return url;
   }
 
   private boolean isAudio(String fileExtension) {
@@ -252,7 +262,9 @@ public class AVServiceImpl implements AVService {
             dto.getVideoInfo().formats() != null &&
             dto.getVideoInfo().formats().get(0).duration() != null) {
           long duration = dto.getVideoInfo().formats().get(0).duration();
-          String durationStr = String.format("Duration: %.1f minutes", duration/(1000 * 60.0));
+          double minutes = duration/(1000 * 60.0);
+          long seconds = Math.round((minutes % Math.floor(minutes) * 60));
+          String durationStr = String.format("Duration: %s minutes %s seconds", Math.round(minutes), seconds);
           response.setDuration(durationStr);
         }
       } catch (NullPointerException e) {
