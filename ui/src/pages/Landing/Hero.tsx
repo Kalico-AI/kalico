@@ -12,6 +12,7 @@ function Hero() {
           <div className="row flex-column-reverse flex-md-row align-items-center">
             <div className="col-md-12">
               <div className="banner-left text-center">
+                <img className="sign-in-logo" src="/assets/images/logo.png" alt="logo"/>
                 <h2>
                   Give your video content another {' '}
                   <span style={{color: '#ee8e3b'}}>

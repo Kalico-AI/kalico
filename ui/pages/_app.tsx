@@ -12,7 +12,6 @@ import HeaderNav from "@/components/Header";
 import initAuth from "@/auth/nextAuth";
 import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import 'react-toastify/dist/ReactToastify.css';
-import {SITE_IMAGE_URL} from "@/utils/constants";
 import {CenterAlignedProgress} from "@/utils/utils";
 
 type NextPageWithLayout = NextPage & {
@@ -26,9 +25,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
 })(async ({ AuthUser }) => {
   return {
     props: {
-      title: "Kalico",
-      description: "",
-      siteImage: SITE_IMAGE_URL,
+      title: "Kalico AI | Supercharge Your Audio and Video Content",
       userId: AuthUser.id
     }
   }
@@ -37,9 +34,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
 interface DefaultAppProps extends AppProps {
   Component: NextPageWithLayout;
   title: string;
-  description: string;
-  siteImage: string;
-  userId?: string
+  userId?: string,
 }
 
 const MyApp: FC<DefaultAppProps> = (props) => {
@@ -85,9 +80,6 @@ const MyApp: FC<DefaultAppProps> = (props) => {
       </Script>
       <Head>
         <title>{props.title}</title>
-        <meta property="og:title" content={props.title} key="title"/>
-        <meta property="og:description" content={props.description} key="description" />
-        <meta property="og:image:secure" content={props.siteImage} key="image:secure"/>
       </Head>
         <RootStoreProvider>
           <HeaderNav/>
