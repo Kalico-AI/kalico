@@ -71,13 +71,13 @@ public class LeadServiceImpl implements LeadService {
 
       List<Map<String, String>>  channelDetails = getChannelDetails(new ArrayList<>(channels),
           zenRowsProps.getConcurrency());
-      log.info(this.getClass().getName() + ".getChannelInfo: Fetched {} channel details for query: '{}' ",
+      log.info(this.getClass().getSimpleName()+ ".getChannelInfo: Fetched {} channel details for query: '{}' ",
           channelDetails.size(), query);
       return new ChannelPageableResponse()
           .count(channelDetails.size())
           .records(channelDetails);
     }
-    log.info(this.getClass().getName() + ".getChannelInfo: Fetched {} channel details for query: '{}' ",
+    log.info(this.getClass().getSimpleName()+ ".getChannelInfo: Fetched {} channel details for query: '{}' ",
         0, query);
     return new ChannelPageableResponse()
         .count(0)
@@ -85,7 +85,7 @@ public class LeadServiceImpl implements LeadService {
   }
 
   private List<Map<String, String>>  getChannelDetails(List<String> channels, int concurrency) {
-    log.info(this.getClass().getName() + ".getChannelDetails: Fetching channel details for {} channels",
+    log.info(this.getClass().getSimpleName()+ ".getChannelDetails: Fetching channel details for {} channels",
         channels.size());
     List<Map<String, String>> response = new ArrayList<>();
     if (!ObjectUtils.isEmpty(channels)) {
@@ -140,7 +140,7 @@ public class LeadServiceImpl implements LeadService {
         log.info("X-Request-Id: {} \turl: {}", requestId[0].getElements()[0].getName(), url);
         return parseChannelSoup(EntityUtils.toString(httpResponse.getEntity()));
       } catch (IOException e) {
-        log.error(this.getClass().getName() + ".getChannelDetails: {}", e.getLocalizedMessage());
+        log.error(this.getClass().getSimpleName()+ ".getChannelDetails: {}", e.getLocalizedMessage());
       }
     }
     return null;
@@ -211,7 +211,7 @@ public class LeadServiceImpl implements LeadService {
         }
       }
     } catch (JsonProcessingException | NullPointerException e) {
-      log.error(this.getClass().getName() + ".parseChannelSoup: {}", e.getLocalizedMessage());
+      log.error(this.getClass().getSimpleName()+ ".parseChannelSoup: {}", e.getLocalizedMessage());
     }
     return data;
   }
@@ -219,9 +219,9 @@ public class LeadServiceImpl implements LeadService {
   private String getSubscriberNumericalValue(String subscribers) {
     String value = subscribers;
     if (subscribers.toLowerCase().endsWith("m")) {
-      value = Math.round(Double.parseDouble(subscribers.replace("m", "")) * 1000000) + "";
+      value = Math.round(Double.parseDouble(subscribers.replace("M", "")) * 1000000) + "";
     } else if (subscribers.toLowerCase().endsWith("k")) {
-      value = Math.round(Double.parseDouble(subscribers.replace("k", "")) * 1000) + "";
+      value = Math.round(Double.parseDouble(subscribers.replace("K", "")) * 1000) + "";
     }
     return value;
   }
@@ -257,7 +257,7 @@ public class LeadServiceImpl implements LeadService {
            }
            links.put(name, url);
          } catch (UnsupportedEncodingException e) {
-           log.error(this.getClass().getName() + ".parseLinks: {}", e.getLocalizedMessage());
+           log.error(this.getClass().getSimpleName()+ ".parseLinks: {}", e.getLocalizedMessage());
          }
        }
       }
@@ -284,9 +284,9 @@ public class LeadServiceImpl implements LeadService {
         name = "SnapChat";
       } else if (name.toLowerCase().contains("discord")) {
         name = "Discord";
-      } else if (name.toLowerCase().equals("fb")) {
+      } else if (name.equalsIgnoreCase("fb")) {
         name = "Facebook";
-      } else if (name.toLowerCase().equals("ig")) {
+      } else if (name.equalsIgnoreCase("ig")) {
         name = "Instagram";
       } else if (name.toLowerCase().contains("linkedin")) {
         name = "LinkedIn";
@@ -328,12 +328,12 @@ public class LeadServiceImpl implements LeadService {
 
   private List<String> getChannels(SearchResult result) {
     List<String> channels = new ArrayList<>();
-    if (!ObjectUtils.isEmpty(result.items())) {
+    if (result != null && !ObjectUtils.isEmpty(result.items())) {
       for (SearchResultItem item : result.items()) {
         try {
           channels.add(item.asVideo().channelName());
         } catch (UnsupportedOperationException e) {
-          log.error(this.getClass().getName() + ".getChannels: {}", e.getLocalizedMessage());
+          log.warn(this.getClass().getSimpleName()+ ".getChannels: {} -- Ignore", e.getLocalizedMessage());
         }
       }
     }
