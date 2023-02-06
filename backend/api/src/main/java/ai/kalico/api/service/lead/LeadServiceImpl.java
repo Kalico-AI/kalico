@@ -167,12 +167,14 @@ public class LeadServiceImpl implements LeadService {
         if (jsonNode.get("metadata") != null) {
           if (jsonNode.get("metadata").get("channelMetadataRenderer") != null) {
             JsonNode channelMeta = jsonNode.get("metadata").get("channelMetadataRenderer");
-            String channelName = "", description = "", keywords = "", channelUrl = "", subscriberCount = "";
+            String channelName = "", description = "", keywords = "", channelUrl = "", subscribers = "",
+                subscribersValue = "";
             if (channelMeta.get("title") != null) {
               channelName = channelMeta.get("title").asText();
             }
             if (channelMeta.get("description") != null) {
               description = channelMeta.get("description").asText();
+              description = description.replace("\n", " ").strip();
             }
             if (channelMeta.get("keywords") != null) {
               keywords = channelMeta.get("keywords").asText();
@@ -191,18 +193,19 @@ public class LeadServiceImpl implements LeadService {
             }
             JsonNode subscribeNode = findNode(jsonNode.get("header"), "subscriberCountText");
             if (subscribeNode != null) {
-              subscriberCount = subscribeNode
+              subscribers = subscribeNode
                   .get("simpleText")
                   .asText()
                   .replace("subscribers", "")
                   .strip();
+              subscribersValue = getSubscriberNumericalValue(subscribers);
             }
-
             data.put("channelName", channelName);
             data.put("description", description);
             data.put("keywords", keywords);
             data.put("channelUrl", channelUrl);
-            data.put("subscriberCount", subscriberCount);
+            data.put("subscribers", subscribers);
+            data.put("subscribersValue", subscribersValue);
             data.putAll(links);
           }
         }
@@ -211,6 +214,16 @@ public class LeadServiceImpl implements LeadService {
       log.error(this.getClass().getName() + ".parseChannelSoup: {}", e.getLocalizedMessage());
     }
     return data;
+  }
+
+  private String getSubscriberNumericalValue(String subscribers) {
+    String value = subscribers;
+    if (subscribers.toLowerCase().endsWith("m")) {
+      value = Math.round(Double.parseDouble(subscribers.replace("m", "")) * 1000000) + "";
+    } else if (subscribers.toLowerCase().endsWith("k")) {
+      value = Math.round(Double.parseDouble(subscribers.replace("k", "")) * 1000) + "";
+    }
+    return value;
   }
 
   private Map<String, String>  parseLinks(JsonNode linkNode) {
