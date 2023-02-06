@@ -118,4 +118,5 @@ public class SearchResultVideoDetails extends AbstractListVideoDetails implement
     public String description() {
         return description;
     }
+    public String channelName() {return channelName; }
 }

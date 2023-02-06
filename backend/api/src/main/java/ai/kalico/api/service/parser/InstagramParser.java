@@ -3,12 +3,12 @@ package ai.kalico.api.service.parser;
 
 import static ai.kalico.api.service.download.DownloadServiceImpl.VIDEO;
 
+import ai.kalico.api.service.utils.ScraperUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
 import ai.kalico.api.dto.VideoInfoDto;
-import ai.kalico.api.props.ZenRowsProps;
 import ai.kalico.api.service.instagram4j.IGClient;
 import ai.kalico.api.service.instagram4j.actions.media.MediaAction;
 import ai.kalico.api.service.instagram4j.models.media.timeline.TimelineVideoMedia;
@@ -26,7 +26,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.jsoup.Jsoup;
@@ -46,7 +45,7 @@ import org.springframework.util.ObjectUtils;
 public class InstagramParser implements ParserService {
     private final ObjectMapper objectMapper;
     private final IGClient igClient;
-    private final ZenRowsProps zenRowsProps;
+    private final ScraperUtils scraperUtils;
 
 
     @Override
@@ -92,19 +91,15 @@ public class InstagramParser implements ParserService {
     public VideoInfoDto getMediaMetadata(String igUrl, String contentId) {
         log.info("About to process URL for Instagram with content ID {}: {}", contentId, igUrl);
         final CloseableHttpClient httpClient = HttpClients.createDefault();
-        URI uri = new URIBuilder()
-            .setScheme("https").setHost(zenRowsProps.getHost()).setPath(zenRowsProps.getPath())
-            .setParameter("apikey", zenRowsProps.getApikey())
-            .setParameter("url", igUrl)
-            .setParameter("js_render", "true")
-            .setParameter("premium_proxy", "true")
-            .setParameter("autoparse", "true")
-            .build();
-        HttpGet httpGet = new HttpGet(uri);
-        HttpEntity httpEntity = httpClient.execute(httpGet).getEntity();
-        JsonNode media = objectMapper.readValue(httpEntity.getContent(), JsonNode.class);
-        if (media != null ) {
-            return getDtoFromMediaMetadata(parseFromMediaNode(media.get("shortcode_media")), igUrl, contentId);
+        URI uri = scraperUtils.getZenRowsUri(igUrl, true, true);
+        if (uri != null) {
+            HttpGet httpGet = new HttpGet(uri);
+            HttpEntity httpEntity = httpClient.execute(httpGet).getEntity();
+            JsonNode media = objectMapper.readValue(httpEntity.getContent(), JsonNode.class);
+            if (media != null) {
+                return getDtoFromMediaMetadata(parseFromMediaNode(media.get("shortcode_media")),
+                    igUrl, contentId);
+            }
         }
         return null;
 

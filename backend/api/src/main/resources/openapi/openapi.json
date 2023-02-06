@@ -787,73 +787,29 @@
       "ChannelPageableResponse": {
         "type": "object",
         "required": [
-          "total_records",
-          "num_pages",
+          "count",
           "records"
         ],
         "properties": {
           "continuation": {
             "$ref": "#/components/schemas/SearchContinuationDto"
           },
-          "total_records": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "num_pages": {
+          "count": {
             "type": "integer",
             "format": "int32"
           },
           "records": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/YouTubeChannelInfo"
+              "$ref": "#/components/schemas/YouTubeChannelDetail"
             }
           }
         }
       },
-      "YouTubeChannelInfo": {
+      "YouTubeChannelDetail": {
         "type": "object",
-        "required": [
-          "channel_name",
-          "channel_handle"
-        ],
-        "properties": {
-          "channel_name": {
-            "type": "string"
-          },
-          "channel_handle": {
-            "type": "string"
-          },
-          "num_subs": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "instagram": {
-            "type": "string"
-          },
-          "facebook": {
-            "type": "string"
-          },
-          "twitter": {
-            "type": "string"
-          },
-          "tiktok": {
-            "type": "string"
-          },
-          "linktree": {
-            "type": "string"
-          },
-          "website": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "other": {
-            "type": "string"
-          }
+        "additionalProperties": {
+          "type": "string"
         }
       }
     }
