@@ -38,6 +38,55 @@
         }
       }
     },
+    "/lead/youtube/channel-info": {
+      "get": {
+        "tags": [
+          "lead"
+        ],
+        "summary": "Get YouTube channel info",
+        "operationId": "getChannelInfo",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 25
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Channel info response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelPageableResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/project/create": {
       "post": {
         "tags": [
@@ -724,6 +773,84 @@
             "items": {
               "$ref": "#/components/schemas/Project"
             }
+          }
+        }
+      },
+      "ChannelPageableResponse": {
+        "type": "object",
+        "required": [
+          "total_records",
+          "num_pages",
+          "records"
+        ],
+        "properties": {
+          "total_records": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "num_pages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/YouTubeChannelInfo"
+            }
+          }
+        }
+      },
+      "YouTubeChannelInfo": {
+        "type": "object",
+        "required": [
+          "channel_name",
+          "channel_handle",
+          "num_subs",
+          "description",
+          "instagram",
+          "facebook",
+          "twitter",
+          "tiktok",
+          "linktree",
+          "website",
+          "email"
+        ],
+        "properties": {
+          "channel_name": {
+            "type": "string"
+          },
+          "channel_handle": {
+            "type": "string"
+          },
+          "num_subs": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "instagram": {
+            "type": "string"
+          },
+          "facebook": {
+            "type": "string"
+          },
+          "twitter": {
+            "type": "string"
+          },
+          "tiktok": {
+            "type": "string"
+          },
+          "linktree": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "other": {
+            "type": "string"
           }
         }
       }

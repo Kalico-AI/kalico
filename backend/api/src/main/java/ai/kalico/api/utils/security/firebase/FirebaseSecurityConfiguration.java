@@ -80,7 +80,7 @@ public class FirebaseSecurityConfiguration extends WebSecurityConfigurerAdapter 
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/actuator/health**",
-                  "/blog/**"
+                  "/lead/**"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()
