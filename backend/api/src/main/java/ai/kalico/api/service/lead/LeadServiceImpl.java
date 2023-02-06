@@ -1,6 +1,7 @@
 package ai.kalico.api.service.lead;
 
 import ai.kalico.api.RootConfiguration;
+import ai.kalico.api.dto.Pair;
 import ai.kalico.api.props.ZenRowsProps;
 import ai.kalico.api.service.utils.ScraperUtils;
 import ai.kalico.api.service.youtubej.YoutubeDownloader;
@@ -16,15 +17,16 @@ import com.kalico.model.ChannelPageableResponse;
 import com.kalico.model.ChannelRequest;
 import com.kalico.model.SearchContinuationDto;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -52,20 +54,6 @@ public class LeadServiceImpl implements LeadService {
   private final ScraperUtils scraperUtils;
   private final ObjectMapper objectMapper;
   private final ZenRowsProps zenRowsProps;
-  private final Set<String> excludedKeys = new HashSet<>(List.of(
-      "rssUrl",
-      "avatar",
-      "channelUrl",
-      "isFamilySafe",
-      "androidDeepLink",
-      "androidAppindexingLink",
-      "iosAppindexingLink",
-      "vanityChannelUrl",
-      "subscribersAprox",
-      "doubleclickTrackingUsername",
-      "externalId",
-      "channelConversionUrl"
-  ));
 
   @Override
   public ChannelPageableResponse getChannelInfo(ChannelRequest channelRequest) {
@@ -98,14 +86,18 @@ public class LeadServiceImpl implements LeadService {
       }
       List<List<CompletableFuture<Map<String, String>>>> batches = getConcurrencyBatches(tasks, concurrency);
       for (List<CompletableFuture<Map<String, String>>> batch : batches) {
-        response.addAll(batch
+        List<Map<String, String>> batchedResult = batch
             .stream()
             .map(CompletableFuture::join)
             .filter(Objects::nonNull)
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
+        response.addAll(batchedResult);
       }
     }
-    return response;
+    return response
+        .stream()
+        .filter(it -> it.size() > 0)
+        .collect(Collectors.toList());
   }
 
   private List<List<CompletableFuture<Map<String, String>>>> getConcurrencyBatches(
@@ -133,18 +125,7 @@ public class LeadServiceImpl implements LeadService {
       HttpEntity httpEntity = null;
       try {
         httpEntity = httpClient.execute(httpGet).getEntity();
-        Map<String, String> detail = parseChannelSoup(EntityUtils.toString(httpEntity));
-//        for (Iterator<String> it = data.fieldNames(); it.hasNext(); ) {
-//          String key = it.next();
-//          if (!excludedKeys.contains(key)) {
-//            if (key.equalsIgnoreCase("ownerUrls")) {
-//              detail.put("channel", data.get(key).asText());
-//            } else {
-//              detail.put(key, data.get(key).asText());
-//            }
-//          }
-//        }
-        return detail;
+        return parseChannelSoup(EntityUtils.toString(httpEntity));
       } catch (IOException e) {
         log.error(this.getClass().getCanonicalName() + ".getChannelDetails: {}", e.getLocalizedMessage());
       }
@@ -154,6 +135,7 @@ public class LeadServiceImpl implements LeadService {
 
   private Map<String, String> parseChannelSoup(String soup) {
     Document doc = Jsoup.parse(soup);
+    Map<String, String> data = new HashMap<>();
     try {
       String json = null;
       List<DataNode> dataNodes = doc.select("script").dataNodes();
@@ -172,7 +154,7 @@ public class LeadServiceImpl implements LeadService {
         if (jsonNode.get("metadata") != null) {
           if (jsonNode.get("metadata").get("channelMetadataRenderer") != null) {
             JsonNode channelMeta = jsonNode.get("metadata").get("channelMetadataRenderer");
-            String channelName = "", description = "", keywords = "", channelUrl = "";
+            String channelName = "", description = "", keywords = "", channelUrl = "", subscriberCount = "";
             if (channelMeta.get("title") != null) {
               channelName = channelMeta.get("title").asText();
             }
@@ -190,33 +172,66 @@ public class LeadServiceImpl implements LeadService {
             if (ObjectUtils.isEmpty(channelUrl) && channelAboutMetadata.get("canonicalChannelUrl") != null) {
               channelUrl = channelAboutMetadata.get("canonicalChannelUrl").asText();
             }
+            Map<String, String> links = new HashMap<>();
             if (channelAboutMetadata.get("primaryLinks") != null) {
-              List<String> links = parseLinks(channelAboutMetadata.get("primaryLinks"));
+              links = parseLinks(channelAboutMetadata.get("primaryLinks"));
             }
             JsonNode subscribeNode = findNode(jsonNode.get("header"), "subscriberCountText");
             if (subscribeNode != null) {
-              String subscriberCount = subscribeNode.get("simpleText").asText();
+              subscriberCount = subscribeNode
+                  .get("simpleText")
+                  .asText()
+                  .replace("subscribers", "")
+                  .strip();
             }
 
-            int x = 1;
+            data.put("channelName", channelName);
+            data.put("description", description);
+            data.put("keywords", keywords);
+            data.put("channelUrl", channelUrl);
+            data.put("subscriberCount", subscriberCount);
+            data.putAll(links);
           }
         }
-        int x = 1;
       }
     } catch (JsonProcessingException | NullPointerException e) {
-
+      log.error(this.getClass().getCanonicalName() + ".parseChannelSoup: {}", e.getLocalizedMessage());
     }
-    return null;
+    return data;
   }
 
-  private List<String> parseLinks(JsonNode linkNode) {
-    List<String> links = new ArrayList<>();
+  private Map<String, String>  parseLinks(JsonNode linkNode) {
+    Map<String, String>  links = new HashMap<>();
     if (linkNode != null && linkNode.isArray()) {
       for (int i = 0; i < linkNode.size(); i++) {
         JsonNode link = linkNode.get(i);
-        String name = link.get("title").asText();
-        String url = link.get("navigationEndpoint").get("urlEndpoint").get("url").asText();
-        links.add(url);
+        String name = null;
+        if (link.get("title") != null) {
+          if (link.get("title").get("simpleText") != null) {
+            name = link.get("title").get("simpleText").asText();
+          }
+        }
+        String url = null;
+        if (link.get("navigationEndpoint") != null) {
+          if (link.get("navigationEndpoint").get("urlEndpoint") != null) {
+            if (link.get("navigationEndpoint").get("urlEndpoint").get("url") != null) {
+              url = link.get("navigationEndpoint").get("urlEndpoint").get("url").asText();
+            }
+          }
+        }
+       if (url != null && name != null) {
+         try {
+           url = URLDecoder.decode(url, StandardCharsets.UTF_8.toString());
+           // Remove the redirect tokens and extract the target url
+           String[] tokens = url.split("=http");
+           if (tokens.length > 1) {
+             url = "http" + tokens[tokens.length - 1];
+           }
+           links.put(name, url);
+         } catch (UnsupportedEncodingException e) {
+           log.error(this.getClass().getCanonicalName() + ".parseLinks: {}", e.getLocalizedMessage());
+         }
+       }
       }
     }
     return links;
@@ -255,9 +270,11 @@ public class LeadServiceImpl implements LeadService {
       for (SearchResultItem item : result.items()) {
         try {
           channels.add(item.asVideo().channelName());
-          break;
+//          if (channels.size() == 10) {
+//            break;
+//          }
         } catch (UnsupportedOperationException e) {
-          // ignore
+          log.error(this.getClass().getCanonicalName() + ".getChannels: {}", e.getLocalizedMessage());
         }
       }
     }
