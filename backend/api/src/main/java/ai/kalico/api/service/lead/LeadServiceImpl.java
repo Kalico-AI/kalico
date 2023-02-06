@@ -31,7 +31,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -77,16 +79,16 @@ public class LeadServiceImpl implements LeadService {
   private List<Map<String, String>>  getChannelDetails(List<String> channels, int concurrency) {
     List<Map<String, String>> response = new ArrayList<>();
     if (!ObjectUtils.isEmpty(channels)) {
-      List<CompletableFuture<Map<String, String>>> tasks = new ArrayList<>();
-      for (final String channel : channels) {
-        tasks.add(
-            CompletableFuture.supplyAsync(() -> getChannelDetail(channel),
-                RootConfiguration.executor)
-        );
-      }
-      List<List<CompletableFuture<Map<String, String>>>> batches = getConcurrencyBatches(tasks, concurrency);
-      for (List<CompletableFuture<Map<String, String>>> batch : batches) {
-        List<Map<String, String>> batchedResult = batch
+      List<List<String>> batches = getConcurrencyBatches(channels, concurrency);
+      for (List<String> batch : batches) {
+        List<CompletableFuture<Map<String, String>>> tasks = new ArrayList<>();
+        for (final String channel : batch) {
+          tasks.add(
+              CompletableFuture.supplyAsync(() -> getChannelDetail(channel),
+                  RootConfiguration.executor)
+          );
+        }
+        List<Map<String, String>> batchedResult = tasks
             .stream()
             .map(CompletableFuture::join)
             .filter(Objects::nonNull)
@@ -100,17 +102,16 @@ public class LeadServiceImpl implements LeadService {
         .collect(Collectors.toList());
   }
 
-  private List<List<CompletableFuture<Map<String, String>>>> getConcurrencyBatches(
-      List<CompletableFuture<Map<String, String>>> tasks, int concurrency) {
+  private List<List<String>> getConcurrencyBatches(List<String> channels, int concurrency) {
     // Batch up the task count up to the concurrency limit
-    List<List<CompletableFuture<Map<String, String>>>> batches = new ArrayList<>();
-    List<CompletableFuture<Map<String, String>>> batch = new ArrayList<>();
-    for (CompletableFuture<Map<String, String>> task : tasks) {
+    List<List<String>> batches = new ArrayList<>();
+    List<String> batch = new ArrayList<>();
+    for (String channel : channels) {
       if (batch.size() == concurrency) {
         batches.add(batch);
         batch = new ArrayList<>();
       }
-      batch.add(task);
+      batch.add(channel);
     }
     batches.add(batch);
     return batches;
@@ -122,10 +123,12 @@ public class LeadServiceImpl implements LeadService {
     final CloseableHttpClient httpClient = HttpClients.createDefault();
     if (uri != null) {
       HttpGet httpGet = new HttpGet(uri);
-      HttpEntity httpEntity = null;
+      CloseableHttpResponse httpResponse = null;
       try {
-        httpEntity = httpClient.execute(httpGet).getEntity();
-        return parseChannelSoup(EntityUtils.toString(httpEntity));
+        httpResponse = httpClient.execute(httpGet);
+        Header[] requestId = httpResponse.getHeaders("X-Request-Id");
+        log.info("X-Request-Id: {} \turl: {}", requestId[0].getElements()[0].getName(), url);
+        return parseChannelSoup(EntityUtils.toString(httpResponse.getEntity()));
       } catch (IOException e) {
         log.error(this.getClass().getCanonicalName() + ".getChannelDetails: {}", e.getLocalizedMessage());
       }
