@@ -14,7 +14,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ChannelPageableResponse;
-import com.kalico.model.ChannelRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -59,10 +58,9 @@ public class LeadServiceImpl implements LeadService {
   private final YouTubeProps youTubeProps;
 
   @Override
-  public ChannelPageableResponse getChannelInfo(ChannelRequest channelRequest) {
+  public ChannelPageableResponse getChannelInfo(String query) {
     Response<SearchResult> response = youtubeDownloader.search(
-        new RequestSearchResult(
-        channelRequest.getQuery()));
+        new RequestSearchResult(query));
     if (response.ok()) {
       SearchResult result = response.data();
       Set<String> channels = new HashSet<>(getChannels(result));
@@ -74,13 +72,13 @@ public class LeadServiceImpl implements LeadService {
       List<Map<String, String>>  channelDetails = getChannelDetails(new ArrayList<>(channels),
           zenRowsProps.getConcurrency());
       log.info(this.getClass().getName() + ".getChannelInfo: Fetched {} channel details for query: '{}' ",
-          channelDetails.size(), channelRequest.getQuery());
+          channelDetails.size(), query);
       return new ChannelPageableResponse()
           .count(channelDetails.size())
           .records(channelDetails);
     }
     log.info(this.getClass().getName() + ".getChannelInfo: Fetched {} channel details for query: '{}' ",
-        0, channelRequest.getQuery());
+        0, query);
     return new ChannelPageableResponse()
         .count(0)
         .records(new ArrayList<>());
@@ -234,7 +232,9 @@ public class LeadServiceImpl implements LeadService {
             }
           }
         }
-       if (url != null && name != null) {
+        name = getStandardFieldName(name);
+       if (url != null && name != null)
+       {
          try {
            url = URLDecoder.decode(url, StandardCharsets.UTF_8.toString());
            // Remove the redirect tokens and extract the target url
@@ -250,6 +250,40 @@ public class LeadServiceImpl implements LeadService {
       }
     }
     return links;
+  }
+
+  private String getStandardFieldName(String name) {
+    // Standardize
+    if (name != null) {
+      if (name.toLowerCase().contains("facebook")) {
+        name = "Facebook";
+      } else if (name.toLowerCase().contains("instagram")) {
+        name = "Instagram";
+      } else if (name.toLowerCase().contains("twitter")) {
+        name = "Twitter";
+      } else if (name.toLowerCase().contains("website")) {
+        name = "Website";
+      } else if (name.toLowerCase().contains("blog")) {
+        name = "Blog";
+      } else if (name.toLowerCase().contains("pinterest")) {
+        name = "Pinterest";
+      } else if (name.toLowerCase().contains("snapchat")) {
+        name = "SnapChat";
+      } else if (name.toLowerCase().contains("discord")) {
+        name = "Discord";
+      } else if (name.toLowerCase().equals("fb")) {
+        name = "Facebook";
+      } else if (name.toLowerCase().equals("ig")) {
+        name = "Instagram";
+      } else if (name.toLowerCase().contains("linkedin")) {
+        name = "LinkedIn";
+      } else if (name.toLowerCase().contains("tik tok")) {
+        name = "TikTok";
+      } else {
+        name = null;
+      }
+    }
+    return name;
   }
 
   private JsonNode findNode(JsonNode root, String target) {

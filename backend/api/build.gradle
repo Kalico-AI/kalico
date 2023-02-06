@@ -7,8 +7,6 @@ configurations {
 //    all*.exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 //    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-security'
 }
-//com/gargoylesoftware/htmlunit/css/StyleAttributes
-
 dependencies {
     implementation 'org.apache.httpcomponents:fluent-hc'
     implementation 'com.alibaba:fastjson'
