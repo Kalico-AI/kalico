@@ -90,7 +90,7 @@ public class CustomSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(
                         "/actuator/health**",
-                        "/blog/**")
+                        "/lead/**")
           .permitAll()
                 .anyRequest().authenticated()
                 .and()

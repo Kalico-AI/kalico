@@ -43,7 +43,7 @@ public class YoutubeSearchExtractorTest extends AbstractTestNGSpringContextTests
     @Test
     void searchContinuation_Success() {
         assertDoesNotThrow(() -> {
-            SearchResult result = search(new RequestSearchResult("nasa"));
+            SearchResult result = search(new RequestSearchResult("stir fry vegetables"));
             assertTrue(result.estimatedResults() > 20_000_000, "Estimated results should be over 20 M");
             assertFalse(result.channels().isEmpty(), "Result should contain a channel");
             assertFalse(result.shelves().isEmpty(), "Result should contain the channel latest shelf");

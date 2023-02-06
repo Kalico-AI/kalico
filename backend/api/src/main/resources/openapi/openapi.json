@@ -38,6 +38,38 @@
         }
       }
     },
+    "/lead/youtube/channels": {
+      "post": {
+        "tags": [
+          "lead"
+        ],
+        "summary": "Get YouTube channel info",
+        "operationId": "getChannelInfo",
+        "requestBody": {
+          "required": true,
+          "description": "Channel request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChannelRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Channel info response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelPageableResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/project/create": {
       "post": {
         "tags": [
@@ -725,6 +757,39 @@
               "$ref": "#/components/schemas/Project"
             }
           }
+        }
+      },
+      "ChannelRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        }
+      },
+      "ChannelPageableResponse": {
+        "type": "object",
+        "required": [
+          "count",
+          "records"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/YouTubeChannelDetail"
+            }
+          }
+        }
+      },
+      "YouTubeChannelDetail": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
         }
       }
     }

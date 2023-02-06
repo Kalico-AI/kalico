@@ -413,13 +413,13 @@ public class ParserImpl implements Parser {
         JSONArray stats = sideBarItems.getJSONObject(0)
                 .getJSONObject("playlistSidebarPrimaryInfoRenderer")
                 .getJSONArray("stats");
-        int videoCount = extractor.extractIntegerFromText(stats.getJSONObject(0).getJSONArray("runs").getJSONObject(0).getString("text"));
-        int viewCount = extractor.extractIntegerFromText(stats.getJSONObject(1).getString("simpleText"));
+        long videoCount = extractor.extractIntegerFromText(stats.getJSONObject(0).getJSONArray("runs").getJSONObject(0).getString("text"));
+        long viewCount = extractor.extractIntegerFromText(stats.getJSONObject(1).getString("simpleText"));
 
         return new PlaylistDetails(playlistId, title, author, videoCount, viewCount);
     }
 
-    private List<PlaylistVideoDetails> parsePlaylistVideos(JSONObject initialData, int videoCount) throws YoutubeException {
+    private List<PlaylistVideoDetails> parsePlaylistVideos(JSONObject initialData, long videoCount) throws YoutubeException {
         JSONObject content;
 
         try {
@@ -439,7 +439,7 @@ public class ParserImpl implements Parser {
 
         List<PlaylistVideoDetails> videos;
         if (videoCount > 0) {
-            videos = new ArrayList<>(videoCount);
+            videos = new ArrayList<>((int) videoCount);
         } else {
             videos = new LinkedList<>();
         }
@@ -726,7 +726,7 @@ public class ParserImpl implements Parser {
             throw new BadPageException("Search result root contents not found");
         }
 
-        int estimatedCount = extractor.extractIntegerFromText(initialData.getString("estimatedResults"));
+        long estimatedCount = extractor.extractIntegerFromText(initialData.getString("estimatedResults"));
         String clientVersion = extractor.extractClientVersionFromContext(initialData.getJSONObject("responseContext"));
         SearchContinuation continuation = getSearchContinuation(rootContents, clientVersion);
         return parseSearchResult(estimatedCount, rootContents, continuation);
@@ -777,7 +777,7 @@ public class ParserImpl implements Parser {
             throw new BadPageException("Could not parse search continuation json");
         }
 
-        int estimatedResults = extractor.extractIntegerFromText(jsonResponse.getString("estimatedResults"));
+        long estimatedResults = extractor.extractIntegerFromText(jsonResponse.getString("estimatedResults"));
         SearchContinuation nextContinuation = getSearchContinuation(rootContents, continuation.clientVersion());
         return parseSearchResult(estimatedResults, rootContents, nextContinuation);
     }

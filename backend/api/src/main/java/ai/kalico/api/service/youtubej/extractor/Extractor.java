@@ -20,6 +20,6 @@ public interface Extractor {
 
     String extractClientVersionFromContext(JSONObject context);
 
-    int extractIntegerFromText(String text);
+    long extractIntegerFromText(String text);
 
 }
