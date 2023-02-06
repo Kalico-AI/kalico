@@ -110,4 +110,24 @@ public class Utils {
             return thumbnails;
         }
     }
+
+    public static String parseNavigationEndpoint(JSONObject ownerText) {
+        JSONArray runs = ownerText.getJSONArray("runs");
+        if (runs != null && runs.size() > 0) {
+            JSONObject jsonObject = runs.getJSONObject(0).getJSONObject("navigationEndpoint");
+            if (jsonObject != null) {
+                if (jsonObject.containsKey("browseEndpoint")) {
+                    Object urlJsonObject = jsonObject
+                        .getJSONObject("browseEndpoint")
+                        .get("canonicalBaseUrl");
+                    if (urlJsonObject != null) {
+                        return urlJsonObject
+                            .toString()
+                            .replace("/", "");
+                    }
+                }
+            }
+        }
+        return "";
+    }
 }

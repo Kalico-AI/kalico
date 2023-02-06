@@ -38,41 +38,24 @@
         }
       }
     },
-    "/lead/youtube/channel-info": {
-      "get": {
+    "/lead/youtube/channels": {
+      "post": {
         "tags": [
           "lead"
         ],
         "summary": "Get YouTube channel info",
         "operationId": "getChannelInfo",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 25
+        "requestBody": {
+          "required": true,
+          "description": "Channel request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChannelRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Channel info response",
@@ -776,6 +759,31 @@
           }
         }
       },
+      "ChannelRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "continuation": {
+            "$ref": "#/components/schemas/SearchContinuationDto"
+          }
+        }
+      },
+      "SearchContinuationDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "client_version": {
+            "type": "string"
+          },
+          "click_tracking_parameters": {
+            "type": "string"
+          }
+        }
+      },
       "ChannelPageableResponse": {
         "type": "object",
         "required": [
@@ -784,6 +792,9 @@
           "records"
         ],
         "properties": {
+          "continuation": {
+            "$ref": "#/components/schemas/SearchContinuationDto"
+          },
           "total_records": {
             "type": "integer",
             "format": "int32"
@@ -804,16 +815,7 @@
         "type": "object",
         "required": [
           "channel_name",
-          "channel_handle",
-          "num_subs",
-          "description",
-          "instagram",
-          "facebook",
-          "twitter",
-          "tiktok",
-          "linktree",
-          "website",
-          "email"
+          "channel_handle"
         ],
         "properties": {
           "channel_name": {

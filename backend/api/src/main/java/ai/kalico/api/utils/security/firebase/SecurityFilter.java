@@ -63,7 +63,7 @@ public class SecurityFilter extends OncePerRequestFilter {
       .anyMatch(method -> httpServletRequest.getMethod().toLowerCase().contains(method));
     boolean uriExcluded = Stream.of(
         "/actuator/health",
-        "/blog")
+        "/lead")
       .anyMatch(uri -> httpServletRequest.getRequestURI().toLowerCase().contains(uri));
     if (!(methodExcluded || uriExcluded)) {
       verifyToken(httpServletRequest);

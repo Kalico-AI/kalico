@@ -14,6 +14,7 @@ public abstract class AbstractVideoDetails {
     protected int lengthSeconds;
     protected String title;
     protected String author;
+    protected String channelName;
     protected boolean isLive;
 
     protected boolean isDownloadable() {
@@ -53,5 +54,9 @@ public abstract class AbstractVideoDetails {
 
     public boolean isLive() {
         return isLive;
+    }
+
+    public String channelName() {
+        return channelName;
     }
 }

@@ -20,6 +20,7 @@ public class SearchResultVideoDetails extends AbstractListVideoDetails implement
     private List<String> badges;
     // Animated images
     private List<String> richThumbnails;
+    private String channelName;
 
     public SearchResultVideoDetails(JSONObject json, boolean isMovie) {
         super(json);
@@ -70,6 +71,9 @@ public class SearchResultVideoDetails extends AbstractListVideoDetails implement
                     richThumbnails.add(jsonThumbs.getJSONObject(i).getString("url"));
                 }
             } catch (NullPointerException ignored) {}
+        }
+        if (json.containsKey("ownerText")) {
+            channelName = Utils.parseNavigationEndpoint(json.getJSONObject("ownerText"));
         }
     }
 

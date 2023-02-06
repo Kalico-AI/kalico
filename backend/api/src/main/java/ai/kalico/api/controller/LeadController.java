@@ -5,6 +5,7 @@ import ai.kalico.api.ProjectApi;
 import ai.kalico.api.service.lead.LeadService;
 import ai.kalico.api.service.project.ProjectService;
 import com.kalico.model.ChannelPageableResponse;
+import com.kalico.model.ChannelRequest;
 import com.kalico.model.ContentPreviewResponse;
 import com.kalico.model.CreateProjectRequest;
 import com.kalico.model.CreateProjectResponse;
@@ -31,8 +32,7 @@ public class LeadController implements LeadApi {
   private final LeadService leadService;
 
   @Override
-  public ResponseEntity<ChannelPageableResponse> getChannelInfo(String query, Integer page,
-      Integer limit) {
-    return ResponseEntity.ok(leadService.getChannelInfo(query, page, limit));
+  public ResponseEntity<ChannelPageableResponse> getChannelInfo(ChannelRequest channelRequest) {
+    return ResponseEntity.ok(leadService.getChannelInfo(channelRequest));
   }
 }
