@@ -764,23 +764,6 @@
         "properties": {
           "query": {
             "type": "string"
-          },
-          "continuation": {
-            "$ref": "#/components/schemas/SearchContinuationDto"
-          }
-        }
-      },
-      "SearchContinuationDto": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string"
-          },
-          "client_version": {
-            "type": "string"
-          },
-          "click_tracking_parameters": {
-            "type": "string"
           }
         }
       },
@@ -791,9 +774,6 @@
           "records"
         ],
         "properties": {
-          "continuation": {
-            "$ref": "#/components/schemas/SearchContinuationDto"
-          },
           "count": {
             "type": "integer",
             "format": "int32"

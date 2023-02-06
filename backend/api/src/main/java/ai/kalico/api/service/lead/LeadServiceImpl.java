@@ -1,13 +1,13 @@
 package ai.kalico.api.service.lead;
 
 import ai.kalico.api.RootConfiguration;
-import ai.kalico.api.dto.Pair;
+import ai.kalico.api.props.YouTubeProps;
 import ai.kalico.api.props.ZenRowsProps;
 import ai.kalico.api.service.utils.ScraperUtils;
 import ai.kalico.api.service.youtubej.YoutubeDownloader;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
 import ai.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
 import ai.kalico.api.service.youtubej.downloader.response.Response;
-import ai.kalico.api.service.youtubej.model.search.ContinuatedSearchResult;
 import ai.kalico.api.service.youtubej.model.search.SearchResult;
 import ai.kalico.api.service.youtubej.model.search.SearchResultItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ChannelPageableResponse;
 import com.kalico.model.ChannelRequest;
-import com.kalico.model.SearchContinuationDto;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -23,16 +22,17 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -56,6 +56,7 @@ public class LeadServiceImpl implements LeadService {
   private final ScraperUtils scraperUtils;
   private final ObjectMapper objectMapper;
   private final ZenRowsProps zenRowsProps;
+  private final YouTubeProps youTubeProps;
 
   @Override
   public ChannelPageableResponse getChannelInfo(ChannelRequest channelRequest) {
@@ -64,19 +65,30 @@ public class LeadServiceImpl implements LeadService {
         channelRequest.getQuery()));
     if (response.ok()) {
       SearchResult result = response.data();
-      SearchContinuationDto continuation = getContinuation(result);
-      List<Map<String, String>>  channelDetails = getChannelDetails(getChannels(result), zenRowsProps.getConcurrency());
+      Set<String> channels = new HashSet<>(getChannels(result));
+      while (result.hasContinuation() && channels.size() < youTubeProps.getMaxChannelResults()) {
+        result = youtubeDownloader.searchContinuation(new RequestSearchContinuation(result)).data();
+        channels.addAll(getChannels(result));
+      }
+
+      List<Map<String, String>>  channelDetails = getChannelDetails(new ArrayList<>(channels),
+          zenRowsProps.getConcurrency());
+      log.info(this.getClass().getName() + ".getChannelInfo: Fetched {} channel details for query: '{}' ",
+          channelDetails.size(), channelRequest.getQuery());
       return new ChannelPageableResponse()
-          .continuation(continuation)
           .count(channelDetails.size())
           .records(channelDetails);
     }
+    log.info(this.getClass().getName() + ".getChannelInfo: Fetched {} channel details for query: '{}' ",
+        0, channelRequest.getQuery());
     return new ChannelPageableResponse()
         .count(0)
         .records(new ArrayList<>());
   }
 
   private List<Map<String, String>>  getChannelDetails(List<String> channels, int concurrency) {
+    log.info(this.getClass().getName() + ".getChannelDetails: Fetching channel details for {} channels",
+        channels.size());
     List<Map<String, String>> response = new ArrayList<>();
     if (!ObjectUtils.isEmpty(channels)) {
       List<List<String>> batches = getConcurrencyBatches(channels, concurrency);
@@ -130,7 +142,7 @@ public class LeadServiceImpl implements LeadService {
         log.info("X-Request-Id: {} \turl: {}", requestId[0].getElements()[0].getName(), url);
         return parseChannelSoup(EntityUtils.toString(httpResponse.getEntity()));
       } catch (IOException e) {
-        log.error(this.getClass().getCanonicalName() + ".getChannelDetails: {}", e.getLocalizedMessage());
+        log.error(this.getClass().getName() + ".getChannelDetails: {}", e.getLocalizedMessage());
       }
     }
     return null;
@@ -198,7 +210,7 @@ public class LeadServiceImpl implements LeadService {
         }
       }
     } catch (JsonProcessingException | NullPointerException e) {
-      log.error(this.getClass().getCanonicalName() + ".parseChannelSoup: {}", e.getLocalizedMessage());
+      log.error(this.getClass().getName() + ".parseChannelSoup: {}", e.getLocalizedMessage());
     }
     return data;
   }
@@ -232,7 +244,7 @@ public class LeadServiceImpl implements LeadService {
            }
            links.put(name, url);
          } catch (UnsupportedEncodingException e) {
-           log.error(this.getClass().getCanonicalName() + ".parseLinks: {}", e.getLocalizedMessage());
+           log.error(this.getClass().getName() + ".parseLinks: {}", e.getLocalizedMessage());
          }
        }
       }
@@ -273,25 +285,11 @@ public class LeadServiceImpl implements LeadService {
       for (SearchResultItem item : result.items()) {
         try {
           channels.add(item.asVideo().channelName());
-//          if (channels.size() == 10) {
-//            break;
-//          }
         } catch (UnsupportedOperationException e) {
-          log.error(this.getClass().getCanonicalName() + ".getChannels: {}", e.getLocalizedMessage());
+          log.error(this.getClass().getName() + ".getChannels: {}", e.getLocalizedMessage());
         }
       }
     }
     return channels;
-  }
-
-  private SearchContinuationDto getContinuation(SearchResult result) {
-    if (result.hasContinuation()) {
-      ContinuatedSearchResult continuatedSearchResult = (ContinuatedSearchResult) result;
-      return new SearchContinuationDto()
-          .token(continuatedSearchResult.continuation().token())
-          .clientVersion(continuatedSearchResult.continuation().clientVersion())
-          .clickTrackingParameters(continuatedSearchResult.continuation().clickTrackingParameters());
-    }
-   return null;
   }
 }
