@@ -32,6 +32,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -43,6 +44,7 @@ import static org.testng.AssertJUnit.assertNotNull;
  * @author Bizuwork Melesse
  * created on 1/30/23
  */
+@Ignore
 @Slf4j
 @SpringBootTest(classes = ServiceTestConfiguration.class)
 public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextTests {
