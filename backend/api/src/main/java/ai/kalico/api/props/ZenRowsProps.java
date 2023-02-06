@@ -18,4 +18,5 @@ public class ZenRowsProps {
     private String host;
     private String path;
     private String apikey;
+    private int concurrency = 1;
 }

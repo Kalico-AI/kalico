@@ -45,7 +45,7 @@ public class ScraperUtils {
         return webClient;
     }
 
-    public URI getZenRowsUri(String url, boolean jsRender, boolean premiumProxy) {
+    public URI getZenRowsUri(String url, boolean jsRender, boolean premiumProxy, boolean autoParse) {
         try {
             return new URIBuilder()
                 .setScheme("https").setHost(zenRowsProps.getHost()).setPath(zenRowsProps.getPath())
@@ -53,7 +53,7 @@ public class ScraperUtils {
                 .setParameter("url", url)
                 .setParameter("js_render", jsRender ? "true" : "false")
                 .setParameter("premium_proxy", premiumProxy ? "true": "false")
-                .setParameter("autoparse", "true")
+                .setParameter("autoparse", autoParse ? "true" : "false")
                 .build();
         } catch (URISyntaxException e) {
             log.error("ScraperUtils.getIGZenRowsUri {}", e.getLocalizedMessage());

@@ -91,7 +91,7 @@ public class InstagramParser implements ParserService {
     public VideoInfoDto getMediaMetadata(String igUrl, String contentId) {
         log.info("About to process URL for Instagram with content ID {}: {}", contentId, igUrl);
         final CloseableHttpClient httpClient = HttpClients.createDefault();
-        URI uri = scraperUtils.getZenRowsUri(igUrl, true, true);
+        URI uri = scraperUtils.getZenRowsUri(igUrl, true, true, true);
         if (uri != null) {
             HttpGet httpGet = new HttpGet(uri);
             HttpEntity httpEntity = httpClient.execute(httpGet).getEntity();
