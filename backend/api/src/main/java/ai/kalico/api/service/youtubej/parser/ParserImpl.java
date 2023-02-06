@@ -51,7 +51,9 @@ import ai.kalico.api.service.youtubej.downloader.response.Response;
 import ai.kalico.api.service.youtubej.downloader.response.ResponseImpl;
 import ai.kalico.api.service.youtubej.extractor.Extractor;
 import ai.kalico.api.service.youtubej.model.subtitles.SubtitlesInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ParserImpl implements Parser {
     private static final String ANDROID_APIKEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8";
 
@@ -848,8 +850,7 @@ public class ParserImpl implements Parser {
         case "horizontalCardListRenderer":
             return new QueryRefinementList(jsonRenderer);
        default:
-           System.out.println("Unknown search result element type " + rendererKey);
-           System.out.println(jsonItem);
+           log.warn("Unknown search result element type '{}'", rendererKey);
            return null;
         }
     }

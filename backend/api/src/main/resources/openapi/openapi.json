@@ -39,23 +39,22 @@
       }
     },
     "/lead/youtube/channels": {
-      "post": {
+      "get": {
         "tags": [
           "lead"
         ],
         "summary": "Get YouTube channel info",
         "operationId": "getChannelInfo",
-        "requestBody": {
-          "required": true,
-          "description": "Channel request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChannelRequest"
-              }
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Channel info response",
@@ -756,14 +755,6 @@
             "items": {
               "$ref": "#/components/schemas/Project"
             }
-          }
-        }
-      },
-      "ChannelRequest": {
-        "type": "object",
-        "properties": {
-          "query": {
-            "type": "string"
           }
         }
       },

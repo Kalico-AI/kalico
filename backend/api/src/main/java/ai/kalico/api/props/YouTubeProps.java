@@ -1,6 +1,5 @@
 package ai.kalico.api.props;
 
-import java.util.Base64;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,5 +15,5 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 @ConfigurationProperties(prefix = "youtube")
 public class YouTubeProps {
-    private int maxChannelResults = 100;
+    private int maxChannelResults = 1000;
 }

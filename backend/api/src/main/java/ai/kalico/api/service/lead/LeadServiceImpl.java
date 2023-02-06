@@ -14,7 +14,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ChannelPageableResponse;
-import com.kalico.model.ChannelRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -59,10 +58,9 @@ public class LeadServiceImpl implements LeadService {
   private final YouTubeProps youTubeProps;
 
   @Override
-  public ChannelPageableResponse getChannelInfo(ChannelRequest channelRequest) {
+  public ChannelPageableResponse getChannelInfo(String query) {
     Response<SearchResult> response = youtubeDownloader.search(
-        new RequestSearchResult(
-        channelRequest.getQuery()));
+        new RequestSearchResult(query));
     if (response.ok()) {
       SearchResult result = response.data();
       Set<String> channels = new HashSet<>(getChannels(result));
@@ -73,21 +71,21 @@ public class LeadServiceImpl implements LeadService {
 
       List<Map<String, String>>  channelDetails = getChannelDetails(new ArrayList<>(channels),
           zenRowsProps.getConcurrency());
-      log.info(this.getClass().getName() + ".getChannelInfo: Fetched {} channel details for query: '{}' ",
-          channelDetails.size(), channelRequest.getQuery());
+      log.info(this.getClass().getSimpleName()+ ".getChannelInfo: Fetched {} channel details for query: '{}' ",
+          channelDetails.size(), query);
       return new ChannelPageableResponse()
           .count(channelDetails.size())
           .records(channelDetails);
     }
-    log.info(this.getClass().getName() + ".getChannelInfo: Fetched {} channel details for query: '{}' ",
-        0, channelRequest.getQuery());
+    log.info(this.getClass().getSimpleName()+ ".getChannelInfo: Fetched {} channel details for query: '{}' ",
+        0, query);
     return new ChannelPageableResponse()
         .count(0)
         .records(new ArrayList<>());
   }
 
   private List<Map<String, String>>  getChannelDetails(List<String> channels, int concurrency) {
-    log.info(this.getClass().getName() + ".getChannelDetails: Fetching channel details for {} channels",
+    log.info(this.getClass().getSimpleName()+ ".getChannelDetails: Fetching channel details for {} channels",
         channels.size());
     List<Map<String, String>> response = new ArrayList<>();
     if (!ObjectUtils.isEmpty(channels)) {
@@ -142,7 +140,7 @@ public class LeadServiceImpl implements LeadService {
         log.info("X-Request-Id: {} \turl: {}", requestId[0].getElements()[0].getName(), url);
         return parseChannelSoup(EntityUtils.toString(httpResponse.getEntity()));
       } catch (IOException e) {
-        log.error(this.getClass().getName() + ".getChannelDetails: {}", e.getLocalizedMessage());
+        log.error(this.getClass().getSimpleName()+ ".getChannelDetails: {}", e.getLocalizedMessage());
       }
     }
     return null;
@@ -169,12 +167,14 @@ public class LeadServiceImpl implements LeadService {
         if (jsonNode.get("metadata") != null) {
           if (jsonNode.get("metadata").get("channelMetadataRenderer") != null) {
             JsonNode channelMeta = jsonNode.get("metadata").get("channelMetadataRenderer");
-            String channelName = "", description = "", keywords = "", channelUrl = "", subscriberCount = "";
+            String channelName = "", description = "", keywords = "", channelUrl = "", subscribers = "",
+                subscribersValue = "";
             if (channelMeta.get("title") != null) {
               channelName = channelMeta.get("title").asText();
             }
             if (channelMeta.get("description") != null) {
               description = channelMeta.get("description").asText();
+              description = description.replace("\n", " ").strip();
             }
             if (channelMeta.get("keywords") != null) {
               keywords = channelMeta.get("keywords").asText();
@@ -193,26 +193,37 @@ public class LeadServiceImpl implements LeadService {
             }
             JsonNode subscribeNode = findNode(jsonNode.get("header"), "subscriberCountText");
             if (subscribeNode != null) {
-              subscriberCount = subscribeNode
+              subscribers = subscribeNode
                   .get("simpleText")
                   .asText()
                   .replace("subscribers", "")
                   .strip();
+              subscribersValue = getSubscriberNumericalValue(subscribers);
             }
-
             data.put("channelName", channelName);
             data.put("description", description);
             data.put("keywords", keywords);
             data.put("channelUrl", channelUrl);
-            data.put("subscriberCount", subscriberCount);
+            data.put("subscribers", subscribers);
+            data.put("subscribersValue", subscribersValue);
             data.putAll(links);
           }
         }
       }
     } catch (JsonProcessingException | NullPointerException e) {
-      log.error(this.getClass().getName() + ".parseChannelSoup: {}", e.getLocalizedMessage());
+      log.error(this.getClass().getSimpleName()+ ".parseChannelSoup: {}", e.getLocalizedMessage());
     }
     return data;
+  }
+
+  private String getSubscriberNumericalValue(String subscribers) {
+    String value = subscribers;
+    if (subscribers.toLowerCase().endsWith("m")) {
+      value = Math.round(Double.parseDouble(subscribers.replace("M", "")) * 1000000) + "";
+    } else if (subscribers.toLowerCase().endsWith("k")) {
+      value = Math.round(Double.parseDouble(subscribers.replace("K", "")) * 1000) + "";
+    }
+    return value;
   }
 
   private Map<String, String>  parseLinks(JsonNode linkNode) {
@@ -234,7 +245,9 @@ public class LeadServiceImpl implements LeadService {
             }
           }
         }
-       if (url != null && name != null) {
+        name = getStandardFieldName(name);
+       if (url != null && name != null)
+       {
          try {
            url = URLDecoder.decode(url, StandardCharsets.UTF_8.toString());
            // Remove the redirect tokens and extract the target url
@@ -244,12 +257,46 @@ public class LeadServiceImpl implements LeadService {
            }
            links.put(name, url);
          } catch (UnsupportedEncodingException e) {
-           log.error(this.getClass().getName() + ".parseLinks: {}", e.getLocalizedMessage());
+           log.error(this.getClass().getSimpleName()+ ".parseLinks: {}", e.getLocalizedMessage());
          }
        }
       }
     }
     return links;
+  }
+
+  private String getStandardFieldName(String name) {
+    // Standardize
+    if (name != null) {
+      if (name.toLowerCase().contains("facebook")) {
+        name = "Facebook";
+      } else if (name.toLowerCase().contains("instagram")) {
+        name = "Instagram";
+      } else if (name.toLowerCase().contains("twitter")) {
+        name = "Twitter";
+      } else if (name.toLowerCase().contains("website")) {
+        name = "Website";
+      } else if (name.toLowerCase().contains("blog")) {
+        name = "Blog";
+      } else if (name.toLowerCase().contains("pinterest")) {
+        name = "Pinterest";
+      } else if (name.toLowerCase().contains("snapchat")) {
+        name = "SnapChat";
+      } else if (name.toLowerCase().contains("discord")) {
+        name = "Discord";
+      } else if (name.equalsIgnoreCase("fb")) {
+        name = "Facebook";
+      } else if (name.equalsIgnoreCase("ig")) {
+        name = "Instagram";
+      } else if (name.toLowerCase().contains("linkedin")) {
+        name = "LinkedIn";
+      } else if (name.toLowerCase().contains("tik tok")) {
+        name = "TikTok";
+      } else {
+        name = null;
+      }
+    }
+    return name;
   }
 
   private JsonNode findNode(JsonNode root, String target) {
@@ -281,12 +328,12 @@ public class LeadServiceImpl implements LeadService {
 
   private List<String> getChannels(SearchResult result) {
     List<String> channels = new ArrayList<>();
-    if (!ObjectUtils.isEmpty(result.items())) {
+    if (result != null && !ObjectUtils.isEmpty(result.items())) {
       for (SearchResultItem item : result.items()) {
         try {
           channels.add(item.asVideo().channelName());
         } catch (UnsupportedOperationException e) {
-          log.error(this.getClass().getName() + ".getChannels: {}", e.getLocalizedMessage());
+          log.warn(this.getClass().getSimpleName()+ ".getChannels: {} -- Ignore", e.getLocalizedMessage());
         }
       }
     }
