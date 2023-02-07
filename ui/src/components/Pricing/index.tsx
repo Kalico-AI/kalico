@@ -1,26 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {useAuthUser, withAuthUser} from "next-firebase-auth";
-import {useRouter} from "next/router";
+import React from 'react';
+import {withAuthUser} from "next-firebase-auth";
 import {PATHS} from "@/utils/constants";
 import dynamic from "next/dynamic";
 
 const Pricing = () => {
-  const user = useAuthUser()
-  const router = useRouter()
-  const [hide, setHide] = useState(true)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHide(false)
-    }, 2000)
-    if (user.id) {
-      setHide(false)
-    }
-    return () => {
-      clearInterval(interval)
-    }
-  }, [user.id])
-
 
   return (
       <section className="choose-plan-area-three bg-price pt-150 pb-150">
@@ -51,7 +34,7 @@ const Pricing = () => {
                           <li><i className="icon-close fas fa-times-circle"></i>Additional rewrites</li>
                           <li><i className="icon-close fas fa-times-circle"></i>Intelligent image and GIF embedding</li>
                           <li><i className="icon-close fas fa-times-circle"></i>Image and GIF hosting</li>
-                          <li><i className="icon-close fas fa-times-circle"></i>Summarize</li>
+                          <li><i className="icon-close fas fa-times-circle"></i>On-screen text extraction</li>
                           <li><i className="icon-close fas fa-times-circle"></i>Publish to WordPress</li>
                           <li><i className="icon-close fas fa-times-circle"></i>Premium support</li>
                           <li><i className="icon-close fas fa-times-circle"></i>Access to latest features</li>
@@ -78,7 +61,7 @@ const Pricing = () => {
                           <li><i className="icon-check fas fa-check-circle"></i>Additional rewrites</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Intelligent image and GIF embedding</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Image and GIF hosting</li>
-                          <li><i className="icon-check fas fa-check-circle"></i>Summarize</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>On-screen text extraction</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Publish to WordPress</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Premium support</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Access to latest features</li>
@@ -105,7 +88,7 @@ const Pricing = () => {
                           <li><i className="icon-check fas fa-check-circle"></i>Additional rewrites</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Intelligent image and GIF embedding</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Image and GIF hosting</li>
-                          <li><i className="icon-check fas fa-check-circle"></i>Summarize</li>
+                          <li><i className="icon-check fas fa-check-circle"></i>On-screen text extraction</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Publish to WordPress</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Premium support</li>
                           <li><i className="icon-check fas fa-check-circle"></i>Access to latest features</li>
