@@ -31,7 +31,51 @@ function FAQ() {
                        aria-labelledby="project-headingOne" data-bs-parent="#projectAccordion">
                     <div className="accordion-body">
                       <p>
-                        Our AI works by extracting audio contained in the video to write the article. We use a combination of state-of-the-art open source AI tools and our own models.
+                        Our AI uses the audio, on-screen text, and description from the video as a source material to create the article. It does not simply copy the words from the video, but rather adapts them to make the final output more reader-friendly.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="accordion-item">
+                  <h2 className="accordion-header" id="project-headingHowLong">
+                    <button
+                        className="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#project-collapseHowLong"
+                        aria-expanded="false"
+                        aria-controls="project-collapseHowLong"
+                    >
+                      How long does it take to convert an audio or video?
+                    </button>
+                  </h2>
+                  <div id="project-collapseHowLong" className="accordion-collapse collapse"
+                       aria-labelledby="project-headingHowLong" data-bs-parent="#projectAccordion">
+                    <div className="accordion-body">
+                      <p>
+                       A typical 10-minute food recipe video takes about 4-5 minutes to process. We expect this to fall to 2-3 minutes as we improve our algorithms.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="accordion-item">
+                  <h2 className="accordion-header" id="project-length-limit">
+                    <button
+                        className="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#project-length-limit"
+                        aria-expanded="false"
+                        aria-controls="project-length-limit"
+                    >
+                      Is there a limit to the length of the audio or video content?
+                    </button>
+                  </h2>
+                  <div id="project-length-limit" className="accordion-collapse collapse"
+                       aria-labelledby="project-length-limit" data-bs-parent="#projectAccordion">
+                    <div className="accordion-body">
+                      <p>
+                        We can handle up to 20-30-minute audio and video files. Kalico is still in beta. We expect to handle much longer content over time.
                       </p>
                     </div>
                   </div>
@@ -69,14 +113,15 @@ function FAQ() {
                         aria-expanded="false"
                         aria-controls="project-collapseTwo"
                     >
-                      What types of links do you support?
+                      What type of links and file formats do you support?
                     </button>
                   </h2>
                   <div id="project-collapseTwo" className="accordion-collapse collapse"
                        aria-labelledby="project-headingTwo" data-bs-parent="#projectAccordion">
                     <div className="accordion-body">
                       <p>
-                       We support YouTube and Instagram links right now. Support for other platforms coming soon.
+                       We support YouTube, Instagram Reels, and local MP4, WEBM, MP3, WAV, and AAC file
+                       formats. Local uploads are currently limited to 100MB.
                       </p>
                     </div>
                   </div>
@@ -91,7 +136,7 @@ function FAQ() {
                         aria-expanded="false"
                         aria-controls="project-collapseThree"
                     >
-                      Which languages are supported?
+                      Which languages do you support?
                     </button>
                   </h2>
                   <div id="project-collapseThree" className="accordion-collapse collapse"

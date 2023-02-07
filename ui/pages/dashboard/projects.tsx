@@ -4,6 +4,7 @@ import MyProjects from "@/pages/Dashboard/MyProjects";
 import {Project, ProjectApi} from "@/api";
 import {headerConfig} from "@/api/headerConfig";
 import {CenterAlignedProgress} from "@/utils/utils";
+import Head from "next/head";
 
 
 export interface ProjectIndexProps {
@@ -12,7 +13,7 @@ export interface ProjectIndexProps {
   siteImage?: string
 }
 
-const ProjectsIndex: FC<ProjectIndexProps> =  (props) => {
+const ProjectsIndex: FC<ProjectIndexProps> =  (_props) => {
   const [projects, setProjects] = useState<Project[]>([])
   const user = useAuthUser()
 
@@ -35,6 +36,9 @@ const ProjectsIndex: FC<ProjectIndexProps> =  (props) => {
 
     return (
         <>
+          <Head>
+            <title>Kalico | My Projects</title>
+          </Head>
           <main>
             <section className="container">
               <MyProjects projects={projects} user={user}/>
