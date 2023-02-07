@@ -7,6 +7,7 @@ import MyProject from "@/pages/Dashboard/MyProject";
 import {toast} from "react-toastify";
 import {useRouter} from "next/router";
 import {CenterAlignedProgress} from "@/utils/utils";
+import Head from "next/head";
 
 export async function getServerSideProps(context) {
   return {
@@ -58,6 +59,9 @@ const ProjectByIdIndex: FC<ProjectByIdProps> =  (props) => {
 
   return (
       <>
+        <Head>
+          <title>Kalico | {project?.name}</title>
+        </Head>
         <main>
           <section className="container">
             <MyProject project={project} user={user} showProgress={showProgress}/>
