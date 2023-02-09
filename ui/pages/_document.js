@@ -3,8 +3,8 @@ import Script from "next/script";
 import {SITE_IMAGE_URL} from "../src/utils/constants";
 
 export default function Document() {
-  const title = 'Supercharge Your Audio and Video Content with Kalico AI'
-  const description = 'Turn your audio and video content into engaging articles instantly with Kalico'
+  const title = 'Kalico AI | Audio and Video Repurposing for Content Creators'
+  const description = 'Kalico is an AI assistant that helps you instantly create captivating articles from your videos and podcasts.'
   const siteImage = SITE_IMAGE_URL
   const url = 'https://kalico.ai'
       return (

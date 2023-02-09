@@ -11,7 +11,7 @@ function Index() {
   return (
     <>
       <Head>
-        <title>Kalico | Supercharge Your Audio and Video Content</title>
+        <title>Kalico | Audio and Video Content Repurposing</title>
       </Head>
       <Landing/>
     </>

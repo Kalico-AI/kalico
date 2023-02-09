@@ -25,7 +25,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
 })(async ({ AuthUser }) => {
   return {
     props: {
-      title: "Kalico AI | Supercharge Your Audio and Video Content",
+      title: "Kalico AI | Video and Audio Content Re-purposing",
       userId: AuthUser.id
     }
   }
