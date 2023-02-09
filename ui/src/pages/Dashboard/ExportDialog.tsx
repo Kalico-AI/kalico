@@ -10,7 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import InputIcon from '@mui/icons-material/Input';
 import {FC, RefObject} from "react";
-import html2canvas from 'html2canvas';
+// import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
 
@@ -70,9 +70,7 @@ const ExportDialog: FC<ExportDialogProps> = (props) => {
   };
 
   const handleDownloadHtml = async () => {
-    console.log("DEBUG 0 : about to generate html")
     if (props.editorRef && props.editorRef.current) {
-      console.log("DEBUG 1 : about to generate html")
       const element = props.editorRef.current;
       const link = document.createElement("a");
       const file = new Blob([element.innerHTML], {type: 'text/html'})
@@ -86,8 +84,8 @@ const ExportDialog: FC<ExportDialogProps> = (props) => {
   const handleDownloadPdf = async () => {
     if (props.editorRef && props.editorRef.current) {
       const element = props.editorRef.current;
-      const canvas = await html2canvas(element);
-      const data = canvas.toDataURL('image/png');
+      // const canvas = await html2canvas(element);
+      // const data = canvas.toDataURL('image/png');
 
       const doc = new jsPDF({
         format: 'a4',

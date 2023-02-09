@@ -1,7 +1,5 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useStore} from "@/hooks/useStore";
-import {UserApi} from "@/api";
-import {headerConfig} from "@/api/headerConfig";
 import {
   GoogleAuthProvider,
   indexedDBLocalPersistence, sendSignInLinkToEmail,
@@ -52,13 +50,10 @@ const SignIn: FC<SignInProps> = observer((props) => {
   }, [])
 
   const signInWithEmail = (): void => {
-    console.log("DEBUG 1: signing in with email: ", email)
     setPersistence(auth, indexedDBLocalPersistence)
     .then(() => {
-      console.log("DEBUG 2: signing in with email: ", email)
       sendSignInLinkToEmail(auth, email, actionCodeSettings)
       .then(() => {
-        console.log("DEBUG 3: signing in with email: ", email)
         window.localStorage.setItem('emailForSignIn', email);
         toast("Please check your email and follow the instructions to login", {
           type: 'success',
@@ -66,7 +61,6 @@ const SignIn: FC<SignInProps> = observer((props) => {
         });
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage)
       });

@@ -1,6 +1,5 @@
 import React from 'react';
 import Hero from "@/pages/Landing/Hero";
-import Features from './Features';
 import WhyKalico from "@/pages/Landing/WhyKalico";
 import FAQ from './FAQ';
 import HowItWorks from "@/pages/Landing/HowItWorks";
@@ -14,9 +13,7 @@ function Landing() {
           <VideoDemo/>
           <WhyKalico/>
           <HowItWorks/>
-          {/*<Features/>*/}
           <FAQ/>
-          {/*<CallToAction/>*/}
         </main>
       </>
   );
