@@ -14314,7 +14314,7 @@ button:hover .HoverArrow__tipPath {
   height: 100%;
 
   border-radius: 20px;
-  box-shadow: hwb(31deg 64% 0%) 0px 0px 12px 15px, rgb(255 211 163 / 96%) 0px 1px 60px 14px;
+  box-shadow: hwb(31deg 64% 0%) 0px 0px 12px 15px, rgb(255 211 163 / 96%) 0px 1px 60px 48px;
   opacity: 1;
 }
 .video-box-btn-container {
