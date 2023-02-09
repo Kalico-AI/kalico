@@ -13,12 +13,16 @@ function Hero() {
             <div className="col-md-12">
               <div className="banner-left text-center">
                 <h2>
-                  Give your video content another {' '}
+                  Instantly create captivating articles from your
                   <span style={{color: '#ee8e3b'}}>
-                    life
+                    {' '}videos
+                  </span>
+                  {' '}and
+                  <span style={{color: '#ee8e3b'}}>
+                    {' '} podcasts
                   </span>
                 </h2>
-                <span className="banner-para">Maximize the reach of your videos and podcasts by turning them into engaging and shareable articles instantly.</span>
+                {/*<span className="banner-para">Maximize the reach of your videos and podcasts by turning them into engaging and shareable articles instantly.</span>*/}
                 <div className="hero-cta">
                   {/*<div className="right-nav">*/}
                     {/*<a href="#" className="language-bar mr-50"><span className="active">En.</span><span>Ru</span></a>*/}

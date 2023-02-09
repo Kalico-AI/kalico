@@ -64,20 +64,24 @@ const MyApp: FC<DefaultAppProps> = (props) => {
 
   return (
     <>
-      <Script
-          strategy="lazyOnload"
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.REACT_APP_GOOGLE_ANALYTICS}`}
-      />
-      <Script id="google-analytics" strategy="lazyOnload">
-        {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${process.env.REACT_APP_GOOGLE_ANALYTICS}', {
-              page_path: window.location.pathname,
-            });
-                `}
-      </Script>
+      {process.env.NODE_ENV === 'production' &&
+          <>
+              <Script
+                  strategy="lazyOnload"
+                  src={`https://www.googletagmanager.com/gtag/js?id=${process.env.REACT_APP_GOOGLE_ANALYTICS}`}
+              />
+            <Script id="google-analytics" strategy="lazyOnload">
+          {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.REACT_APP_GOOGLE_ANALYTICS}', {
+                  page_path: window.location.pathname,
+                });
+                    `}
+        </Script>
+          </>
+      }
       <Head>
         <title>{props.title}</title>
       </Head>
