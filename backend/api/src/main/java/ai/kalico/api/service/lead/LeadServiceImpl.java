@@ -391,9 +391,9 @@ public class LeadServiceImpl implements LeadService {
          try {
            url = URLDecoder.decode(url, StandardCharsets.UTF_8.toString());
            // Remove the redirect tokens and extract the target url
-           String[] tokens = url.split("=");
+           String[] tokens = url.split("www");
            if (tokens.length > 1) {
-             url = tokens[tokens.length - 1];
+             url = "www" + tokens[tokens.length - 1];
            }
            links.put(name, url);
          } catch (UnsupportedEncodingException e) {
