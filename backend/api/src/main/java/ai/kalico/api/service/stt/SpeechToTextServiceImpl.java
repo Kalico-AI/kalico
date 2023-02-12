@@ -1,6 +1,7 @@
 package ai.kalico.api.service.stt;
 
 import ai.kalico.api.props.DockerImageProps;
+import ai.kalico.api.props.WhisperProps;
 import ai.kalico.api.service.utils.KALUtils;
 import ai.kalico.api.service.utils.ShellService;
 import java.io.File;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class SpeechToTextServiceImpl implements SpeechToTextService {
   private final ShellService shell;
   private final DockerImageProps dockerImageProps;
+  private final WhisperProps whisperProps;
 
   @SneakyThrows
   @Override
@@ -37,7 +39,7 @@ public class SpeechToTextServiceImpl implements SpeechToTextService {
           "whisper",
           KALUtils.getCanonicalPath(request.getPath()),
           "--model",
-          "tiny",
+          whisperProps.getModel(),
           "--language",
           request.getLanguage(),
           "--output_dir",

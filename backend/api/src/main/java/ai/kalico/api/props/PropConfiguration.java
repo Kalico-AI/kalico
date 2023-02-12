@@ -24,7 +24,8 @@ import org.springframework.context.annotation.Configuration;
     InstagramProps.class,
     DockerImageProps.class,
     OpenAiProps.class,
-    YouTubeProps.class
+    YouTubeProps.class,
+    WhisperProps.class
 })
 public class PropConfiguration {
 }
