@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -205,7 +206,7 @@ public class LeadServiceImpl implements LeadService {
         }
         return detail;
       } catch (IOException e) {
-        log.error(this.getClass().getSimpleName()+ ".submitBatchedRequests: {}", e.getLocalizedMessage());
+        log.error(this.getClass().getSimpleName()+ ".getChannelDetail: {}", e.getLocalizedMessage());
       }
     }
     return null;
@@ -214,33 +215,39 @@ public class LeadServiceImpl implements LeadService {
   private YouTubeChannelDetail getFacebookPage(Object detail) {
     YouTubeChannelDetail _detail = (YouTubeChannelDetail) detail;
     String url = _detail.getFacebook();
-    if (url != null && leadsRepo.findByFacebook(url).isEmpty()) {
-      URI uri = scraperUtils.getZenRowsUri(url, true, true, false);
-      final CloseableHttpClient httpClient = HttpClients.createDefault();
-      if (uri != null) {
-        HttpGet httpGet = new HttpGet(uri);
-        CloseableHttpResponse httpResponse = null;
-        try {
-          httpResponse = httpClient.execute(httpGet);
-          Header[] requestId = httpResponse.getHeaders("X-Request-Id");
-          log.info("X-Request-Id: {} \turl: {}", requestId[0].getElements()[0].getName(), url);
-          String email = parseFacebookSoup(EntityUtils.toString(httpResponse.getEntity()));
-          if (email == null) {
-            return  null;
-          }
-          _detail.setEmail(email);
+    if (url != null) {
+      if (leadsRepo.findByFacebook(url).isEmpty()) {
+        URI uri = scraperUtils.getZenRowsUri(url, true, true, false);
+        final CloseableHttpClient httpClient = HttpClients.createDefault();
+        if (uri != null) {
+          HttpGet httpGet = new HttpGet(uri);
+          CloseableHttpResponse httpResponse = null;
           try {
-            // Save to the database
-            LeadsEntity entity = mapDetailToEntity(_detail);
-            leadsRepo.save(entity);
-          } catch (Exception e) {
-            log.warn(this.getClass().getSimpleName()+ ".getFacebookPage: {}", e.getLocalizedMessage());
+            httpResponse = httpClient.execute(httpGet);
+            Header[] requestId = httpResponse.getHeaders("X-Request-Id");
+            log.info("X-Request-Id: {} \turl: {}", requestId[0].getElements()[0].getName(), url);
+            String email = parseFacebookSoup(EntityUtils.toString(httpResponse.getEntity()));
+            if (email == null) {
+              return null;
+            }
+            _detail.setEmail(email);
+            try {
+              // Save to the database
+              LeadsEntity entity = mapDetailToEntity(_detail);
+              leadsRepo.save(entity);
+            } catch (Exception e) {
+              log.warn(this.getClass().getSimpleName() + ".getFacebookPage: {}",
+                  e.getLocalizedMessage());
+            }
+            return _detail;
+          } catch (IOException e) {
+            log.error(this.getClass().getSimpleName() + ".getFacebookPage: {}",
+                e.getLocalizedMessage());
           }
-          return _detail;
-        } catch (IOException e) {
-          log.error(this.getClass().getSimpleName() + ".submitBatchedRequests: {}",
-              e.getLocalizedMessage());
         }
+      } else {
+        log.warn(this.getClass().getSimpleName() + ".getFacebookPage: Url already exists in the database: {}",
+            url);
       }
     }
     return null;
@@ -249,8 +256,8 @@ public class LeadServiceImpl implements LeadService {
 
   private YouTubeChannelDetail parseChannelSoup(String soup) {
     Document doc = Jsoup.parse(soup);
+    String json = null;
     try {
-      String json = null;
       List<DataNode> dataNodes = doc.select("script").dataNodes();
       for (DataNode dataNode : dataNodes) {
         String wholeData = dataNode.getWholeData();
@@ -284,7 +291,9 @@ public class LeadServiceImpl implements LeadService {
             }
             JsonNode channelAboutMetadata = findNode(jsonNode.get("contents"),
                 "channelAboutFullMetadataRenderer");
-            if (ObjectUtils.isEmpty(channelUrl) && channelAboutMetadata.get("canonicalChannelUrl") != null) {
+            if (ObjectUtils.isEmpty(channelUrl) &&
+                channelAboutMetadata != null &&
+                channelAboutMetadata.get("canonicalChannelUrl") != null) {
               channelUrl = channelAboutMetadata.get("canonicalChannelUrl").asText();
             }
             Map<String, String> links = new HashMap<>();
@@ -389,14 +398,29 @@ public class LeadServiceImpl implements LeadService {
        if (url != null && name != null)
        {
          try {
-           url = URLDecoder.decode(url, StandardCharsets.UTF_8.toString());
-           // Remove the redirect tokens and extract the target url
-           String[] tokens = url.split("www");
-           if (tokens.length > 1) {
-             url = "www" + tokens[tokens.length - 1];
+           URI uri = new URI(url);
+           String query = uri.getQuery();
+           if (query != null) {
+             String wwwUrl = null;
+             String httpUrl = null;
+             // Remove the redirect tokens and extract the target url
+             String[] wwwTokens = query.split("www");
+             String[] httpTokens = query.split("http");
+
+             if (wwwTokens.length > 1) {
+               wwwUrl = "www" + wwwTokens[wwwTokens.length - 1];
+             }
+             if (httpTokens.length > 1) {
+               httpUrl = "http" + httpTokens[httpTokens.length - 1];
+             }
+             String cleanUrl = wwwUrl;
+             if ((cleanUrl != null &&
+                 cleanUrl.toLowerCase().contains("youtube")) || httpUrl != null) {
+               cleanUrl = httpUrl;
+             }
+             links.put(name, cleanUrl);
            }
-           links.put(name, url);
-         } catch (UnsupportedEncodingException e) {
+         } catch (URISyntaxException | NullPointerException e) {
            log.error(this.getClass().getSimpleName()+ ".parseLinks: {}", e.getLocalizedMessage());
          }
        }
