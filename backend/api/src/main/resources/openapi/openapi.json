@@ -780,6 +780,9 @@
       "YouTubeChannelDetail": {
         "type": "object",
         "properties": {
+          "query": {
+            "type": "string"
+          },
           "first_name": {
             "type": "string"
           },
@@ -792,9 +795,6 @@
           "facebook": {
             "type": "string"
           },
-          "title": {
-            "type": "string"
-          },
           "description": {
             "type": "string"
           },
@@ -805,6 +805,9 @@
             "type": "string"
           },
           "channel_name": {
+            "type": "string"
+          },
+          "channel_handle": {
             "type": "string"
           },
           "subscribers": {

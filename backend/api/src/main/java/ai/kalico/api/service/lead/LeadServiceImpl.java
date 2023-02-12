@@ -3,6 +3,8 @@ package ai.kalico.api.service.lead;
 import static com.amazonaws.util.StringUtils.UTF8;
 
 import ai.kalico.api.RootConfiguration;
+import ai.kalico.api.data.postgres.entity.LeadsEntity;
+import ai.kalico.api.data.postgres.repo.LeadsRepo;
 import ai.kalico.api.props.YouTubeProps;
 import ai.kalico.api.props.ZenRowsProps;
 import ai.kalico.api.service.utils.ScraperUtils;
@@ -72,7 +74,7 @@ public class LeadServiceImpl implements LeadService {
   private final ObjectMapper objectMapper;
   private final ZenRowsProps zenRowsProps;
   private final YouTubeProps youTubeProps;
-
+  private final LeadsRepo leadsRepo;
   @Override
   public ChannelPageableResponse getChannelInfo(String query) {
     Response<SearchResult> response = youtubeDownloader.search(
@@ -87,15 +89,15 @@ public class LeadServiceImpl implements LeadService {
 
       List<YouTubeChannelDetail>  channelDetails = submitBatchedRequests(new ArrayList<>(channels), 
           this::getChannelDetail);
-      log.info(this.getClass().getSimpleName()+ ".getChannelInfo: Fetched {} channel details for query: '{}' ",
-          channelDetails.size(), query);
-      channelDetails = fetchEmailAddress(channelDetails);
+      channelDetails = fetchEmailAddress(channelDetails, query);
       channelDetails.sort(Comparator.comparing(YouTubeChannelDetail::getSubscribersValue));
 
       ChannelPageableResponse fullResponse = new ChannelPageableResponse()
           .count(channelDetails.size())
           .records(channelDetails);
       saveResponse(fullResponse);
+      log.info(this.getClass().getSimpleName()+ ".getChannelInfo: Fetched {} channel details for query: '{}' ",
+          channelDetails.size(), query);
       return fullResponse;
     }
     log.info(this.getClass().getSimpleName()+ ".getChannelInfo: Fetched {} channel details for query: '{}' ",
@@ -120,7 +122,7 @@ public class LeadServiceImpl implements LeadService {
     }
   }
 
-  private List<YouTubeChannelDetail> fetchEmailAddress(List<YouTubeChannelDetail> channelDetails) {
+  private List<YouTubeChannelDetail> fetchEmailAddress(List<YouTubeChannelDetail> channelDetails, String query) {
     // Fetch the email address from the channel's Facebook page, if available
     List<YouTubeChannelDetail> channelsWithoutFacebookPage = channelDetails
         .stream()
@@ -133,6 +135,9 @@ public class LeadServiceImpl implements LeadService {
     if (youTubeProps.isEmailRequired()) {
       log.info(this.getClass().getSimpleName()+ ".fetchEmailAddress: Fetching email addresses for {} channels",
           channelsWithFacebookPage.size());
+      for (YouTubeChannelDetail detail : channelsWithFacebookPage) {
+       detail.setQuery(query);
+      }
       return submitBatchedRequests(channelsWithFacebookPage, this::getFacebookPage);
     }
     List<YouTubeChannelDetail> allChannels = new ArrayList<>();
@@ -194,7 +199,11 @@ public class LeadServiceImpl implements LeadService {
         httpResponse = httpClient.execute(httpGet);
         Header[] requestId = httpResponse.getHeaders("X-Request-Id");
         log.info("X-Request-Id: {} \turl: {}", requestId[0].getElements()[0].getName(), url);
-        return parseChannelSoup(EntityUtils.toString(httpResponse.getEntity()));
+        YouTubeChannelDetail detail = parseChannelSoup(EntityUtils.toString(httpResponse.getEntity()));
+        if (detail != null) {
+          detail.setChannelHandle(_channel);
+        }
+        return detail;
       } catch (IOException e) {
         log.error(this.getClass().getSimpleName()+ ".submitBatchedRequests: {}", e.getLocalizedMessage());
       }
@@ -205,7 +214,7 @@ public class LeadServiceImpl implements LeadService {
   private YouTubeChannelDetail getFacebookPage(Object detail) {
     YouTubeChannelDetail _detail = (YouTubeChannelDetail) detail;
     String url = _detail.getFacebook();
-    if (url != null) {
+    if (url != null && leadsRepo.findByFacebook(url).isEmpty()) {
       URI uri = scraperUtils.getZenRowsUri(url, true, true, false);
       final CloseableHttpClient httpClient = HttpClients.createDefault();
       if (uri != null) {
@@ -220,6 +229,13 @@ public class LeadServiceImpl implements LeadService {
             return  null;
           }
           _detail.setEmail(email);
+          try {
+            // Save to the database
+            LeadsEntity entity = mapDetailToEntity(_detail);
+            leadsRepo.save(entity);
+          } catch (Exception e) {
+            log.warn(this.getClass().getSimpleName()+ ".getFacebookPage: {}", e.getLocalizedMessage());
+          }
           return _detail;
         } catch (IOException e) {
           log.error(this.getClass().getSimpleName() + ".submitBatchedRequests: {}",
@@ -229,7 +245,7 @@ public class LeadServiceImpl implements LeadService {
     }
     return null;
   }
-  
+
 
   private YouTubeChannelDetail parseChannelSoup(String soup) {
     Document doc = Jsoup.parse(soup);
@@ -375,9 +391,9 @@ public class LeadServiceImpl implements LeadService {
          try {
            url = URLDecoder.decode(url, StandardCharsets.UTF_8.toString());
            // Remove the redirect tokens and extract the target url
-           String[] tokens = url.split("=http");
+           String[] tokens = url.split("=");
            if (tokens.length > 1) {
-             url = "http" + tokens[tokens.length - 1];
+             url = tokens[tokens.length - 1];
            }
            links.put(name, url);
          } catch (UnsupportedEncodingException e) {
@@ -445,7 +461,7 @@ public class LeadServiceImpl implements LeadService {
          }
       }
     }
-    return result;
+    return null;
   }
 
   private List<String> getChannels(SearchResult result) {
@@ -460,6 +476,29 @@ public class LeadServiceImpl implements LeadService {
       }
     }
     return channels;
+  }
+
+  private LeadsEntity mapDetailToEntity(YouTubeChannelDetail detail) {
+    LeadsEntity entity = new LeadsEntity();
+    entity.setEmail(detail.getEmail());
+    entity.setDescription(detail.getDescription());
+    entity.setKeywords(detail.getKeywords());
+    entity.setChannelUrl(detail.getChannelUrl());
+    entity.setChannelName(detail.getChannelName());
+    entity.setChannelHandle(detail.getChannelHandle());
+    entity.setSubscribers(detail.getSubscribers());
+    entity.setSubscribersValue(detail.getSubscribersValue());
+    entity.setFacebook(detail.getFacebook());
+    entity.setInstagram(detail.getInstagram());
+    entity.setTwitter(detail.getTwitter());
+    entity.setWebsite(detail.getWebsite());
+    entity.setBlog(detail.getBlog());
+    entity.setSnapChat(detail.getSnapChat());
+    entity.setDiscord(detail.getDiscord());
+    entity.setTiktok(detail.getTiktok());
+    entity.setPinterest(detail.getPinterest());
+    entity.setQuery(detail.getQuery());
+    return entity;
   }
 
   private static class SocialPlatforms {
