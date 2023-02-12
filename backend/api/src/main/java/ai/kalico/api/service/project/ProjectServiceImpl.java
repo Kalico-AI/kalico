@@ -11,6 +11,7 @@ import ai.kalico.api.props.ProjectProps;
 import ai.kalico.api.service.av.AVService;
 import ai.kalico.api.service.gif.GifService;
 import ai.kalico.api.service.mapper.ProjectMapper;
+import ai.kalico.api.service.user.UserService;
 import ai.kalico.api.utils.security.firebase.SecurityFilter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,9 +57,11 @@ public class ProjectServiceImpl implements ProjectService {
   private final ObjectMapper objectMapper;
   private final AVService avService;
   private final ProjectProps projectProps;
+  private final UserService userService;
 
   @Override
   public CreateProjectResponse createProject(CreateProjectRequest createProjectRequest) {
+    userService.createUser();
     if (createProjectRequest != null) {
       // If a file is uploaded, use that. Otherwise, use the url
       String url = null;
