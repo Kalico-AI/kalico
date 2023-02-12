@@ -371,6 +371,12 @@ public class LeadServiceImpl implements LeadService {
       value = Math.round(Double.parseDouble(subscribers.replace("M", "")) * 1000000);
     } else if (subscribers.toLowerCase().endsWith("k")) {
       value = Math.round(Double.parseDouble(subscribers.replace("K", "")) * 1000);
+    } else {
+      try {
+        value = Long.parseLong(subscribers);
+      } catch (Exception e) {
+        log.error(this.getClass().getSimpleName()+ ".getSubscriberNumericalValue: {}", e.getLocalizedMessage());
+      }
     }
     return value;
   }
