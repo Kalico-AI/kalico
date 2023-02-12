@@ -16,6 +16,7 @@ import com.kalico.model.ContentItemChildren;
 import com.kalico.model.KalicoContentType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +84,7 @@ public class LanguageServiceImpl implements LanguageService {
         log.info("LanguageServiceImpl.generateContent Clustering transcript for projectId={}",
             projectId);
         List<GptResponse> clusters = clusterTranscript(chunkedTranscript);
+        List<ClusterItem> clustersWithHeadings = getClustersWithHeadings(clusters);
 
         // Each cluster is broken down into paragraphs and the grammar and writing style is
         // improved. This acts as a section in the final output with its own subheading.
@@ -91,15 +93,15 @@ public class LanguageServiceImpl implements LanguageService {
         //      the best image or GIF for it automatically
         log.info("LanguageServiceImpl.generateContent Generating paragraphs for projectId={}",
             projectId);
-        List<GptResponse> paragraphsByCluster = clustersIntoParagraphs(clusters);
+        List<ClusterItem> paragraphsByCluster = clustersIntoParagraphs(clustersWithHeadings);
 
         // Generate a title using the first chunk of the transcript. This eats into the token usage
-        // because who have to send the entire chunk for context.
+        // because we have to send the entire chunk for context.
         // TODO: Design a better prompt to generate the title and do the cluster at the same time
         log.info("LanguageServiceImpl.generateContent Generating title for projectId={}",
             projectId);
         GptResponse title = gptCompletion(0, openAiProps.getPromptTitle(),
-            chunkedTranscript.get(0));
+            chunkedTranscript.get(0), null);
 
         GptResponse recipe = null;
         if (contentType != null && contentType.equals(KalicoContentType.FOOD_RECIPE)) {
@@ -108,12 +110,9 @@ public class LanguageServiceImpl implements LanguageService {
           log.info("LanguageServiceImpl.generateContent Generating recipe for projectId={}",
               projectId);
           recipe = gptCompletion(0, openAiProps.getPromptRecipe(),
-              chunkedTranscript.get(0));
+              chunkedTranscript.get(0), null);
         }
 
-        // For FoodBlog type, do the following:
-        // TODO: Extract the ingredients with quantity
-        // TODO: Extract recipe steps
         log.info("LanguageServiceImpl.generateContent Generating structured content projectId={}",
             projectId);
         List<ContentItem> content = generateContent(title, paragraphsByCluster, recipe);
@@ -130,7 +129,50 @@ public class LanguageServiceImpl implements LanguageService {
     return new ArrayList<>();
   }
 
-  private List<ContentItem> generateContent(GptResponse title, List<GptResponse> paragraphsByCluster,
+  private List<ClusterItem> getClustersWithHeadings(List<GptResponse> clusters) {
+    // Extract the cluster header and raw text from each cluster
+    List<ClusterItem> items = new ArrayList<>();
+    int i = 0;
+    for (GptResponse cluster : clusters) {
+      for (CompletionChoice completionChoice : cluster.getCompletionChoices()) {
+        // Treat each completion choice as a cluster
+        String fullText = completionChoice.getText();
+        if (fullText != null) {
+          List<String> groups = Arrays
+              .stream(fullText.split("\n\n"))
+              .filter(it -> !ObjectUtils.isEmpty(it))
+              .collect(Collectors.toList());
+          // Go through the groups and extract the heading and raw text
+
+          for (String group : groups) {
+            List<String> groupSections = Arrays
+                .stream(group.split("\n"))
+                .filter(it -> !ObjectUtils.isEmpty(it))
+                .collect(Collectors.toList());
+            // If there are three sections in the group, then the first two are the primary heading and the
+            // cluster heading. The last group is the raw text.
+            String title = "";
+            String rawText = "";
+            if (groupSections.size() > 2) {
+              title = groupSections.get(1);
+              rawText = groupSections.get(2);
+            } else if (groupSections.size() > 1) {
+              title = groupSections.get(0);
+              rawText = groupSections.get(1);
+            } else if (groupSections.size() > 0){
+              // Treat the only text in the group as the raw text
+              rawText = groupSections.get(0);
+            }
+            items.add(new ClusterItem(title, rawText, new ArrayList<>(), i));
+            i++;
+          }
+        }
+      }
+    }
+    return items;
+  }
+
+  private List<ContentItem> generateContent(GptResponse title, List<ClusterItem> paragraphsByCluster,
       GptResponse recipe) {
     List<ContentItem> content = new ArrayList<>();
     ContentItem item = new ContentItem()
@@ -138,20 +180,28 @@ public class LanguageServiceImpl implements LanguageService {
         .children(List.of(new ContentItemChildren()
             .text(cleanup(extractTitle(title.completionChoices.get(0).getText())))));
     content.add(item);
-    for (GptResponse paragraphs : paragraphsByCluster) {
+    // Sort the clusters
+    paragraphsByCluster.sort(Comparator.comparing(ClusterItem::getSortOrder));
+    for (ClusterItem clusterItem : paragraphsByCluster) {
       // TODO: This is where we insert the section headers
-      for (CompletionChoice choice : paragraphs.completionChoices) {
-        List<String> eachParagraph = new ArrayList<>(List.of(choice.getText().split("\n")));
-        for (String p : eachParagraph) {
-          // Cleanup each paragraph and populate the content data structure
-          String cleanedParagraph = cleanup(p);
-          if (!ObjectUtils.isEmpty(cleanedParagraph)) {
-            ContentItem pItem = new ContentItem()
-                .type("paragraph")
-                .children(List.of(new ContentItemChildren()
-                    .text(cleanedParagraph)));
-            content.add(pItem);
-          }
+      if (!ObjectUtils.isEmpty(clusterItem.getTitle())) {
+        content.add(new ContentItem()
+            .type("heading")
+            .children(List.of(new ContentItemChildren()
+                .text(clusterItem.getTitle()))));
+      }
+      // If this cluster doesn't have paragraphs, then use the raw text
+      if (ObjectUtils.isEmpty(clusterItem.getParagraphs())) {
+        content.add(new ContentItem()
+            .type("paragraph")
+            .children(List.of(new ContentItemChildren()
+                .text(clusterItem.getRawText()))));
+      } else {
+        for (String paragraph : clusterItem.getParagraphs()) {
+          content.add(new ContentItem()
+              .type("paragraph")
+              .children(List.of(new ContentItemChildren()
+                  .text(paragraph))));
         }
       }
     }
@@ -227,16 +277,49 @@ public class LanguageServiceImpl implements LanguageService {
   }
 
 
-  private List<GptResponse> clustersIntoParagraphs(List<GptResponse> clusters) {
+  private List<ClusterItem> clustersIntoParagraphs(List<ClusterItem> clusters) {
+    List<ClusterItem> response = new ArrayList<>();
     List<CompletableFuture<GptResponse>> tasks = new ArrayList<>();
-    for (int i = 0; i < clusters.size(); i++) {
-      final String context = extractGptResponse(clusters.get(i).getCompletionChoices());
-      final int sortingOrder = i;
-      tasks.add(CompletableFuture
-          .supplyAsync(() -> gptCompletion(sortingOrder, openAiProps.getPromptParagraph(), context),
-              RootConfiguration.executor));
+    for (final ClusterItem cluster : clusters) {
+      final String context = cluster.getRawText();
+      final int sortingOrder = cluster.getSortOrder();
+      // Break any cluster with more than 600 characters into paragraphs
+      if (context.length() > 600) {
+        tasks.add(CompletableFuture
+            .supplyAsync(
+                () -> gptCompletion(sortingOrder, openAiProps.getPromptParagraph(), context, cluster),
+                RootConfiguration.executor));
+      } else {
+        response.add(cluster);
+      }
     }
-    return await(tasks);
+
+    List<GptResponse> gptResponse =  await(tasks);
+    // Extract the cluster items and add the responses to paragraphs
+    for (GptResponse hydratedResponse : gptResponse) {
+      List<String> paragraphs = extractParagraphs(hydratedResponse);
+      ClusterItem clusterItem = hydratedResponse.getClusterItem();
+      if (clusterItem != null) {
+        clusterItem.setParagraphs(paragraphs);
+        response.add(clusterItem);
+      }
+    }
+    return response;
+  }
+
+  private List<String> extractParagraphs(GptResponse hydratedResponse) {
+    List<String> paragraphs = new ArrayList<>();
+    if (hydratedResponse != null && !ObjectUtils.isEmpty(hydratedResponse.getCompletionChoices())) {
+      for (CompletionChoice completionChoice : hydratedResponse.getCompletionChoices()) {
+        List<String> paragraphsByCompletionChoice = Arrays
+            .stream(completionChoice.getText().split("\n\n"))
+            .filter(it -> !ObjectUtils.isEmpty(it))
+            .map(this::cleanup)
+            .collect(Collectors.toList());
+        paragraphs.addAll(paragraphsByCompletionChoice);
+      }
+    }
+    return paragraphs;
   }
 
 
@@ -246,13 +329,13 @@ public class LanguageServiceImpl implements LanguageService {
       final int soringOrder = i;
       final String chunk = chunkedTranscript.get(i);
       tasks.add(CompletableFuture
-          .supplyAsync(() -> gptCompletion(soringOrder, openAiProps.getPromptCluster(), chunk),
+          .supplyAsync(() -> gptCompletion(soringOrder, openAiProps.getPromptCluster(), chunk, null),
               RootConfiguration.executor));
     }
     return await(tasks);
   }
 
-  private  GptResponse gptCompletion(int sortOrder, String prompt, String context) {
+  private  GptResponse gptCompletion(int sortOrder, String prompt, String context, ClusterItem clusterItem) {
     String query = String.format("%s\n%s", prompt, cleanup(context));
     CompletionRequest completionRequest = CompletionRequest.builder()
         .model(openAiProps.getModel())
@@ -264,7 +347,7 @@ public class LanguageServiceImpl implements LanguageService {
         .user(openAiProps.getUser())
         .logitBias(new HashMap<>())
         .build();
-    return new GptResponse(sortOrder, openAiService.createCompletion(completionRequest).getChoices());
+    return new GptResponse(sortOrder, openAiService.createCompletion(completionRequest).getChoices(), clusterItem);
   }
 
   private List<GptResponse> await(List<CompletableFuture<GptResponse>> tasks) {
@@ -278,7 +361,7 @@ public class LanguageServiceImpl implements LanguageService {
   @Override
   public String cleanup(String input) {
     return input
-        .replace("Paragraph:", "")
+        .replace("(\\w+\\s\\d+:\\s)", "")
         .replace("\"", "")
         .replace("\n", " ")
         .trim();
@@ -365,5 +448,17 @@ public class LanguageServiceImpl implements LanguageService {
   private static class GptResponse {
     private int sortOrder;
     private List<CompletionChoice> completionChoices;
+    private final ClusterItem clusterItem;
+  }
+
+  @Getter
+  @Setter
+  @AllArgsConstructor
+  @RequiredArgsConstructor
+  private static class ClusterItem {
+    private String title;
+    private String rawText;
+    private List<String> paragraphs;
+    private int sortOrder;
   }
 }

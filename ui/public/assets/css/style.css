@@ -3498,6 +3498,7 @@ textarea:focus {
 }
 .slate-editor-box {
   padding: 10px;
+  padding-bottom: 120px;
 }
 .slate-editor-title {
   padding-bottom: 2px;
@@ -3506,7 +3507,9 @@ textarea:focus {
   padding-top: 40px;
 }
 .slate-editor-paragraph {
-  padding-top: 20px;
+  padding-top: 6px;
+  line-height: 36px;
+  padding-bottom: 20px;
 }
 .slate-editor-img {
   padding-top: 20px;
