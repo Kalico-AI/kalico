@@ -17,8 +17,6 @@ export default function Document() {
             name="description"
             content="Kalico"
           />
-
-          <title>{title}</title>
           <meta name="description" content={description}/>
 
           {/*<!-- Google / Search Engine Tags -->*/}
