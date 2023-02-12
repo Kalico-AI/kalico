@@ -15,4 +15,9 @@ public interface UserService {
   UserProfileResponse getOrCreateUserprofileAsync();
 
   UserProfileResponse getOrCreateUserprofile();
+
+  /**
+   * Create a user if not already in the database.
+   */
+  void createUser();
 }

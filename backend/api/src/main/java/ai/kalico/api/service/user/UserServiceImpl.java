@@ -31,4 +31,9 @@ public class UserServiceImpl implements UserService {
     userServiceHelper.createDbUser(userProfile);
     return new UserProfileResponse().profile(userProfile);
   }
+
+  @Override
+  public void createUser() {
+    userServiceHelper.createDbUser(securityFilter.getUser());
+  }
 }
