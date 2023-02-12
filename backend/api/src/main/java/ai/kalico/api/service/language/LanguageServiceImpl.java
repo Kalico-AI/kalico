@@ -283,8 +283,8 @@ public class LanguageServiceImpl implements LanguageService {
     for (final ClusterItem cluster : clusters) {
       final String context = cluster.getRawText();
       final int sortingOrder = cluster.getSortOrder();
-      // Break any cluster with more than 600 characters into paragraphs
-      if (context.length() > 600) {
+      // Break any cluster with more characters than the threshold into paragraphs
+      if (context.length() > openAiProps.getParagraphThresholdCharCount()) {
         tasks.add(CompletableFuture
             .supplyAsync(
                 () -> gptCompletion(sortingOrder, openAiProps.getPromptParagraph(), context, cluster),

@@ -27,4 +27,5 @@ public class OpenAiProps {
     private String user = "kalico";
     private int descriptionCharacterLimit = 256;
     private int requestTimeoutSeconds = 120;
+    private int paragraphThresholdCharCount = 1000;
 }
