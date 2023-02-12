@@ -779,8 +779,68 @@
       },
       "YouTubeChannelDetail": {
         "type": "object",
-        "additionalProperties": {
-          "type": "string"
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "facebook": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "keywords": {
+            "type": "string"
+          },
+          "channel_url": {
+            "type": "string"
+          },
+          "channel_name": {
+            "type": "string"
+          },
+          "channel_handle": {
+            "type": "string"
+          },
+          "subscribers": {
+            "type": "string"
+          },
+          "subscribers_value": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "instagram": {
+            "type": "string"
+          },
+          "twitter": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "blog": {
+            "type": "string"
+          },
+          "snap_chat": {
+            "type": "string"
+          },
+          "discord": {
+            "type": "string"
+          },
+          "tiktok": {
+            "type": "string"
+          },
+          "pinterest": {
+            "type": "string"
+          }
         }
       }
     }

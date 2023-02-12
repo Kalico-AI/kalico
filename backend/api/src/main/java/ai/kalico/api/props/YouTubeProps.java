@@ -16,4 +16,5 @@ import org.springframework.context.annotation.Primary;
 @ConfigurationProperties(prefix = "youtube")
 public class YouTubeProps {
     private int maxChannelResults = 1000;
+    private boolean emailRequired = false;
 }
