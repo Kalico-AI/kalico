@@ -393,6 +393,10 @@ public class LanguageServiceImpl implements LanguageService {
         currChunkSize = 0;
       }
     }
+    String chunk = joiner.toString().trim();
+    if (!ObjectUtils.isEmpty(chunk)) {
+      chunks.add(chunk);
+    }
     return chunks;
   }
 
