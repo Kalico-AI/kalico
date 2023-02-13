@@ -17,15 +17,15 @@ import org.springframework.context.annotation.Primary;
 public class OpenAiProps {
     private String apiKey;
     private double temp = 0.5;
-    private int maxTokens = 2000;
-    private int chunkSize = 1400; //words
+    private int maxTokens = 2048;
+    private int chunkSize = 1024; //words
     private String model = "text-davinci-003";
-    private String promptCluster = "Cluster the following text:";
+    private String promptCluster = "Break the following text into paragraphs with headings and fix the grammar:";
     private String promptParagraph = "Break the following text into paragraphs and improve the writing style:";
     private String promptTitle = "Generate a blog post title for the following text:";
     private String promptRecipe = "Generate  recipe steps and ingredient list with quantity form the following text:";
     private String user = "kalico";
     private int descriptionCharacterLimit = 256;
-    private int requestTimeoutSeconds = 120;
+    private int requestTimeoutSeconds = 300;
     private int paragraphThresholdCharCount = 1000;
 }

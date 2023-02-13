@@ -14,15 +14,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ContentItem;
 import com.kalico.model.ContentItemChildren;
 import com.kalico.model.KalicoContentType;
+import java.text.BreakIterator;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.StringJoiner;
-import java.util.StringTokenizer;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -79,7 +80,7 @@ public class LanguageServiceImpl implements LanguageService {
         }
 
         // Break input transcript into clusters
-        List<String> chunkedTranscript = chunkTranscript(contentEntity.getRawTranscript(),
+        List<String> chunkedTranscript = chunkTranscript(cleanup(contentEntity.getRawTranscript()),
             openAiProps.getChunkSize());
         log.info("LanguageServiceImpl.generateContent Clustering transcript for projectId={}",
             projectId);
@@ -139,37 +140,45 @@ public class LanguageServiceImpl implements LanguageService {
         String fullText = completionChoice.getText();
         if (fullText != null) {
           List<String> groups = Arrays
-              .stream(fullText.split("\n\n"))
+              .stream(fullText.split("\n"))
               .filter(it -> !ObjectUtils.isEmpty(it))
               .collect(Collectors.toList());
           // Go through the groups and extract the heading and raw text
 
+          String title = null;
+          String rawText = null;
           for (String group : groups) {
-            List<String> groupSections = Arrays
-                .stream(group.split("\n"))
-                .filter(it -> !ObjectUtils.isEmpty(it))
-                .collect(Collectors.toList());
-            // If there are three sections in the group, then the first two are the primary heading and the
-            // cluster heading. The last group is the raw text.
-            String title = "";
-            String rawText = "";
-            if (groupSections.size() > 2) {
-              title = groupSections.get(1);
-              rawText = groupSections.get(2);
-            } else if (groupSections.size() > 1) {
-              title = groupSections.get(0);
-              rawText = groupSections.get(1);
-            } else if (groupSections.size() > 0){
-              // Treat the only text in the group as the raw text
-              rawText = groupSections.get(0);
+            group = group.trim();
+            if (!ObjectUtils.isEmpty(group)) {
+              if (isTitle(group)) {
+                title = group;
+              } else {
+                if (title != null) {
+                  // The title must not be null when assigning the raw text. This is necessary to deal with
+                  // cases where GptCompletion returns a stray cluster without a corresponding title. Such
+                  // cluster is found at the very beginning of the completion response. It does not belong
+                  // in the rest of the text.
+                  // NB: This fix may be an over-correction and may result in some weird bugs down the line
+                  rawText = group;
+                }
+              }
+              if (title != null && rawText != null) {
+                items.add(new ClusterItem(title, rawText, new ArrayList<>(), i));
+                title = null;
+                rawText = null;
+                i++;
+              }
             }
-            items.add(new ClusterItem(title, rawText, new ArrayList<>(), i));
-            i++;
           }
         }
       }
     }
     return items;
+  }
+
+  private boolean isTitle(String text) {
+    // Perform a naive title check
+    return text.charAt(text.length() - 1) != '.';
   }
 
   private List<ContentItem> generateContent(GptResponse title, List<ClusterItem> paragraphsByCluster,
@@ -188,14 +197,14 @@ public class LanguageServiceImpl implements LanguageService {
         content.add(new ContentItem()
             .type("heading")
             .children(List.of(new ContentItemChildren()
-                .text(clusterItem.getTitle()))));
+                .text(cleanup(clusterItem.getTitle())))));
       }
       // If this cluster doesn't have paragraphs, then use the raw text
       if (ObjectUtils.isEmpty(clusterItem.getParagraphs())) {
         content.add(new ContentItem()
             .type("paragraph")
             .children(List.of(new ContentItemChildren()
-                .text(clusterItem.getRawText()))));
+                .text(cleanup(clusterItem.getRawText())))));
       } else {
         for (String paragraph : clusterItem.getParagraphs()) {
           content.add(new ContentItem()
@@ -360,41 +369,51 @@ public class LanguageServiceImpl implements LanguageService {
 
   @Override
   public String cleanup(String input) {
-    return input
-        .replace("(\\w+\\s\\d+:\\s)", "")
-        .replace("\"", "")
-        .replace("\n", " ")
-        .trim();
-//    String pattern = "(?:^||\\. )(?=[a-zA-Z0-9])(.*\\.)";
-//    Pattern r = Pattern.compile(pattern);
-//    Matcher m = r.matcher(input);
-//    if (m.find()) {
-//      String clean = m.group(0);
-//      log.info("Output: {}", clean);
-//      return clean;
-//    }
-//    return input;
+    if (!ObjectUtils.isEmpty(input)) {
+      return input
+          .replace("\"", "")
+          .replaceFirst("^(\\w+\\s*\\d*:\\s*)", "")
+          .replace("\n", " ")
+          .trim();
+    }
+    return input;
   }
 
   @Override
-  public List<String> chunkTranscript(String input, int chunkSize) {
+  public List<String> chunkTranscript(String source, int chunkSize) {
+    List<String> sentences = getSentences(source);
     List<String> chunks = new ArrayList<>();
-    StringTokenizer tokenizer = new StringTokenizer(input);
-    int i = 0;
     StringJoiner joiner = new StringJoiner(" ");
-    while (tokenizer.hasMoreTokens()) {
-      joiner.add(tokenizer.nextToken());
-      i++;
-      if (i == chunkSize) {
-        i = 0;
+    int currChunkSize = 0;
+    for (String sentence : sentences) {
+      currChunkSize += new ArrayList<>(Stream.of(sentence.split(" "))
+          .filter(it -> !ObjectUtils.isEmpty(it))
+          .collect(Collectors.toList())).size();
+      joiner.add(sentence);
+      if (currChunkSize >= chunkSize) {
         chunks.add(joiner.toString());
         joiner = new StringJoiner(" ");
+        currChunkSize = 0;
       }
     }
-    if (!ObjectUtils.isEmpty(joiner.toString())) {
-      chunks.add(joiner.toString());
+    String chunk = joiner.toString().trim();
+    if (!ObjectUtils.isEmpty(chunk)) {
+      chunks.add(chunk);
     }
     return chunks;
+  }
+
+  private List<String> getSentences(String source) {
+    // Split the input text into sentences first and then chunk them at the sentence level
+    // rather than word
+    List<String> sentences = new ArrayList<>();
+    BreakIterator iterator = BreakIterator.getSentenceInstance(Locale.US);
+    iterator.setText(source);
+    int start = iterator.first();
+    for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {
+      sentences.add(source.substring(start,end).trim());
+    }
+    return sentences;
   }
 
   @Override
