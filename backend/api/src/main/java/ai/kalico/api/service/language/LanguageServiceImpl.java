@@ -148,23 +148,26 @@ public class LanguageServiceImpl implements LanguageService {
           String title = null;
           String rawText = null;
           for (String group : groups) {
-            if (isTitle(group)) {
-              title = group;
-            } else {
-              if (title != null) {
-                // The title must not be null when assigning the raw text. This is necessary to deal with
-                // cases where GptCompletion returns a stray cluster without a corresponding title. Such
-                // cluster is found at the very beginning of the completion response. It does not belong
-                // in the rest of the text.
-                // NB: This fix may be an over-correction and may result in some weird bugs down the line
-                rawText = group;
+            group = group.trim();
+            if (!ObjectUtils.isEmpty(group)) {
+              if (isTitle(group)) {
+                title = group;
+              } else {
+                if (title != null) {
+                  // The title must not be null when assigning the raw text. This is necessary to deal with
+                  // cases where GptCompletion returns a stray cluster without a corresponding title. Such
+                  // cluster is found at the very beginning of the completion response. It does not belong
+                  // in the rest of the text.
+                  // NB: This fix may be an over-correction and may result in some weird bugs down the line
+                  rawText = group;
+                }
               }
-            }
-            if (title != null && rawText != null) {
-              items.add(new ClusterItem(title, rawText, new ArrayList<>(), i));
-              title = null;
-              rawText = null;
-              i++;
+              if (title != null && rawText != null) {
+                items.add(new ClusterItem(title, rawText, new ArrayList<>(), i));
+                title = null;
+                rawText = null;
+                i++;
+              }
             }
           }
         }
