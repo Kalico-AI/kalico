@@ -17,8 +17,8 @@ import org.springframework.context.annotation.Primary;
 public class OpenAiProps {
     private String apiKey;
     private double temp = 0.5;
-    private int maxTokens = 4000;
-    private int chunkSize = 1400; //words
+    private int maxTokens = 2048;
+    private int chunkSize = 1024; //words
     private String model = "text-davinci-003";
     private String promptCluster = "Break the following text into paragraphs with headings and fix the grammar:";
     private String promptParagraph = "Break the following text into paragraphs and improve the writing style:";
