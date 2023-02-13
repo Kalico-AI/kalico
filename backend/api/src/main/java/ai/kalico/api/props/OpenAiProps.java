@@ -26,6 +26,6 @@ public class OpenAiProps {
     private String promptRecipe = "Generate  recipe steps and ingredient list with quantity form the following text:";
     private String user = "kalico";
     private int descriptionCharacterLimit = 256;
-    private int requestTimeoutSeconds = 120;
+    private int requestTimeoutSeconds = 300;
     private int paragraphThresholdCharCount = 1000;
 }
