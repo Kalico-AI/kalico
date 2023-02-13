@@ -228,7 +228,7 @@ public class ProjectServiceImpl implements ProjectService {
     // Compute the progress by taking the creation time and the elapsed time
     String userId = securityFilter.getUser().getFirebaseId();
     Optional<ProjectEntity> entityOpt =  projectRepo.findPendingJob(userId);
-    if (entityOpt.isPresent()) {
+    if (entityOpt.isPresent() && isRecent(entityOpt.get().getCreatedAt())) {
       ProjectEntity projectEntity = entityOpt.get();
       long percent;
       String message = "";
@@ -267,6 +267,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
     return new ProjectJobStatus()
         .status(JobStatus.PROJECT_NOT_FOUND);
+  }
+
+  private boolean isRecent(LocalDateTime createdAt) {
+    // Consider anything that is less than an hour old to be recent
+    return Math.abs(createdAt.toEpochSecond(ZoneOffset.UTC) -
+        LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) < 60*60;
   }
 
   @Override
