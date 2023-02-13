@@ -3486,6 +3486,10 @@ textarea:focus {
   top: 50%;
   left: 50%
 }
+.beta-program-img img{
+  margin: 0 auto;
+  max-width: 528px;
+}
 .dashboard-container {
   padding-top: 100px;
 }

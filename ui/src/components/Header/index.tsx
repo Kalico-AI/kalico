@@ -10,6 +10,7 @@ import initAuth from "@/auth/nextAuth";
 import {useAuthUser} from "next-firebase-auth";
 import Link from "next/link";
 import BoltIcon from '@mui/icons-material/Bolt';
+import ForumIcon from '@mui/icons-material/Forum';
 
 initAuth()
 
@@ -24,6 +25,12 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
   const gotoPricing = () => {
     router.push({
       pathname: PATHS.PRICING,
+    }).catch(e => console.log(e))
+  }
+
+  const gotoBetaUser = () => {
+    router.push({
+      pathname: PATHS.BETA_USER,
     }).catch(e => console.log(e))
   }
 
@@ -101,6 +108,16 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                     {/*  </li>*/}
                     {/*</ul>*/}
                     <div className="right-nav">
+                      <Box sx={{mr: 3, mb: 1, mt: 1}}>
+                        <Button
+                            color="error"
+                            startIcon={<ForumIcon/>}
+                            className="upgrade-button"
+                            size='large'
+                            variant='contained'
+                            onClick={gotoBetaUser}
+                        >Help Us Improve Kalico</Button>
+                      </Box>
                       <Box sx={{mr: 3, mb: 1, mt: 1}}>
                       <Button
                           color="warning"
