@@ -74,24 +74,28 @@ public class AVServiceImpl implements AVService {
     if (url != null) {
       url = normalizeUrl(url);
       VideoInfoDto dto = getContent(url);
-      createMediaContentFromUrl(dto, projectId);
-      try {
-        if (dto.getPlatform() == Platform.YOUTUBE) {
-          youtubeDownloader
-              .getConfig()
-              .getExecutorService()
-              .submit(() -> processYouTubeVideo(dto, projectId))
-              .get();
-        } else if (dto.getPlatform() == Platform.INSTAGRAM) {
-          youtubeDownloader
-              .getConfig()
-              .getExecutorService()
-              .submit(() -> processInstagramVideo(dto, projectId))
-              .get();
+      if (dto != null) {
+        createMediaContentFromUrl(dto, projectId);
+        try {
+          if (dto.getPlatform() == Platform.YOUTUBE) {
+            youtubeDownloader
+                .getConfig()
+                .getExecutorService()
+                .submit(() -> processYouTubeVideo(dto, projectId))
+                .get();
+          } else if (dto.getPlatform() == Platform.INSTAGRAM) {
+            youtubeDownloader
+                .getConfig()
+                .getExecutorService()
+                .submit(() -> processInstagramVideo(dto, projectId))
+                .get();
+          }
+        } catch (InterruptedException | ExecutionException e) {
+          log.error("AVServiceImpl.startVideoProcessing: {}", e.getLocalizedMessage());
+          e.printStackTrace();
         }
-      } catch (InterruptedException | ExecutionException e) {
-        log.error("ContentServiceImpl.startVideoProcessing: {}", e.getLocalizedMessage());
-        e.printStackTrace();
+      } else {
+       log.error("AVServiceImpl.processMedia Failed to fetch video info for url={}", url);
       }
     } else if (file != null && fileExtension != null) {
       String mediaId = createMediaContentFromUpload(projectId);
@@ -364,7 +368,7 @@ public class AVServiceImpl implements AVService {
   @Override
   public String extractYouTubeVideoId(String url) {
     String vId = null;
-    String regex = "http(?:s)?://(?:www\\.)?youtu(?:\\.be/|be\\.com/(?:watch\\?v=|v/|embed/|user/(?:[\\w#]+/)+))([^&#?\\n]+)";
+    String regex = "http(?:s)?://(?:www\\.)?youtu(?:\\.be/|be\\.com/(?:watch\\?v=|v/|embed/|shorts/|user/(?:[\\w#]+/)+))([^&#?\\n]+)";
     Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     Matcher matcher = pattern.matcher(url);
     if (matcher.matches()){
