@@ -22,6 +22,8 @@ import ai.kalico.api.service.utils.Platform;
 import com.kalico.model.ContentPreviewResponse;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -39,7 +41,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * @author Bizuwork Melesse
@@ -373,6 +377,16 @@ public class AVServiceImpl implements AVService {
     Matcher matcher = pattern.matcher(url);
     if (matcher.matches()){
       vId = matcher.group(1);
+    }
+    if (vId == null) {
+      try {
+        MultiValueMap<String, String> parameters = UriComponentsBuilder.fromUriString(url)
+            .build()
+            .getQueryParams();
+        return parameters.get("v").get(0);
+      } catch (Exception e) {
+        log.error(this.getClass().getSimpleName()+ ".extractYouTubeVideoId: {}", e.getLocalizedMessage());
+      }
     }
     return vId;
   }
