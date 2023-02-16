@@ -108,7 +108,8 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
 
   const onOpenProject = (projectId: string) => {
     router.push({
-      pathname: PATHS.PROJECT + '/' + projectId
+      pathname: PATHS.PROJECT + '/' + projectId,
+      query: {editable: true}
     }, undefined, {shallow: true})
     .catch(e => console.log(e))
   }

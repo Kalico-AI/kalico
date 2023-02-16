@@ -12,13 +12,15 @@ import Head from "next/head";
 export async function getServerSideProps(context) {
   return {
     props: {
-      projectId: context.query.id
+      projectId: context.query.id,
+      editable: context.query?.editable ? context.query?.editable : false
     }
   }
 }
 
 interface ProjectByIdProps {
-  projectId: number
+  projectId: string,
+  editable: boolean
 }
 
 
@@ -64,7 +66,7 @@ const ProjectByIdIndex: FC<ProjectByIdProps> =  (props) => {
         </Head>
         <main>
           <section className="container">
-            <MyProject project={project} user={user} showProgress={showProgress}/>
+            <MyProject project={project} user={user} showProgress={showProgress} editable={props.editable} />
           </section>
         </main>
 

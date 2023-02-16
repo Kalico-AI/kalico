@@ -33,7 +33,8 @@ import {debounce} from "lodash";
 export interface EditorProps {
   project: ProjectDetail,
   user: AuthUserContext,
-  setEditorRef: (ref: RefObject<HTMLElement>) => void
+  setEditorRef: (ref: RefObject<HTMLElement>) => void,
+  editable?: boolean
 }
 
 const initialValue: { children: { text: string }[]; type: string }[] = [
@@ -69,17 +70,21 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
 
 
   const saveToDb = (content: Descendant[]) => {
-
-    props.user?.getIdToken(false)
-    .then(tokenResult => {
-      const projectApi = new ProjectApi(headerConfig(tokenResult))
-      projectApi.updateProjectContent({
-        id: props.project.id,
-        content: content as ContentItem[]
-      })
-      .then(_ => {
+    if (props.editable) {
+      console.log("DEBUG: editable=", props.editable)
+      props.user?.getIdToken(false)
+      .then(tokenResult => {
+        const projectApi = new ProjectApi(headerConfig(tokenResult))
+        projectApi.updateProjectContent({
+          id: props.project.id,
+          content: content as ContentItem[]
+        })
+        .then(_ => {
+        }).catch(e => console.log(e))
       }).catch(e => console.log(e))
-    }).catch(e => console.log(e))
+    } else {
+      console.log("not editable")
+    }
   }
 
   const handleChange = (content: Descendant[]) => {

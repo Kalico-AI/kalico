@@ -10,7 +10,8 @@ import {CenterAlignedProgress} from "@/utils/utils";
 export interface MyProjectsProps {
   project: ProjectDetail,
   user: AuthUserContext,
-  showProgress: boolean
+  showProgress: boolean,
+  editable?: boolean
 }
 
 const MyProject: FC<MyProjectsProps> = observer((props) => {
@@ -28,6 +29,7 @@ const MyProject: FC<MyProjectsProps> = observer((props) => {
                 <>
                   {/*<ExportDialog editorRef={editorRef} projectName={props.project?.name}/>*/}
                   <ForcedLayoutEditor
+                      editable={props.editable}
                       setEditorRef={handleSetEditorRef}
                       project={props.project}
                       user={props.user}/>

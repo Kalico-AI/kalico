@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useState} from 'react';
 import {observer} from "mobx-react";
-import {Box, Typography} from "@mui/material";
+import {Box, Chip} from "@mui/material";
 import {PATHS} from "@/utils/constants";
 import {ProjectApi, UserProjectsResponse} from "@/api";
 import {headerConfig} from "@/api/headerConfig";
@@ -98,7 +98,7 @@ const UserProjects: FC<UserProjectProps> = observer((props) => {
 
 
   const getProjectUrl = (projectUid: string) => {
-    return PATHS.PROJECT + '/' + projectUid
+    return PATHS.PROJECT + '/' + projectUid + "?editable=false"
   }
   return (
       <section>
@@ -106,7 +106,7 @@ const UserProjects: FC<UserProjectProps> = observer((props) => {
          <Box sx={{
            p: 2
          }}>
-           <Typography variant="h3" sx={{fontSize: '24px'}}>Number of Users: {userProjects?.num_users}</Typography>
+           <Chip label={"Total users: " + userProjects?.num_users} color="success" />
          </Box>
         </Box>
         <Box sx={{pb: 15}}>
