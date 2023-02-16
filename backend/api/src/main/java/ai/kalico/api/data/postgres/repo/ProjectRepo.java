@@ -1,7 +1,10 @@
 package ai.kalico.api.data.postgres.repo;
 
 import ai.kalico.api.data.postgres.entity.ProjectEntity;
+import ai.kalico.api.data.postgres.projection.UserProjectProjection;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -38,4 +41,18 @@ public interface ProjectRepo extends JpaRepository<ProjectEntity, Long> {
       + "LIMIT 1 ",
       nativeQuery = true)
   Optional<ProjectEntity> findPendingJob(String userId);
+
+  @Query(value = "SELECT "
+      + "p.id as projectId, "
+      + "p.project_name as projectName, "
+      + "p.created_at as projectCreatedAt, "
+      + "mc.permalink as contentUrl, "
+      + "u.email as email, "
+      + "u.full_name as fullName, "
+      + "u.created_at as registeredOn " +
+      "FROM public.project p "
+      + "JOIN public.user u ON u.firebase_id = p.user_id "
+      + "INNER JOIN public.media_content mc ON mc.project_id = p.id ",
+      nativeQuery = true)
+  Page<UserProjectProjection> findAllUserProjects(Pageable pageable);
 }

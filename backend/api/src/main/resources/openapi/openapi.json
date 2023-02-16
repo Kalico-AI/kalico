@@ -563,7 +563,7 @@
           "project_name": {
             "type": "string"
           },
-          "id": {
+          "project_id": {
             "type": "integer",
             "format": "int64"
           },
@@ -577,6 +577,10 @@
             "type": "string"
           },
           "registered_on": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "project_created_at": {
             "type": "integer",
             "format": "int64"
           }
@@ -818,7 +822,7 @@
           },
           "total_records": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "num_pages": {
             "type": "integer",

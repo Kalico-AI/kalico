@@ -3,6 +3,7 @@ package ai.kalico.api.service.project;
 import ai.kalico.api.data.postgres.entity.MediaContentEntity;
 import ai.kalico.api.data.postgres.entity.ProjectEntity;
 import ai.kalico.api.data.postgres.entity.SampledImageEntity;
+import ai.kalico.api.data.postgres.projection.UserProjectProjection;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.data.postgres.repo.ProjectRepo;
 import ai.kalico.api.data.postgres.repo.SampledImageRepo;
@@ -40,6 +41,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -286,17 +291,25 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public UserProjectsResponse getAllUserProjects(Integer page, Integer limit) {
+  public UserProjectsResponse getAllUserProjects(Integer pageNum, Integer limit) {
     String email = securityFilter.getUser().getEmail();
     if (userProps.getAdminEmails().contains(email)) {
       long numUsers = userRepo.count();
+      Pageable pageable = PageRequest.of(pageNum, limit,
+          Sort.by("projectCreatedAt").descending());
+      Page<UserProjectProjection> page = projectRepo.findAllUserProjects(pageable);
+
       UserProjectsResponse response = new UserProjectsResponse();
       response.setNumUsers(numUsers);
+      response.setTotalRecords(page.getTotalElements());
+      response.setNumPages(page.getTotalPages());
+      response.setRecords(projectMapper.mapProjections(page.getContent()));
+      return response;
     }
     return new UserProjectsResponse()
         .numUsers(0L)
         .numPages(0)
-        .totalRecords(0)
+        .totalRecords(0L)
         .records(new ArrayList<>());
   }
 

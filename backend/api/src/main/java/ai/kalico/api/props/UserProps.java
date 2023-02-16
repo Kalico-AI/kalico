@@ -1,5 +1,6 @@
 package ai.kalico.api.props;
 
+import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,6 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 @ConfigurationProperties(prefix = "user")
 public class UserProps {
-    private Set<String> adminEmails;
+    private Set<String> adminEmails = new HashSet<>();
 
 }
