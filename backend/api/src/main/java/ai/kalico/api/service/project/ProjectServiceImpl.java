@@ -6,8 +6,10 @@ import ai.kalico.api.data.postgres.entity.SampledImageEntity;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.data.postgres.repo.ProjectRepo;
 import ai.kalico.api.data.postgres.repo.SampledImageRepo;
+import ai.kalico.api.data.postgres.repo.UserRepo;
 import ai.kalico.api.props.AWSProps;
 import ai.kalico.api.props.ProjectProps;
+import ai.kalico.api.props.UserProps;
 import ai.kalico.api.service.av.AVService;
 import ai.kalico.api.service.gif.GifService;
 import ai.kalico.api.service.mapper.ProjectMapper;
@@ -27,6 +29,7 @@ import com.kalico.model.PageableResponse;
 import com.kalico.model.ProjectDetail;
 import com.kalico.model.ProjectJobStatus;
 import com.kalico.model.UpdateProjectContentRequest;
+import com.kalico.model.UserProjectsResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -58,6 +61,8 @@ public class ProjectServiceImpl implements ProjectService {
   private final AVService avService;
   private final ProjectProps projectProps;
   private final UserService userService;
+  private final UserProps userProps;
+  private final UserRepo userRepo;
 
   @Override
   public CreateProjectResponse createProject(CreateProjectRequest createProjectRequest) {
@@ -278,6 +283,21 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public ContentPreviewResponse getContentPreview(String url) {
     return avService.downloadContentMetadata(avService.normalizeUrl(url));
+  }
+
+  @Override
+  public UserProjectsResponse getAllUserProjects(Integer page, Integer limit) {
+    String email = securityFilter.getUser().getEmail();
+    if (userProps.getAdminEmails().contains(email)) {
+      long numUsers = userRepo.count();
+      UserProjectsResponse response = new UserProjectsResponse();
+      response.setNumUsers(numUsers);
+    }
+    return new UserProjectsResponse()
+        .numUsers(0L)
+        .numPages(0)
+        .totalRecords(0)
+        .records(new ArrayList<>());
   }
 
   private boolean isSupportedUrl(String url) {

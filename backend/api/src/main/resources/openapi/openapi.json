@@ -157,6 +157,50 @@
         }
       }
     },
+    "/project/users/all": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Get all user projects",
+        "description": "Get a list of user projects",
+        "operationId": "getAllUserProjects",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 2147483647
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All user projects response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProjectsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/project/content/preview": {
       "get": {
         "tags": [
@@ -513,6 +557,31 @@
           }
         }
       },
+      "UserProject": {
+        "type": "object",
+        "properties": {
+          "project_name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "content_url": {
+            "type": "string"
+          },
+          "user_full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "registered_on": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "Project": {
         "type": "object",
         "properties": {
@@ -731,6 +800,35 @@
           "cover_image": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "UserProjectsResponse": {
+        "type": "object",
+        "required": [
+          "num_users",
+          "total_records",
+          "num_pages",
+          "records"
+        ],
+        "properties": {
+          "num_users": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_records": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "num_pages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserProject"
+            }
           }
         }
       },

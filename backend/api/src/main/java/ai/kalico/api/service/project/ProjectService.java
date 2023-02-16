@@ -11,6 +11,7 @@ import com.kalico.model.PageableResponse;
 import com.kalico.model.ProjectDetail;
 import com.kalico.model.ProjectJobStatus;
 import com.kalico.model.UpdateProjectContentRequest;
+import com.kalico.model.UserProjectsResponse;
 import java.util.List;
 
 /**
@@ -48,5 +49,14 @@ public interface ProjectService {
    * @return
    */
   ContentPreviewResponse getContentPreview(String url);
+
+  /**
+   * Get all user projects for an admin
+   *
+   * @param page
+   * @param limit
+   * @return
+   */
+  UserProjectsResponse getAllUserProjects(Integer page, Integer limit);
 
 }

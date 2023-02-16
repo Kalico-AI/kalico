@@ -11,6 +11,7 @@ import com.kalico.model.PageableResponse;
 import com.kalico.model.ProjectDetail;
 import com.kalico.model.ProjectJobStatus;
 import com.kalico.model.UpdateProjectContentRequest;
+import com.kalico.model.UserProjectsResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,11 @@ public class ProjectController implements ProjectApi {
   @Override
   public ResponseEntity<PageableResponse> getAllProjects() {
     return ResponseEntity.ok(projectService.getAllProjects());
+  }
+
+  @Override
+  public ResponseEntity<UserProjectsResponse> getAllUserProjects(Integer page, Integer limit) {
+    return ResponseEntity.ok(projectService.getAllUserProjects(page, limit));
   }
 
   @Override
