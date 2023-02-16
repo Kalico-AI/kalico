@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import {FC, useEffect} from "react";
 
 export interface DialogProps {
-  projectId: number,
+  projectId?: string,
   open: boolean,
   onCloseDialog: (doDelete: boolean) => void
 }

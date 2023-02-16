@@ -5,12 +5,13 @@ import {Box, Button} from "@mui/material";
 import LogoutIcon from '@mui/icons-material/Logout';
 import {auth} from "@/utils/firebase-setup";
 import {useRouter} from "next/router";
-import {PATHS} from "@/utils/constants";
+import {ADMIN_EMAIL, PATHS} from "@/utils/constants";
 import initAuth from "@/auth/nextAuth";
 import {useAuthUser} from "next-firebase-auth";
 import Link from "next/link";
 import BoltIcon from '@mui/icons-material/Bolt';
 import ForumIcon from '@mui/icons-material/Forum';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
 
 initAuth()
 
@@ -31,6 +32,12 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
   const gotoBetaUser = () => {
     router.push({
       pathname: PATHS.BETA_USER,
+    }).catch(e => console.log(e))
+  }
+
+  const gotoUsers = () => {
+    router.push({
+      pathname: PATHS.USER_PROJECTS,
     }).catch(e => console.log(e))
   }
 
@@ -108,6 +115,18 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                     {/*  </li>*/}
                     {/*</ul>*/}
                     <div className="right-nav">
+                      {user.email === ADMIN_EMAIL &&
+                          <Box sx={{mr: 3, mb: 1, mt: 1}}>
+                            <Button
+                                color="primary"
+                                startIcon={<FolderSharedIcon/>}
+                                className="upgrade-button"
+                                size='large'
+                                variant='contained'
+                                onClick={gotoUsers}
+                            >Users</Button>
+                          </Box>
+                      }
                       <Box sx={{mr: 3, mb: 1, mt: 1}}>
                         <Button
                             color="error"

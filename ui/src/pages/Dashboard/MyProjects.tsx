@@ -1,7 +1,6 @@
 import React, {FC, useEffect, useState} from 'react';
 import {observer} from "mobx-react";
 import {Box, Button, Grid, Typography} from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmActionDialog from "@/pages/Dashboard/ConfirmActionDialog";
 import {useRouter} from "next/router";
@@ -31,7 +30,7 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false)
   const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false)
   const [projectInProgress, setProjectInProgress] = useState<Project | undefined>(undefined)
-  const [pendingDeleteProjectId, setPendingDeleteProjectId] = useState<number | undefined>(undefined)
+  const [pendingDeleteProjectId, setPendingDeleteProjectId] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     setProjects(props.projects)
@@ -57,7 +56,7 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
           if (result && result.data) {
             const newProject: Project = {
               project_name: result.data.project_name,
-              id: result.data.project_id
+              project_uid: result.data.project_id
             }
             setProjectInProgress(newProject)
           }
@@ -107,13 +106,13 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
     }).catch(e => console.log(e))
   }
 
-  const onOpenProject = (projectId: number) => {
+  const onOpenProject = (projectId: string) => {
     router.push({
       pathname: PATHS.PROJECT + '/' + projectId
     }, undefined, {shallow: true})
     .catch(e => console.log(e))
   }
-  const onDeleteProject = (projectId: number) => {
+  const onDeleteProject = (projectId: string) => {
     setDeleteDialogOpen(true)
     setPendingDeleteProjectId(projectId)
   }
@@ -128,7 +127,7 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
           .then(response => {
             if (response.data.status) {
               setPendingDeleteProjectId(undefined)
-              const filteredProjects = projects.filter(it => it.id !== pendingDeleteProjectId)
+              const filteredProjects = projects.filter(it => it.project_uid !== pendingDeleteProjectId)
               setProjects([...filteredProjects])
             }
           }).catch(e => console.log(e))
@@ -166,9 +165,9 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
                   className="folder-delete-btn"
                   size='large'
                   variant='text'
-                  onClick={() => onDeleteProject(item.id)}
+                  onClick={() => onDeleteProject(item.project_uid)}
               />
-              <h6 onClick={() => onOpenProject(item.id)}
+              <h6 onClick={() => onOpenProject(item.project_uid)}
                   className="folder-title">{abridgedTitle(item.project_name)}</h6>
             </div>
           </Grid>

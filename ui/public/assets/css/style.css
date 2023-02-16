@@ -3493,6 +3493,10 @@ textarea:focus {
 .dashboard-container {
   padding-top: 100px;
 }
+.user-projects-container {
+  max-width: 95%;
+  margin: 0 auto;
+}
 .dashboard-container.editor {
   max-width: 792px;
   margin: 0 auto;
