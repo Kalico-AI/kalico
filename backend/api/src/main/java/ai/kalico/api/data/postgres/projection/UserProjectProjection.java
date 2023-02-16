@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
  * @author Biz Melesse created on 2/16/23
  */
 public interface UserProjectProjection {
-  Long getProjectId();
+  String getProjectUid();
   String getProjectName();
   String getContentUrl();
   String getEmail();

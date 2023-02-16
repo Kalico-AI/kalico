@@ -26,9 +26,9 @@ public interface ProjectService {
    * @return
    */
   CreateProjectResponse createProject(CreateProjectRequest createProjectRequest);
-  GenericResponse deleteProject(Long id);
+  GenericResponse deleteProject(String projectUid);
   PageableResponse getAllProjects();
-  ProjectDetail getProjectById(Long id);
+  ProjectDetail getProjectById(String projectUid);
 
   GenericResponse updateProjectContent(
       UpdateProjectContentRequest updateProjectContentRequest);
@@ -37,11 +37,11 @@ public interface ProjectService {
 
   GifResponse generateGif(GifRequest gifRequest);
 
-  List<String> getSampledImages(Long projectId);
+  List<String> getSampledImages(String projectUid);
 
-  MediaContent getMediaContent(Long projectId);
+  MediaContent getMediaContent(String projectUid);
 
-  ProjectJobStatus getProjectJobStatus(Long projectId);
+  ProjectJobStatus getProjectJobStatus(String projectUid);
 
   /**
    * Get OpenGraph social preview links for the given content

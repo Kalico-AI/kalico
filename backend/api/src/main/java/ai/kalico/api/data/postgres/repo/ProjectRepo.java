@@ -21,6 +21,8 @@ import java.util.List;
 @Repository
 @Transactional
 public interface ProjectRepo extends JpaRepository<ProjectEntity, Long> {
+
+  Optional<ProjectEntity> findByProjectUid(String projectUid);
   @Query(value = "SELECT * " +
       "FROM project " +
       "WHERE user_id = ?1 AND processed = true "
@@ -43,7 +45,7 @@ public interface ProjectRepo extends JpaRepository<ProjectEntity, Long> {
   Optional<ProjectEntity> findPendingJob(String userId);
 
   @Query(value = "SELECT "
-      + "p.id as projectId, "
+      + "p.project_uid as projectUid, "
       + "p.project_name as projectName, "
       + "p.created_at as projectCreatedAt, "
       + "mc.permalink as contentUrl, "

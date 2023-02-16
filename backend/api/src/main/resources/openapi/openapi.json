@@ -246,8 +246,7 @@
             "name": "project_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -279,8 +278,7 @@
             "name": "project_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -312,8 +310,7 @@
             "name": "project_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -345,8 +342,7 @@
             "name": "project_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -381,8 +377,7 @@
             "name": "project_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -431,8 +426,7 @@
             "type": "string"
           },
           "project_id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "status": {
             "$ref": "#/components/schemas/JobStatus"
@@ -456,8 +450,7 @@
         "type": "object",
         "properties": {
           "project_id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "project_name": {
             "type": "string"
@@ -564,8 +557,7 @@
             "type": "string"
           },
           "project_id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "content_url": {
             "type": "string"
@@ -592,9 +584,8 @@
           "project_name": {
             "type": "string"
           },
-          "id": {
-            "type": "integer",
-            "format": "int64"
+          "project_uid": {
+            "type": "string"
           }
         }
       },
@@ -664,8 +655,7 @@
             "type": "string"
           },
           "project_id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "permalink": {
             "type": "string"
@@ -693,8 +683,7 @@
             "format": "float"
           },
           "project_id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           }
         }
       },

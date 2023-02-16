@@ -94,6 +94,7 @@ public class SeedData {
       entity.setUserId(userId);
       entity.setProjectName("Demo Project: Korean Tofu");
       entity.setProcessed(true);
+      entity.setProjectUid(KALUtils.generateUid());
       projectEntities.add(entity);
     }
     projectRepo.saveAll(projectEntities);

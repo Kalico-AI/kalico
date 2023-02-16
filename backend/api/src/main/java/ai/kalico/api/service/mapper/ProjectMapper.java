@@ -44,7 +44,7 @@ public interface ProjectMapper {
 
   default UserProject map(UserProjectProjection projection) {
     return new UserProject()
-        .projectId(projection.getProjectId())
+        .projectId(projection.getProjectUid())
         .projectName(projection.getProjectName())
         .email(projection.getEmail())
         .contentUrl(projection.getContentUrl())
@@ -61,7 +61,7 @@ public interface ProjectMapper {
     for (ProjectEntity projectEntity : projectEntities) {
       projects.add(new Project()
           .projectName(projectEntity.getProjectName())
-          .id(projectEntity.getId()));
+          .projectUid(projectEntity.getProjectUid()));
     }
     return projects;
   }
@@ -90,12 +90,12 @@ public interface ProjectMapper {
     return cdn + "/" + mediaId + "/" + mediaId + "." + format;
   }
 
-  default MediaContent mapMediaContent(MediaContentEntity entity) {
+  default MediaContent mapMediaContent(MediaContentEntity entity, String projectUid) {
     if (entity == null) {
       return null;
     }
     MediaContent content = new MediaContent();
-    content.setProjectId(entity.getProjectId());
+    content.setProjectId(projectUid);
     content.setDescription(entity.getScrapedDescription());
     content.setTitle(entity.getScrapedTitle());
     content.setPermalink(entity.getPermalink());

@@ -15,6 +15,7 @@ import ai.kalico.api.service.av.AVService;
 import ai.kalico.api.service.gif.GifService;
 import ai.kalico.api.service.mapper.ProjectMapper;
 import ai.kalico.api.service.user.UserService;
+import ai.kalico.api.service.utils.KALUtils;
 import ai.kalico.api.utils.security.firebase.SecurityFilter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -110,20 +111,22 @@ public class ProjectServiceImpl implements ProjectService {
       entity.setParaphrase(createProjectRequest.getParaphrase().get());
       entity.setContentType(createProjectRequest.getContentType().get().getValue());
       entity.setContentLink(url);
+      entity.setProjectUid(KALUtils.generateUid());
       projectRepo.save(entity);
       avService.processMedia(url, entity.getId(), file, ext);
       return new CreateProjectResponse()
           .status("OK")
           .projectName(entity.getProjectName())
-          .projectId(entity.getId());
+          .projectId(entity.getProjectUid());
     }
     return new CreateProjectResponse().error("Encountered an error while creating the project");
   }
   @Override
-  public GenericResponse deleteProject(Long id) {
+  public GenericResponse deleteProject(String projectUid) {
     // TODO: remove the corresponding media files from S3
-    if (id != null && id > 0) {
-      projectRepo.deleteById(id);
+    if (!ObjectUtils.isEmpty(projectUid)) {
+      Optional<ProjectEntity> projectEntityOpt = projectRepo.findByProjectUid(projectUid);
+      projectEntityOpt.ifPresent(projectEntity -> projectRepo.deleteById(projectEntity.getId()));
       return new GenericResponse().status("OK");
     }
     return new GenericResponse().error("Invalid project id received. Deletion failed.");
@@ -141,8 +144,8 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public ProjectDetail getProjectById(Long id) {
-    Optional<ProjectEntity> entityOpt = projectRepo.findById(id);
+  public ProjectDetail getProjectById(String projectUid) {
+    Optional<ProjectEntity> entityOpt = projectRepo.findByProjectUid(projectUid);
     return entityOpt.map(projectEntity -> projectMapper.map(projectEntity, objectMapper))
         .orElse(null);
   }
@@ -187,7 +190,11 @@ public class ProjectServiceImpl implements ProjectService {
       if (gifRequest.getStart() != null && gifRequest.getEnd() != null) {
         if (gifRequest.getStart() >= 0 && gifRequest.getEnd() >= 0) {
           if (gifRequest.getStart() < gifRequest.getEnd()) {
-            MediaContentEntity entity = mediaContentRepo.findByProjectId(gifRequest.getProjectId());
+            Optional<ProjectEntity> projectEntityOpt = projectRepo.findByProjectUid(gifRequest.getProjectId());
+            MediaContentEntity entity = null;
+            if (projectEntityOpt.isPresent()) {
+              entity = mediaContentRepo.findByProjectId(projectEntityOpt.get().getId());
+            }
             if (entity == null) {
               error = "Could not find a record of this video in the database";
             } else {
@@ -214,8 +221,13 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public List<String> getSampledImages(Long projectId) {
-    List<SampledImageEntity> entities = sampledImageRepo.findByProjectIdOrderByImageKeyAsc(projectId);
+  public List<String> getSampledImages(String projectUid) {
+    Optional<ProjectEntity> projectEntityOpt = projectRepo.findByProjectUid(projectUid);
+    List<SampledImageEntity> entities = new ArrayList<>();
+    if (projectEntityOpt.isPresent()) {
+      entities = sampledImageRepo.findByProjectIdOrderByImageKeyAsc(
+          projectEntityOpt.get().getId());
+    }
     List<String> imageUrls = new ArrayList<>();
     if (!ObjectUtils.isEmpty(entities)) {
       return entities
@@ -227,13 +239,15 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public MediaContent getMediaContent(Long projectId) {
-     return projectMapper.mapMediaContent(
-        mediaContentRepo.findByProjectId(projectId));
+  public MediaContent getMediaContent(String projectUid) {
+    Optional<ProjectEntity> projectEntityOpt = projectRepo.findByProjectUid(projectUid);
+    return projectEntityOpt.map(projectEntity -> projectMapper.mapMediaContent(
+        mediaContentRepo.findByProjectId(projectEntity.getId()),
+        projectEntityOpt.get().getProjectUid())).orElse(null);
   }
 
   @Override
-  public ProjectJobStatus getProjectJobStatus(Long projectId) {
+  public ProjectJobStatus getProjectJobStatus(String projectUid) {
     // Return percent complete until the processed field is set. If so, return 100%.
     // Compute the progress by taking the creation time and the elapsed time
     String userId = securityFilter.getUser().getFirebaseId();
@@ -268,7 +282,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
       }
       return new ProjectJobStatus()
-          .projectId(projectEntity.getId())
+          .projectId(projectEntity.getProjectUid())
           .projectName(projectEntity.getProjectName())
           .percentComplete(percent)
           .estimatedTime(estimate)

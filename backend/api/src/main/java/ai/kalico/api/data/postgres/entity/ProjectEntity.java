@@ -22,6 +22,10 @@ public class ProjectEntity {
     private Long id;
 
     @Basic
+    @Column(name = "project_uid")
+    private String projectUid;
+
+    @Basic
     @Column(name = "user_id")
     private String userId;
 
