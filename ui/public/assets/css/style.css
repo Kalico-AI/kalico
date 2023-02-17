@@ -3504,6 +3504,16 @@ textarea:focus {
 .dashboard-container.editor h3:focus {
   border: none;
 }
+.slate-editor-sticky-controls {
+  position: sticky;
+  bottom: 0;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  background: #ffffff;
+  width: 100%;
+  padding: 15px;
+}
 .slate-editor-box {
   padding: 10px;
   padding-bottom: 120px;
