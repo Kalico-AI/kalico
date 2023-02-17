@@ -89,7 +89,7 @@ public class ProjectServiceIntegrationTest extends AbstractTestNGSpringContextTe
 
     @Test
     public void updateProjectTest() {
-      Long projectId = getProjectId();
+      String projectId = getProjectId();
       ProjectDetail detail = projectService.getProjectById(projectId);
       UpdateProjectContentRequest request = new UpdateProjectContentRequest();
       detail.getContent().add(new ContentItem()
@@ -98,7 +98,7 @@ public class ProjectServiceIntegrationTest extends AbstractTestNGSpringContextTe
           .children(List.of(new ContentItemChildren()
               .text(""))));
       request.setContent(detail.getContent());
-      request.setId(projectId);
+      request.setProjectUid(projectId);
       projectService.updateProjectContent(request);
 
       ProjectDetail updatedDetail = projectService.getProjectById(projectId);
@@ -115,7 +115,7 @@ public class ProjectServiceIntegrationTest extends AbstractTestNGSpringContextTe
 
     @Test
     public void deleteProjectTest() {
-      Long projectId = getProjectId();
+      String projectId = getProjectId();
       ProjectDetail detail = projectService.getProjectById(projectId);
       assertThat(detail, is(notNullValue()));
       assertThat(detail.getId().equals(projectId), is(true));
@@ -134,14 +134,14 @@ public class ProjectServiceIntegrationTest extends AbstractTestNGSpringContextTe
       assertThat(response.getTotalRecords(), is(equalTo(6)));
       assertThat(response.getRecords().size(), is(equalTo(6)));
       for (Project record : response.getRecords()) {
-        assertThat(record.getId(), is(notNullValue()));
+        assertThat(record.getProjectUid(), is(notNullValue()));
         assertThat(record.getProjectName(), is(notNullValue()));
       }
     }
 
     @Test
     public void getProjectByIdTest() {
-      Long projectId = getProjectId();
+      String projectId = getProjectId();
       ProjectDetail detail = projectService.getProjectById(projectId);
       assertThat(detail, is(notNullValue()));
       assertThat(detail.getId().equals(projectId), is(true));
@@ -159,7 +159,7 @@ public class ProjectServiceIntegrationTest extends AbstractTestNGSpringContextTe
 
   @Test
   public void getMediaContentByIdTest() {
-    Long projectId = getProjectId();
+    String projectId = getProjectId();
     MediaContent content = projectService.getMediaContent(projectId);
     assertThat(content, is(notNullValue()));
     assertThat(content.getProjectId().equals(projectId), is(true));
@@ -172,7 +172,7 @@ public class ProjectServiceIntegrationTest extends AbstractTestNGSpringContextTe
 
   @Test
   public void getSampledImagesTest() {
-      Long projectId = getProjectId();
+      String projectId = getProjectId();
       List<String> sampledImages = projectService.getSampledImages(projectId);
       assertThat(sampledImages, is(notNullValue()));
       assertThat(sampledImages.size(), is(equalTo(261)));
@@ -181,8 +181,8 @@ public class ProjectServiceIntegrationTest extends AbstractTestNGSpringContextTe
       }
   }
 
-  private Long getProjectId() {
+  private String getProjectId() {
     PageableResponse response = projectService.getAllProjects();
-    return response.getRecords().get(0).getId();
+    return response.getRecords().get(0).getProjectUid();
   }
 }

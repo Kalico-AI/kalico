@@ -5,12 +5,14 @@ import {Box, Button} from "@mui/material";
 import LogoutIcon from '@mui/icons-material/Logout';
 import {auth} from "@/utils/firebase-setup";
 import {useRouter} from "next/router";
-import {PATHS} from "@/utils/constants";
+import {ADMIN_EMAIL, PATHS} from "@/utils/constants";
 import initAuth from "@/auth/nextAuth";
 import {useAuthUser} from "next-firebase-auth";
 import Link from "next/link";
 import BoltIcon from '@mui/icons-material/Bolt';
 import ForumIcon from '@mui/icons-material/Forum';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
+import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 
 initAuth()
 
@@ -31,6 +33,18 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
   const gotoBetaUser = () => {
     router.push({
       pathname: PATHS.BETA_USER,
+    }).catch(e => console.log(e))
+  }
+
+  const gotoUsers = () => {
+    router.push({
+      pathname: PATHS.USER_PROJECTS,
+    }).catch(e => console.log(e))
+  }
+
+  const gotoProjects = () => {
+    router.push({
+      pathname: PATHS.MY_PROJECTS,
     }).catch(e => console.log(e))
   }
 
@@ -110,6 +124,28 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                     <div className="right-nav">
                       <Box sx={{mr: 3, mb: 1, mt: 1}}>
                         <Button
+                            color="success"
+                            startIcon={<FolderCopyIcon/>}
+                            className="upgrade-button"
+                            size='large'
+                            variant='contained'
+                            onClick={gotoProjects}
+                        >My Projects</Button>
+                      </Box>
+                      {user.email === ADMIN_EMAIL &&
+                          <Box sx={{mr: 3, mb: 1, mt: 1}}>
+                            <Button
+                                color="secondary"
+                                startIcon={<FolderSharedIcon/>}
+                                className="upgrade-button"
+                                size='large'
+                                variant='contained'
+                                onClick={gotoUsers}
+                            >User Projects</Button>
+                          </Box>
+                      }
+                      <Box sx={{mr: 3, mb: 1, mt: 1}}>
+                        <Button
                             color="error"
                             startIcon={<ForumIcon/>}
                             className="upgrade-button"
@@ -129,14 +165,14 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                       >Upgrade</Button>
                       </Box>
                       <Box sx={{ mb: 1, mt: 1}}>
-                      <Button
-                          color="inherit"
-                          startIcon={<LogoutIcon/>}
-                          className="sign-in-button"
-                          size='large'
-                          variant='text'
-                          onClick={logout}
-                      />
+                        <Button
+                            color="primary"
+                            startIcon={<LogoutIcon/>}
+                            className="upgrade-button"
+                            size='large'
+                            variant='outlined'
+                            onClick={logout}
+                        >Sign Out</Button>
                       </Box>
                     </div>
                   </>

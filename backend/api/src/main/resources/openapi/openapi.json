@@ -157,6 +157,50 @@
         }
       }
     },
+    "/project/users/all": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Get all user projects",
+        "description": "Get a list of user projects",
+        "operationId": "getAllUserProjects",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 2147483647
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All user projects response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProjectsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/project/content/preview": {
       "get": {
         "tags": [
@@ -202,8 +246,7 @@
             "name": "project_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -235,8 +278,7 @@
             "name": "project_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -268,8 +310,7 @@
             "name": "project_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -301,8 +342,7 @@
             "name": "project_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -337,8 +377,7 @@
             "name": "project_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -387,8 +426,7 @@
             "type": "string"
           },
           "project_id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "status": {
             "$ref": "#/components/schemas/JobStatus"
@@ -412,8 +450,7 @@
         "type": "object",
         "properties": {
           "project_id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "project_name": {
             "type": "string"
@@ -487,9 +524,8 @@
       "UpdateProjectContentRequest": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
+          "project_uid": {
+            "type": "string",
             "nullable": false
           },
           "content": {
@@ -513,15 +549,42 @@
           }
         }
       },
+      "UserProject": {
+        "type": "object",
+        "properties": {
+          "project_name": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "content_url": {
+            "type": "string"
+          },
+          "user_full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "registered_on": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "project_created_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "Project": {
         "type": "object",
         "properties": {
           "project_name": {
             "type": "string"
           },
-          "id": {
-            "type": "integer",
-            "format": "int64"
+          "project_uid": {
+            "type": "string"
           }
         }
       },
@@ -529,8 +592,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "name": {
             "type": "string",
@@ -591,8 +653,7 @@
             "type": "string"
           },
           "project_id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "permalink": {
             "type": "string"
@@ -620,8 +681,7 @@
             "format": "float"
           },
           "project_id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           }
         }
       },
@@ -731,6 +791,35 @@
           "cover_image": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "UserProjectsResponse": {
+        "type": "object",
+        "required": [
+          "num_users",
+          "total_records",
+          "num_pages",
+          "records"
+        ],
+        "properties": {
+          "num_users": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_records": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "num_pages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserProject"
+            }
           }
         }
       },

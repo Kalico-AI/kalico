@@ -1,12 +1,9 @@
 import {autorun, makeAutoObservable} from 'mobx';
-// import {OTHER} from "@/components/constants/constants";
 
 export class SessionDataStore {
 
-  cookMode: boolean = false;
-  portions: number = 1;
-  interval: any | undefined;
-  user: any | undefined;
+  contentPreview: Map<string, {}> = new Map<string, {}>()
+  user: any | undefined = undefined
 
   constructor() {
     makeAutoObservable(this);
@@ -17,38 +14,21 @@ export class SessionDataStore {
     })
   }
 
-  setCookMode(cookMode: boolean) {
-    this.cookMode = cookMode;
+  addContentPreview(key: string, data: {}) {
+    const content = {...this.contentPreview}
+    content[key] = data
+    this.contentPreview = content
     localStorage.setItem(StoreKey.SESSION_DATA, JSON.stringify(this))
   }
 
-  setPortions(portions: number) {
-    this.portions = portions;
-    localStorage.setItem(StoreKey.SESSION_DATA, JSON.stringify(this))
-  }
-
-  setInterval(interval: any) {
-    this.interval = interval;
-    localStorage.setItem(StoreKey.SESSION_DATA, JSON.stringify(this))
-  }
-
-  // setOs(os: string) {
-  //   this.os = os
-  //   localStorage.setItem(StoreKey.SESSION_DATA, JSON.stringify(this))
-  // }
-
-  setUser(user: any) {
-    this.user = user;
-    // console.log("setting user in session storage: ", this.user)
+  setUser(userObj: any) {
+    this.user = userObj
     localStorage.setItem(StoreKey.SESSION_DATA, JSON.stringify(this))
   }
 
   reset() {
-    // this.os = OTHER;
-    this.cookMode = false;
-    this.portions = 1;
-    this.interval = undefined;
-    this.user = undefined;
+    this.contentPreview.clear()
+    this.user = undefined
     localStorage.removeItem(StoreKey.SESSION_DATA);
   }
 }

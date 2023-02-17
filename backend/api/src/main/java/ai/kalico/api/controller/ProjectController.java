@@ -11,6 +11,7 @@ import com.kalico.model.PageableResponse;
 import com.kalico.model.ProjectDetail;
 import com.kalico.model.ProjectJobStatus;
 import com.kalico.model.UpdateProjectContentRequest;
+import com.kalico.model.UserProjectsResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class ProjectController implements ProjectApi {
   }
 
   @Override
-  public ResponseEntity<GenericResponse> deleteProject(Long projectId) {
+  public ResponseEntity<GenericResponse> deleteProject(String projectId) {
     return ResponseEntity.ok(projectService.deleteProject(projectId));
   }
 
@@ -43,27 +44,32 @@ public class ProjectController implements ProjectApi {
   }
 
   @Override
+  public ResponseEntity<UserProjectsResponse> getAllUserProjects(Integer page, Integer limit) {
+    return ResponseEntity.ok(projectService.getAllUserProjects(page, limit));
+  }
+
+  @Override
   public ResponseEntity<ContentPreviewResponse> getContentPreview(String url) {
     return ResponseEntity.ok(projectService.getContentPreview(url));
   }
 
   @Override
-  public ResponseEntity<MediaContent> getMediaContent(Long projectId) {
+  public ResponseEntity<MediaContent> getMediaContent(String projectId) {
     return ResponseEntity.ok(projectService.getMediaContent(projectId));
   }
 
   @Override
-  public ResponseEntity<ProjectDetail> getProjectById(Long id) {
+  public ResponseEntity<ProjectDetail> getProjectById(String id) {
     return ResponseEntity.ok(projectService.getProjectById(id));
   }
 
   @Override
-  public ResponseEntity<ProjectJobStatus> getProjectJobStatus(Long projectId) {
+  public ResponseEntity<ProjectJobStatus> getProjectJobStatus(String projectId) {
     return ResponseEntity.ok(projectService.getProjectJobStatus(projectId));
   }
 
   @Override
-  public ResponseEntity<List<String>> getSampledImages(Long projectId) {
+  public ResponseEntity<List<String>> getSampledImages(String projectId) {
     return ResponseEntity.ok(projectService.getSampledImages(projectId));
   }
 

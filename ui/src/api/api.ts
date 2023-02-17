@@ -24,6 +24,25 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
+ * @interface ChannelPageableResponse
+ */
+export interface ChannelPageableResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof ChannelPageableResponse
+     */
+    count: number;
+    /**
+     * 
+     * @type {Array<YouTubeChannelDetail>}
+     * @memberof ChannelPageableResponse
+     */
+    records: Array<YouTubeChannelDetail>;
+}
+/**
+ * 
+ * @export
  * @interface ContentItem
  */
 export interface ContentItem {
@@ -147,10 +166,10 @@ export interface CreateProjectRequest {
 export interface CreateProjectResponse {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof CreateProjectResponse
      */
-    project_id?: number;
+    project_id?: string;
     /**
      * 
      * @type {string}
@@ -209,10 +228,10 @@ export interface GifRequest {
     end?: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof GifRequest
      */
-    project_id?: number;
+    project_id?: string;
 }
 /**
  * 
@@ -279,10 +298,10 @@ export interface MediaContent {
     media_id: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof MediaContent
      */
-    project_id: number;
+    project_id: string;
     /**
      * 
      * @type {string}
@@ -347,10 +366,10 @@ export interface Project {
     project_name?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Project
      */
-    id?: number;
+    project_uid?: string;
 }
 /**
  * 
@@ -397,10 +416,10 @@ export interface ProjectJobStatus {
     project_name?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof ProjectJobStatus
      */
-    project_id?: number;
+    project_id?: string;
     /**
      * 
      * @type {JobStatus}
@@ -516,6 +535,86 @@ export interface UserProfileResponse {
 /**
  * 
  * @export
+ * @interface UserProject
+ */
+export interface UserProject {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserProject
+     */
+    project_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserProject
+     */
+    project_id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserProject
+     */
+    content_url?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserProject
+     */
+    user_full_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserProject
+     */
+    email?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserProject
+     */
+    registered_on?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserProject
+     */
+    project_created_at?: number;
+}
+/**
+ * 
+ * @export
+ * @interface UserProjectsResponse
+ */
+export interface UserProjectsResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof UserProjectsResponse
+     */
+    num_users: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserProjectsResponse
+     */
+    total_records: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserProjectsResponse
+     */
+    num_pages: number;
+    /**
+     * 
+     * @type {Array<UserProject>}
+     * @memberof UserProjectsResponse
+     */
+    records: Array<UserProject>;
+}
+/**
+ * 
+ * @export
  * @interface VideoMetadata
  */
 export interface VideoMetadata {
@@ -568,6 +667,241 @@ export interface VideoMetadata {
      */
     cover_image: string | null;
 }
+/**
+ * 
+ * @export
+ * @interface YouTubeChannelDetail
+ */
+export interface YouTubeChannelDetail {
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    query?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    first_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    last_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    email?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    facebook?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    keywords?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    channel_url?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    channel_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    channel_handle?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    subscribers?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof YouTubeChannelDetail
+     */
+    subscribers_value?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    instagram?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    twitter?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    website?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    blog?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    snap_chat?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    discord?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    tiktok?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof YouTubeChannelDetail
+     */
+    pinterest?: string;
+}
+
+/**
+ * LeadApi - axios parameter creator
+ * @export
+ */
+export const LeadApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Get YouTube channel info
+         * @param {string} query 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChannelInfo: async (query: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'query' is not null or undefined
+            assertParamExists('getChannelInfo', 'query', query)
+            const localVarPath = `/lead/youtube/channels`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * LeadApi - functional programming interface
+ * @export
+ */
+export const LeadApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = LeadApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Get YouTube channel info
+         * @param {string} query 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getChannelInfo(query: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChannelPageableResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getChannelInfo(query, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * LeadApi - factory interface
+ * @export
+ */
+export const LeadApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = LeadApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Get YouTube channel info
+         * @param {string} query 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChannelInfo(query: string, options?: any): AxiosPromise<ChannelPageableResponse> {
+            return localVarFp.getChannelInfo(query, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * LeadApi - object-oriented interface
+ * @export
+ * @class LeadApi
+ * @extends {BaseAPI}
+ */
+export class LeadApi extends BaseAPI {
+    /**
+     * 
+     * @summary Get YouTube channel info
+     * @param {string} query 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LeadApi
+     */
+    public getChannelInfo(query: string, options?: any) {
+        return LeadApiFp(this.configuration).getChannelInfo(query, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
 
 /**
  * ProjectApi - axios parameter creator
@@ -614,11 +948,11 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Delete a project
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteProject: async (projectId: number, options: any = {}): Promise<RequestArgs> => {
+        deleteProject: async (projectId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectId' is not null or undefined
             assertParamExists('deleteProject', 'projectId', projectId)
             const localVarPath = `/project/delete/{project_id}`
@@ -676,6 +1010,50 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * Get a list of user projects
+         * @summary Get all user projects
+         * @param {number} page 
+         * @param {number} limit 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllUserProjects: async (page: number, limit: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('getAllUserProjects', 'page', page)
+            // verify required parameter 'limit' is not null or undefined
+            assertParamExists('getAllUserProjects', 'limit', limit)
+            const localVarPath = `/project/users/all`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Get OpenGraph preview of a video or audio link
          * @summary Get OpenGraph preview of a video or audio link
          * @param {string} url 
@@ -715,11 +1093,11 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * Get full media content metadata
          * @summary Get full media content metadata
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMediaContent: async (projectId: number, options: any = {}): Promise<RequestArgs> => {
+        getMediaContent: async (projectId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectId' is not null or undefined
             assertParamExists('getMediaContent', 'projectId', projectId)
             const localVarPath = `/project/media-content/{project_id}`
@@ -749,11 +1127,11 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * Get a project by ID
          * @summary Get a project by ID
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getProjectById: async (projectId: number, options: any = {}): Promise<RequestArgs> => {
+        getProjectById: async (projectId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectId' is not null or undefined
             assertParamExists('getProjectById', 'projectId', projectId)
             const localVarPath = `/project/detail/{project_id}`
@@ -783,11 +1161,11 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * Get the progress of a pending job
          * @summary Get the progress of a pending job
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getProjectJobStatus: async (projectId: number, options: any = {}): Promise<RequestArgs> => {
+        getProjectJobStatus: async (projectId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectId' is not null or undefined
             assertParamExists('getProjectJobStatus', 'projectId', projectId)
             const localVarPath = `/project/job-status/{project_id}`
@@ -817,11 +1195,11 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * Get video sampled images
          * @summary Get video sampled images
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSampledImages: async (projectId: number, options: any = {}): Promise<RequestArgs> => {
+        getSampledImages: async (projectId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectId' is not null or undefined
             assertParamExists('getSampledImages', 'projectId', projectId)
             const localVarPath = `/project/sampled-images/{project_id}`
@@ -908,11 +1286,11 @@ export const ProjectApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Delete a project
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteProject(projectId: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async deleteProject(projectId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteProject(projectId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -924,6 +1302,18 @@ export const ProjectApiFp = function(configuration?: Configuration) {
          */
         async getAllProjects(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageableResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAllProjects(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Get a list of user projects
+         * @summary Get all user projects
+         * @param {number} page 
+         * @param {number} limit 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllUserProjects(page: number, limit: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserProjectsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllUserProjects(page, limit, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -940,44 +1330,44 @@ export const ProjectApiFp = function(configuration?: Configuration) {
         /**
          * Get full media content metadata
          * @summary Get full media content metadata
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getMediaContent(projectId: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MediaContent>> {
+        async getMediaContent(projectId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MediaContent>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getMediaContent(projectId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Get a project by ID
          * @summary Get a project by ID
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getProjectById(projectId: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectDetail>> {
+        async getProjectById(projectId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectDetail>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectById(projectId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Get the progress of a pending job
          * @summary Get the progress of a pending job
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getProjectJobStatus(projectId: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectJobStatus>> {
+        async getProjectJobStatus(projectId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectJobStatus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectJobStatus(projectId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Get video sampled images
          * @summary Get video sampled images
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getSampledImages(projectId: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
+        async getSampledImages(projectId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSampledImages(projectId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1015,11 +1405,11 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Delete a project
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteProject(projectId: number, options?: any): AxiosPromise<GenericResponse> {
+        deleteProject(projectId: string, options?: any): AxiosPromise<GenericResponse> {
             return localVarFp.deleteProject(projectId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1030,6 +1420,17 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          */
         getAllProjects(options?: any): AxiosPromise<PageableResponse> {
             return localVarFp.getAllProjects(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get a list of user projects
+         * @summary Get all user projects
+         * @param {number} page 
+         * @param {number} limit 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllUserProjects(page: number, limit: number, options?: any): AxiosPromise<UserProjectsResponse> {
+            return localVarFp.getAllUserProjects(page, limit, options).then((request) => request(axios, basePath));
         },
         /**
          * Get OpenGraph preview of a video or audio link
@@ -1044,41 +1445,41 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
         /**
          * Get full media content metadata
          * @summary Get full media content metadata
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMediaContent(projectId: number, options?: any): AxiosPromise<MediaContent> {
+        getMediaContent(projectId: string, options?: any): AxiosPromise<MediaContent> {
             return localVarFp.getMediaContent(projectId, options).then((request) => request(axios, basePath));
         },
         /**
          * Get a project by ID
          * @summary Get a project by ID
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getProjectById(projectId: number, options?: any): AxiosPromise<ProjectDetail> {
+        getProjectById(projectId: string, options?: any): AxiosPromise<ProjectDetail> {
             return localVarFp.getProjectById(projectId, options).then((request) => request(axios, basePath));
         },
         /**
          * Get the progress of a pending job
          * @summary Get the progress of a pending job
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getProjectJobStatus(projectId: number, options?: any): AxiosPromise<ProjectJobStatus> {
+        getProjectJobStatus(projectId: string, options?: any): AxiosPromise<ProjectJobStatus> {
             return localVarFp.getProjectJobStatus(projectId, options).then((request) => request(axios, basePath));
         },
         /**
          * Get video sampled images
          * @summary Get video sampled images
-         * @param {number} projectId 
+         * @param {string} projectId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSampledImages(projectId: number, options?: any): AxiosPromise<Array<string>> {
+        getSampledImages(projectId: string, options?: any): AxiosPromise<Array<string>> {
             return localVarFp.getSampledImages(projectId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1116,12 +1517,12 @@ export class ProjectApi extends BaseAPI {
     /**
      * 
      * @summary Delete a project
-     * @param {number} projectId 
+     * @param {string} projectId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectApi
      */
-    public deleteProject(projectId: number, options?: any) {
+    public deleteProject(projectId: string, options?: any) {
         return ProjectApiFp(this.configuration).deleteProject(projectId, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1134,6 +1535,19 @@ export class ProjectApi extends BaseAPI {
      */
     public getAllProjects(options?: any) {
         return ProjectApiFp(this.configuration).getAllProjects(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get a list of user projects
+     * @summary Get all user projects
+     * @param {number} page 
+     * @param {number} limit 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public getAllUserProjects(page: number, limit: number, options?: any) {
+        return ProjectApiFp(this.configuration).getAllUserProjects(page, limit, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1151,48 +1565,48 @@ export class ProjectApi extends BaseAPI {
     /**
      * Get full media content metadata
      * @summary Get full media content metadata
-     * @param {number} projectId 
+     * @param {string} projectId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectApi
      */
-    public getMediaContent(projectId: number, options?: any) {
+    public getMediaContent(projectId: string, options?: any) {
         return ProjectApiFp(this.configuration).getMediaContent(projectId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Get a project by ID
      * @summary Get a project by ID
-     * @param {number} projectId 
+     * @param {string} projectId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectApi
      */
-    public getProjectById(projectId: number, options?: any) {
+    public getProjectById(projectId: string, options?: any) {
         return ProjectApiFp(this.configuration).getProjectById(projectId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Get the progress of a pending job
      * @summary Get the progress of a pending job
-     * @param {number} projectId 
+     * @param {string} projectId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectApi
      */
-    public getProjectJobStatus(projectId: number, options?: any) {
+    public getProjectJobStatus(projectId: string, options?: any) {
         return ProjectApiFp(this.configuration).getProjectJobStatus(projectId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Get video sampled images
      * @summary Get video sampled images
-     * @param {number} projectId 
+     * @param {string} projectId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectApi
      */
-    public getSampledImages(projectId: number, options?: any) {
+    public getSampledImages(projectId: string, options?: any) {
         return ProjectApiFp(this.configuration).getSampledImages(projectId, options).then((request) => request(this.axios, this.basePath));
     }
 

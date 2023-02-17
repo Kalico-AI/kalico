@@ -3493,12 +3493,26 @@ textarea:focus {
 .dashboard-container {
   padding-top: 100px;
 }
+.user-projects-container {
+  max-width: 95%;
+  margin: 0 auto;
+}
 .dashboard-container.editor {
   max-width: 792px;
   margin: 0 auto;
 }
 .dashboard-container.editor h3:focus {
   border: none;
+}
+.slate-editor-sticky-controls {
+  position: sticky;
+  bottom: 0;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  background: #ffffff;
+  width: 100%;
+  padding: 15px;
 }
 .slate-editor-box {
   padding: 10px;
