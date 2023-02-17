@@ -74,7 +74,7 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   )
 
   const throttleSave = useCallback(
-      debounce((value: Descendant[]) => saveToDb(value), 3000),
+      debounce((value: Descendant[]) => saveToDb(value), 15000),
       [],
   );
 
