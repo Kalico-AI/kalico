@@ -29,9 +29,10 @@ import {headerConfig} from "@/api/headerConfig";
 import {debounce} from "lodash";
 import SaveIcon from '@mui/icons-material/Save';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import EditIcon from '@mui/icons-material/Edit';
+import EditOffIcon from '@mui/icons-material/EditOff';
 import {toast, ToastContainer} from "react-toastify";
-import { pdf, PDFViewer } from '@react-pdf/renderer';
+import { pdf } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import PDFGenerator from "@/components/SlateEditor/PDFGenerator";
 
@@ -61,6 +62,11 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   const editorRef = useRef<HTMLElement>()
   const [content, setContent] = useState<Descendant[]>([])
   const [contentSaved, setContentSaved] = useState<boolean>(false)
+  const [readyOnly, setReadOnly] = useState<boolean>(true)
+
+  useEffect(() => {
+    props.setEditorRef(editorRef)
+  }, [editorRef !== undefined])
 
   const editor = useMemo(
       () => withImages(withLayout(withHistory(withReact(createEditor())))),
@@ -68,7 +74,7 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
   )
 
   const throttleSave = useCallback(
-      debounce((value: Descendant[]) => saveToDb(value), 3000),
+      debounce((value: Descendant[]) => saveToDb(value), 15000),
       [],
   );
 
@@ -93,19 +99,18 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
     }
   }
 
-
   const exportPdf = async () => {
     const blob = await pdf((<PDFGenerator content={contentSaved ? content : props.project.content as Descendant[]}/>))
     .toBlob();
     saveAs(blob, props.project.name + '.pdf');
   };
 
-  useEffect(() => {
-    props.setEditorRef(editorRef)
-  }, [editorRef !== undefined])
-
   const quickSaveToDb = () => {
     saveToDb(contentSaved ? content : props.project.content as Descendant[])
+    toast("Your changes have been saved", {
+      type: 'success',
+      position: toast.POSITION.TOP_CENTER
+    });
   }
 
 
@@ -128,6 +133,10 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
     setContent(content)
     setContentSaved(true)
     throttleSave(content);
+  }
+
+  const handleEdit = () => {
+    setReadOnly(!readyOnly)
   }
   // const isPdf = true
   // if (isPdf) {
@@ -167,15 +176,26 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
             id="editor-content"
             renderElement={renderElement}
             placeholder="Untitled"
-            spellCheck
-            autoFocus
+            spellCheck={true}
+            autoFocus={!readyOnly}
+            readOnly={readyOnly}
         />
       </Slate>
         <Box className="slate-editor-sticky-controls">
          <Grid container sx={{maxWidth: '400px', margin: '0 auto'}}>
-           <Grid item sm={6}>
+           <Grid item sm={4}>
              <Button
                  color="success"
+                 startIcon={readyOnly ? <EditIcon/> : <EditOffIcon/>}
+                 className="upgrade-button"
+                 size='large'
+                 variant='text'
+                 onClick={handleEdit}
+             >{readyOnly ? 'Edit' : 'Edit Off'}</Button>
+           </Grid>
+           <Grid item sm={4}>
+             <Button
+                 color="warning"
                  startIcon={<SaveIcon/>}
                  className="upgrade-button"
                  size='large'
@@ -193,7 +213,7 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
            {/*      onClick={exportPdf}*/}
            {/*  >Export</Button>*/}
            {/*</Grid>*/}
-           <Grid item sm={6}>
+           <Grid item sm={4}>
              <Button
                  color="secondary"
                  startIcon={<ContentCopyIcon/>}
