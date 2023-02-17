@@ -154,10 +154,10 @@ public class ProjectServiceImpl implements ProjectService {
   public GenericResponse updateProjectContent(
       UpdateProjectContentRequest updateProjectContentRequest) {
     if (updateProjectContentRequest != null &&
-        updateProjectContentRequest.getId() != null) {
+        updateProjectContentRequest.getProjectUid() != null) {
       String userId = securityFilter.getUser().getFirebaseId();
-      Optional<ProjectEntity> project = projectRepo.findProjectByUserIdAndProjectId(userId,
-          updateProjectContentRequest.getId());
+      Optional<ProjectEntity> project = projectRepo.findProjectByUserIdAndProjectUid(userId,
+          updateProjectContentRequest.getProjectUid());
       if (project.isPresent()) {
         ProjectEntity entity = project.get();
         entity.setUpdatedAt(LocalDateTime.now());
