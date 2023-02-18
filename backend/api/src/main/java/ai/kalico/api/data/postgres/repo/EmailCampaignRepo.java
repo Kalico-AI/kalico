@@ -1,7 +1,7 @@
 package ai.kalico.api.data.postgres.repo;
 
 
-import ai.kalico.api.data.postgres.entity.EmailTrackingEntity;
+import ai.kalico.api.data.postgres.entity.EmailCampaignEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,12 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public interface EmailTrackingRepo extends JpaRepository<EmailTrackingEntity, Long> {
-    List<EmailTrackingEntity> findByIpAddressAndCampaignId(String email, String campaignId);
-
+public interface EmailCampaignRepo extends JpaRepository<EmailCampaignEntity, Long> {
     @Query(value = "SELECT * " +
-        "FROM email_tracking " +
-        "ORDER BY updated_at DESC",
+        "FROM email_campaign " +
+        "ORDER BY created_at DESC",
         nativeQuery = true)
-    List<EmailTrackingEntity> findAllOrderByUpdatedAtDesc();
+    List<EmailCampaignEntity> findAllOrderByCreatedAtDesc();
 }

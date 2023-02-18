@@ -18,30 +18,34 @@ import lombok.Setter;
  */
 @Getter @Setter
 @Entity
-@Table(schema = "public", name = "email_tracking")
-public class EmailTrackingEntity {
+@Table(schema = "public", name = "email_campaign")
+public class EmailCampaignEntity {
 
     @Id
-    @SequenceGenerator(name="pk_sequence",sequenceName="email_tracking_id_seq", allocationSize=1)
-    @GeneratedValue(strategy=GenerationType.AUTO,generator="pk_email_tracking")
+    @SequenceGenerator(name="pk_sequence",sequenceName="email_campaign_id_seq", allocationSize=1)
+    @GeneratedValue(strategy=GenerationType.AUTO,generator="pk_email_campaign")
     @Column(name = "id")
     private Long id;
-
-    @Basic
-    @Column(name = "email")
-    private String email;
-
-    @Basic
-    @Column(name = "num_opened")
-    private Long numOpened = 0L;
 
     @Basic
     @Column(name = "campaign_id")
     private String campaignId;
 
     @Basic
-    @Column(name = "ip_address")
-    private String ipAddress;
+    @Column(name = "subject")
+    private String subject;
+
+    @Basic
+    @Column(name = "template")
+    private String template;
+
+    @Basic
+    @Column(name = "personalized_by_other")
+    private Boolean personalizedByOther = false;
+
+    @Basic
+    @Column(name = "personalized_by_name")
+    private Boolean personalizedByName = false;
 
     @Basic
     @Column(name = "updated_at")

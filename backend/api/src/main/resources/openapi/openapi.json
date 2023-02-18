@@ -16,6 +16,61 @@
     }
   ],
   "paths": {
+    "/campaigns/all": {
+      "get": {
+        "tags": [
+          "lead"
+        ],
+        "summary": "Get email campaign metrics",
+        "description": "Get email campaign metrics",
+        "operationId": "getEmailCampaignMetrics",
+        "responses": {
+          "200": {
+            "description": "Campaign metrics response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailCampaignMetrics"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaigns/create": {
+      "post": {
+        "tags": [
+          "lead"
+        ],
+        "summary": "Create an email campaign",
+        "description": "Create an email campaign",
+        "operationId": "createEmailCampaign",
+        "requestBody": {
+          "required": true,
+          "description": "Create campaign request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEmailCampaignRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create campaign response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user/": {
       "get": {
         "tags": [
@@ -438,6 +493,73 @@
       }
     },
     "schemas": {
+      "CreateEmailCampaignRequest": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          },
+          "personalized_by_name": {
+            "type": "boolean"
+          },
+          "personalized_by_other": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EmailCampaignMetrics": {
+        "type": "object",
+        "properties": {
+          "campaigns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailCampaign"
+            }
+          }
+        }
+      },
+      "EmailCampaign": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          },
+          "personalized_by_name": {
+            "type": "boolean"
+          },
+          "personalized_by_other": {
+            "type": "boolean"
+          },
+          "email_metric": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailMetric"
+            }
+          }
+        }
+      },
+      "EmailMetric": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "num_opened": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "last_opened_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "ContentPreviewResponse": {
         "type": "object",
         "properties": {

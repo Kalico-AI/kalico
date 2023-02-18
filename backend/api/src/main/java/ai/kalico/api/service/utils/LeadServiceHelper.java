@@ -32,16 +32,20 @@ public class LeadServiceHelper {
       String campaignId = tokens[1];
 
       EmailTrackingEntity entity = null;
-      List<EmailTrackingEntity> trackingEntities = emailTrackingRepo.findByEmailAndCampaignId(email, campaignId);
+      // Locate the existing tracked emails  by campaign id and ip address. We need to do the lookup
+      // using these two parameters so each device can only create a single record even if they're
+      // opening multiple emails for the same campaign. This is the case when we are opening the
+      // drafts and sending them.
+      List<EmailTrackingEntity> trackingEntities = emailTrackingRepo.findByIpAddressAndCampaignId(email, campaignId);
       if (!trackingEntities.isEmpty()) {
         entity = trackingEntities.get(0);
         entity.setUpdatedAt(LocalDateTime.now());
-        entity.setNumOpens(entity.getNumOpens() + 1);
+        entity.setNumOpened(entity.getNumOpened() + 1);
       } else {
         entity = new EmailTrackingEntity();
         entity.setCampaignId(campaignId);
         entity.setEmail(email);
-        entity.setNumOpens(1L);
+        entity.setNumOpened(1L);
       }
 
       if (ipAddress != null) {

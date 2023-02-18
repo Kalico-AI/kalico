@@ -1,6 +1,9 @@
 package ai.kalico.api.service.lead;
 
 import com.kalico.model.ChannelPageableResponse;
+import com.kalico.model.CreateEmailCampaignRequest;
+import com.kalico.model.EmailCampaignMetrics;
+import com.kalico.model.GenericResponse;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -31,5 +34,13 @@ public interface LeadService {
    * @return
    */
   byte[] getUserEmailImage(String imageHash, HttpServletRequest httpServletRequest);
+
+  /**
+   * Get email tracking metrics for client-side visualization
+   * @return
+   */
+  EmailCampaignMetrics getEmailCampaignMetrics();
+
+  GenericResponse createEmailCampaign(CreateEmailCampaignRequest createEmailCampaignRequest);
 
 }

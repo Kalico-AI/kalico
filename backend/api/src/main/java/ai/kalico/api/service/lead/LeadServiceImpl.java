@@ -3,11 +3,16 @@ package ai.kalico.api.service.lead;
 import static com.amazonaws.util.StringUtils.UTF8;
 
 import ai.kalico.api.RootConfiguration;
+import ai.kalico.api.data.postgres.entity.EmailCampaignEntity;
+import ai.kalico.api.data.postgres.entity.EmailTrackingEntity;
 import ai.kalico.api.data.postgres.entity.LeadsEntity;
+import ai.kalico.api.data.postgres.repo.EmailCampaignRepo;
+import ai.kalico.api.data.postgres.repo.EmailTrackingRepo;
 import ai.kalico.api.data.postgres.repo.LeadsRepo;
 import ai.kalico.api.props.IpAddressProps;
 import ai.kalico.api.props.YouTubeProps;
 import ai.kalico.api.props.ZenRowsProps;
+import ai.kalico.api.service.utils.KALUtils;
 import ai.kalico.api.service.utils.LeadServiceHelper;
 import ai.kalico.api.service.utils.ScraperUtils;
 import ai.kalico.api.service.youtubej.YoutubeDownloader;
@@ -20,6 +25,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ChannelPageableResponse;
+import com.kalico.model.CreateEmailCampaignRequest;
+import com.kalico.model.EmailCampaign;
+import com.kalico.model.EmailCampaignMetrics;
+import com.kalico.model.EmailMetric;
+import com.kalico.model.GenericResponse;
 import com.kalico.model.YouTubeChannelDetail;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -84,6 +94,8 @@ public class LeadServiceImpl implements LeadService {
   private final LeadsRepo leadsRepo;
   private final LeadServiceHelper leadServiceHelper;
   private final IpAddressProps ipAddressProps;
+  private final EmailTrackingRepo emailTrackingRepo;
+  private final EmailCampaignRepo emailCampaignRepo;
 
   private byte[] trackingImage;
 
@@ -150,6 +162,60 @@ public class LeadServiceImpl implements LeadService {
   public byte[] getUserEmailImage(String imageHash, HttpServletRequest httpServletRequest) {
     leadServiceHelper.logImageRequest(imageHash, getIp(httpServletRequest));
     return trackingImage;
+  }
+
+  @Override
+  public EmailCampaignMetrics getEmailCampaignMetrics() {
+    List<EmailTrackingEntity> entities = emailTrackingRepo.findAllOrderByUpdatedAtDesc();
+    List<EmailCampaignEntity> campaignEntities = emailCampaignRepo.findAllOrderByCreatedAtDesc();
+    // Group by campaign
+    Map<String, List<EmailTrackingEntity>> entityMap = new HashMap<>();
+    for (EmailTrackingEntity entity : entities) {
+      List<EmailTrackingEntity> values = entityMap.getOrDefault(entity.getCampaignId(), new ArrayList<>());
+      values.add(entity);
+      entityMap.put(entity.getCampaignId(), values);
+    }
+    EmailCampaignMetrics emailCampaignMetrics = new EmailCampaignMetrics();
+    for (EmailCampaignEntity campaignEntity : campaignEntities) {
+      // Iterate through the sorted list of campaigns and add metrics for all emails within that campaign
+      String campaignId = campaignEntity.getCampaignId();
+      if (entityMap.containsKey(campaignId)) {
+        // Get all the emails tracked for this campaign
+        List<EmailTrackingEntity> trackedEmails = entityMap.get(campaignId);
+        List<EmailMetric> emailMetrics = trackedEmails.stream().map(it -> new EmailMetric()
+                .email(it.getEmail())
+                .lastOpenedAt(it.getUpdatedAt()
+                .toEpochSecond(ZoneOffset.UTC)).numOpened(it.getNumOpened()))
+            .collect(Collectors.toList());
+        emailCampaignMetrics.addCampaignsItem(new EmailCampaign()
+            .emailMetric(emailMetrics)
+            .subject(campaignEntity.getSubject())
+            .template(campaignEntity.getTemplate())
+            .personalizedByName(campaignEntity.getPersonalizedByName())
+            .personalizedByOther(campaignEntity.getPersonalizedByOther()));
+      }
+
+
+    }
+    return emailCampaignMetrics;
+  }
+
+  @Override
+  public GenericResponse createEmailCampaign(
+      CreateEmailCampaignRequest createEmailCampaignRequest) {
+    if (!ObjectUtils.isEmpty(createEmailCampaignRequest.getSubject()) &&
+        !ObjectUtils.isEmpty(createEmailCampaignRequest.getTemplate())) {
+      EmailCampaignEntity entity = new EmailCampaignEntity();
+      entity.setCampaignId(KALUtils.generateUid());
+      entity.setSubject(createEmailCampaignRequest.getSubject());
+      entity.setTemplate(createEmailCampaignRequest.getTemplate());
+      entity.setPersonalizedByOther(createEmailCampaignRequest.getPersonalizedByOther());
+      entity.setPersonalizedByName(createEmailCampaignRequest.getPersonalizedByName());
+      emailCampaignRepo.save(entity);
+      log.info(this.getClass().getSimpleName()+ ".createEmailCampaign: Create a new email campaign with id={}",
+          entity.getCampaignId());
+    }
+    return new GenericResponse().status("OK");
   }
 
   @SneakyThrows
