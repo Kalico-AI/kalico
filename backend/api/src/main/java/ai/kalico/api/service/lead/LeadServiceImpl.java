@@ -5,6 +5,7 @@ import static com.amazonaws.util.StringUtils.UTF8;
 import ai.kalico.api.RootConfiguration;
 import ai.kalico.api.data.postgres.entity.LeadsEntity;
 import ai.kalico.api.data.postgres.repo.LeadsRepo;
+import ai.kalico.api.props.IpAddressProps;
 import ai.kalico.api.props.YouTubeProps;
 import ai.kalico.api.props.ZenRowsProps;
 import ai.kalico.api.service.utils.LeadServiceHelper;
@@ -34,6 +35,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,8 +49,10 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +83,7 @@ public class LeadServiceImpl implements LeadService {
   private final YouTubeProps youTubeProps;
   private final LeadsRepo leadsRepo;
   private final LeadServiceHelper leadServiceHelper;
+  private final IpAddressProps ipAddressProps;
 
   private byte[] trackingImage;
 
@@ -142,8 +147,8 @@ public class LeadServiceImpl implements LeadService {
   }
 
   @Override
-  public byte[] getUserEmailImage(String imageHash) {
-    leadServiceHelper.logImageRequest(imageHash);
+  public byte[] getUserEmailImage(String imageHash, HttpServletRequest httpServletRequest) {
+    leadServiceHelper.logImageRequest(imageHash, getIp(httpServletRequest));
     return trackingImage;
   }
 
@@ -545,6 +550,54 @@ public class LeadServiceImpl implements LeadService {
       }
     }
     return channels;
+  }
+
+  private Map<String, String> getRequestHeaders(HttpServletRequest httpServletRequest) {
+    // Normalize the headers by lower-casing all the keys
+    Map<String, String> normalized = new HashMap<>();
+    Enumeration<String> headers = httpServletRequest.getHeaderNames();
+    while (headers.hasMoreElements()) {
+      String header = headers.nextElement();
+      normalized.put(header.toLowerCase(), httpServletRequest.getHeader(header));
+    }
+    return normalized;
+  }
+
+  @Nullable
+  private String getIp(HttpServletRequest httpServletRequest) {
+    Map<String, String> normalizedHeaders = getRequestHeaders(httpServletRequest);
+    Set<String> possibleIpAddressKeys = ipAddressProps.getHeaders();
+    for (String header : possibleIpAddressKeys) {
+      String ipList = normalizedHeaders.get(header.toLowerCase());
+      if (!ObjectUtils.isEmpty(ipList)) {
+        try {
+          return ipList.split(",")[0];
+        } catch (Exception ex) {
+          log.error("RootConfiguration.getIp for ipList: {}, ex: {}"
+              , ipList
+              , ex.getLocalizedMessage());
+        }
+      }
+    }
+    // If the IP address is not set in any of the headers, then use the remote address
+    String remoteAddress = httpServletRequest.getRemoteAddr();
+
+    // Our own IP addresses are whitelisted so those must not be considered
+    if (!whitelisted(remoteAddress)) {
+      return remoteAddress;
+    }
+    return null;
+  }
+
+  private boolean whitelisted(String ipAddress) {
+    // Check if an IP address is whitelisted. Because of subnetting, we only want
+    // to check that the prefix
+    for (String whitelistIpPrefix : ipAddressProps.getWhitelist()) {
+      if (ipAddress.indexOf(whitelistIpPrefix) == 0) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private LeadsEntity mapDetailToEntity(YouTubeChannelDetail detail) {

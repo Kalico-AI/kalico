@@ -1,6 +1,7 @@
 package ai.kalico.api.service.lead;
 
 import com.kalico.model.ChannelPageableResponse;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Biz Melesse created on 2/5/23
@@ -29,6 +30,6 @@ public interface LeadService {
    * @param imageHash a Base64-encoded recipient email address
    * @return
    */
-  byte[] getUserEmailImage(String imageHash);
+  byte[] getUserEmailImage(String imageHash, HttpServletRequest httpServletRequest);
 
 }

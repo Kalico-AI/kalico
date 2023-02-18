@@ -3,6 +3,7 @@ package ai.kalico.api.controller;
 import ai.kalico.api.LeadApi;
 import ai.kalico.api.service.lead.LeadService;
 import com.kalico.model.ChannelPageableResponse;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LeadController implements LeadApi {
   private final LeadService leadService;
+  private final HttpServletRequest httpServletRequest;
 
   @Override
   public ResponseEntity<ChannelPageableResponse> getChannelInfo(String query) {
@@ -30,6 +32,6 @@ public class LeadController implements LeadApi {
   public ResponseEntity<byte[]> getUserEmailImage(String imageHash) {
     return ResponseEntity.status(HttpStatus.OK)
         .contentType(MediaType.IMAGE_PNG)
-        .body(leadService.getUserEmailImage(imageHash));
+        .body(leadService.getUserEmailImage(imageHash, httpServletRequest));
   }
 }
