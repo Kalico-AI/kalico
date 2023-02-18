@@ -16,11 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface EmailTrackingRepo extends JpaRepository<EmailTrackingEntity, Long> {
-    List<EmailTrackingEntity> findByIpAddressAndCampaignId(String email, String campaignId);
+    List<EmailTrackingEntity> findByEmailAndCampaignId(String email, String campaignId);
 
-    @Query(value = "SELECT * " +
-        "FROM email_tracking " +
-        "ORDER BY updated_at DESC",
+    @Query(value = "SELECT * "
+        + "FROM email_tracking "
+        + "WHERE num_opened >= ?1 "
+        + "ORDER BY updated_at DESC",
         nativeQuery = true)
-    List<EmailTrackingEntity> findAllOrderByUpdatedAtDesc();
+    List<EmailTrackingEntity> findAllOrderByUpdatedAtDesc(Long minOpenCount);
 }
