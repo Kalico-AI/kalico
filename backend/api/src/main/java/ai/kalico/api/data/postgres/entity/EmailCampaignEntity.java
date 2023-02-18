@@ -32,6 +32,10 @@ public class EmailCampaignEntity {
     private String campaignId;
 
     @Basic
+    @Column(name = "num_emails_sent")
+    private Long numEmailsSent;
+
+    @Basic
     @Column(name = "subject")
     private String subject;
 

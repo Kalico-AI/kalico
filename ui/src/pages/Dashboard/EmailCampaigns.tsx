@@ -9,6 +9,7 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import {
+  CardActionArea,
   CircularProgress,
   FormControlLabel,
   Radio,
@@ -21,6 +22,7 @@ import Tab from "@mui/material/Tab";
 import {EmailCampaign, LeadApi} from "@/api";
 import {AuthUserContext} from "next-firebase-auth";
 import {toast, ToastContainer} from "react-toastify";
+import {getFormattedDate} from "@/utils/utils";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -56,15 +58,16 @@ function a11yProps(index: number) {
 
 
 export interface EmailCampaignProps {
-  campaigns?: EmailCampaign[],
+  campaigns?: EmailCampaign[]
   user: AuthUserContext
 }
 
 
 const EmailCampaigns: FC<EmailCampaignProps> = (props) => {
-  const [tabIndex, setTabIndex] = React.useState(1);
+  const [tabIndex, setTabIndex] = React.useState(0);
   const [subject, setSubject] = useState<string>('')
   const [template, setTemplate] = useState<string>('')
+  const [numEmailsSent, setNumEmailsSent] = useState<number>(0)
   const [personalizedByName, setPersonalizedByName] = useState<boolean>(false)
   const [personalizedByOther, setPersonalizedByOther] = useState<boolean>(true)
 
@@ -80,6 +83,11 @@ const EmailCampaigns: FC<EmailCampaignProps> = (props) => {
   const handleSubjectChange = (e: any) => {
     e.preventDefault()
     setSubject(e.target.value)
+  }
+
+  const handleNumEmailsSentChange = (e: any) => {
+    e.preventDefault()
+    setNumEmailsSent(e.target.value)
   }
 
   const handleRadioChange = (e: any) => {
@@ -102,6 +110,7 @@ const EmailCampaigns: FC<EmailCampaignProps> = (props) => {
       leadApi.createEmailCampaign({
         subject: subject,
         template: template,
+        num_emails_sent: numEmailsSent,
         personalized_by_name: personalizedByName,
         personalized_by_other: personalizedByOther
       })
@@ -116,56 +125,99 @@ const EmailCampaigns: FC<EmailCampaignProps> = (props) => {
 
 
   return (
-      <section>
-        <ToastContainer
-            style={{width: '100%', maxWidth: '600px'}}
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="colored"/>
-      {props.campaigns ?
-          <>
-            <Box sx={{ width: '100%', pt: 10 }}>
-              <Box>
-                <Tabs value={tabIndex} onChange={handleTabChange} aria-label="basic tabs example">
-                  <Tab label="View Campaigns" {...a11yProps(0)} />
-                  <Tab label="Create Campaign" {...a11yProps(1)} />
-                </Tabs>
-              </Box>
-              <TabPanel value={tabIndex} index={0}>
-                <h1>hello</h1>
-              </TabPanel>
-              <TabPanel value={tabIndex} index={1}>
-                <Card sx={{maxWidth: '650px', margin: '0 auto', mt: 5}}>
-                  <CardHeader  titleTypographyProps={{ variant: 'h6' }} />
-                  <CardContent style={{padding: '0rem', marginLeft: '0rem'}}>
-                    <Grid container spacing={5}>
-                      <Grid item xs={12} >
-                        <Grid container spacing={5} sx={{p: 4}}>
+      <Grid container sx={{pt: 15}}  justifyContent='center' alignContent='center'>
+        <Grid item sm={12}>
+          <ToastContainer
+              style={{width: '100%', maxWidth: '600px'}}
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="colored"/>
+        </Grid>
+        <Grid item sm={12} alignItems='center'>
+          {props.campaigns ?
+              <>
+                  <Box>
+                    <Tabs value={tabIndex} onChange={handleTabChange}>
+                      <Tab label="View Campaigns" {...a11yProps(0)} />
+                      <Tab label="Create Campaign" {...a11yProps(1)} />
+                    </Tabs>
+                  </Box>
+                  <TabPanel value={tabIndex} index={0}>
+                    {props?.campaigns && props?.campaigns.map(it =>
+                        <Card sx={{ mb: 2 }} key={it.campaign_id}>
+                          <CardActionArea>
+                            <CardContent>
+                              <Typography gutterBottom variant="h5" component="div">
+                                Subject: {it.subject}
+                              </Typography>
+                              <Box>
+                                <Typography>
+                                  Campaign ID: {it.campaign_id}
+                                </Typography>
+                                <Typography>
+                                  Date Created: {getFormattedDate(it.date_created)}
+                                </Typography>
+                                <Typography>
+                                </Typography>
+                                <Typography>
+                                  Personalized by Name: {it.personalized_by_name ? 'true' : 'false'}
+                                </Typography>
+                                <Typography>
+                                  Personalized by Other: {it.personalized_by_other ? 'true': 'false'}
+                                </Typography>
+                                <Typography>
+                                  Number of Emails Sent: {it.num_emails_sent}
+                                </Typography>
+                                <Typography variant="h5" color="orange">
+                                  Open Rate: {it.open_rate}%
+                                </Typography>
+                              </Box>
+                            </CardContent>
+                          </CardActionArea>
+                        </Card>
+                    )}
+                  </TabPanel>
+                  <TabPanel value={tabIndex} index={1}>
+                    <Card sx={{maxWidth: '650px', margin: '0 auto', mt: 5}}>
+                      <CardHeader  titleTypographyProps={{ variant: 'h6' }} />
+                      <CardContent style={{padding: '0rem', marginLeft: '0rem'}}>
+                        <Grid container spacing={5}>
+                          <Grid item xs={12} >
+                            <Grid container spacing={5} sx={{p: 4}}>
                               <Grid item xs={12} sm={12}>
                                 <TextField
                                     onChange={handleSubjectChange}
-                                    fullWidth label='Subject'
-                                    placeholder='Subject'
+                                    fullWidth
+                                    label='Email Subject'
+                                    placeholder='Email Subject'
                                     value={subject} />
                               </Grid>
-                          <Grid item xs={12} sm={12}>
-                            <RadioGroup
-                                aria-labelledby="dradio-buttons-group-label"
-                                defaultValue="by_other"
-                                name="radio-buttons-group"
-                                onChange={handleRadioChange}
-                            >
-                              <FormControlLabel value="by_other" control={<Radio />} label="Customized by Other" />
-                              <FormControlLabel value="by_name" control={<Radio />} label="Customized by Name" />
-                            </RadioGroup>
-                          </Grid>
+                              <Grid item xs={12} sm={12}>
+                                <TextField
+                                    onChange={handleNumEmailsSentChange}
+                                    label='Number of Emails to be Sent'
+                                    type="number"
+                                    placeholder='0'
+                                    value={numEmailsSent} />
+                              </Grid>
+                              <Grid item xs={12} sm={12}>
+                                <RadioGroup
+                                    aria-labelledby="dradio-buttons-group-label"
+                                    defaultValue="by_other"
+                                    name="radio-buttons-group"
+                                    onChange={handleRadioChange}
+                                >
+                                  <FormControlLabel value="by_other" control={<Radio />} label="Customized by Other" />
+                                  <FormControlLabel value="by_name" control={<Radio />} label="Customized by Name" />
+                                </RadioGroup>
+                              </Grid>
                               <Grid item xs={12}>
                                 <Box >
                                   <TextareaAutosize
@@ -177,36 +229,36 @@ const EmailCampaigns: FC<EmailCampaignProps> = (props) => {
                                 </Box>
                               </Grid>
                             </Grid>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                        onClick={handleCreateCampaign}
-                        size='large'
-                        type='submit'
-                        sx={{ mr: 2 }}
-                        variant='contained'>
-                      Create
-                    </Button>
-                  </CardActions>
-                </Card>
-              </TabPanel>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                      <CardActions>
+                        <Button
+                            onClick={handleCreateCampaign}
+                            size='large'
+                            type='submit'
+                            sx={{ mr: 2 }}
+                            variant='contained'>
+                          Create
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </TabPanel>
+              </> :
 
-            </Box>
-          </> :
+              <Box
+                  justifyContent="center"
+                  alignContent="center"
+                  display="flex"
+                  sx={{
+                    mb: '2rem'
+                  }}>
+                <CircularProgress color="primary" />
+              </Box>
+          }
+        </Grid>
 
-        <Box
-          justifyContent="center"
-          alignContent="center"
-          display="flex"
-          sx={{
-            mb: '2rem'
-          }}>
-          <CircularProgress color="primary" />
-        </Box>
-      }
-      </section>
+      </Grid>
   )
 }
 

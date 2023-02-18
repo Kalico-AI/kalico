@@ -36,7 +36,7 @@ public class LeadServiceHelper {
       // using these two parameters so each device can only create a single record even if they're
       // opening multiple emails for the same campaign. This is the case when we are opening the
       // drafts and sending them.
-      List<EmailTrackingEntity> trackingEntities = emailTrackingRepo.findByIpAddressAndCampaignId(email, campaignId);
+      List<EmailTrackingEntity> trackingEntities = emailTrackingRepo.findByIpAddressAndCampaignId(ipAddress, campaignId);
       if (!trackingEntities.isEmpty()) {
         entity = trackingEntities.get(0);
         entity.setUpdatedAt(LocalDateTime.now());

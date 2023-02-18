@@ -499,6 +499,10 @@
           "subject": {
             "type": "string"
           },
+          "num_emails_sent": {
+            "type": "integer",
+            "format": "int64"
+          },
           "template": {
             "type": "string"
           },
@@ -524,11 +528,25 @@
       "EmailCampaign": {
         "type": "object",
         "properties": {
+          "campaign_id": {
+            "type": "string"
+          },
           "subject": {
             "type": "string"
           },
           "template": {
             "type": "string"
+          },
+          "num_emails_sent": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "open_rate": {
+            "type": "number"
+          },
+          "date_created": {
+            "type": "integer",
+            "format": "int64"
           },
           "personalized_by_name": {
             "type": "boolean"

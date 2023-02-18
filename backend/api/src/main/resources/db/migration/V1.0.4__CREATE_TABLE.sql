@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS public.email_campaign (
     subject varchar(255),
     template varchar,
     campaign_id varchar(255) NOT NULL,
+    num_emails_sent bigint NOT NULL default 0,
     personalized_by_name boolean NOT NULL default false,
     personalized_by_other boolean NOT NULL default false,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,

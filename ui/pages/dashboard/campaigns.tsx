@@ -48,9 +48,10 @@ const CampaignsIndex: FC<ProjectIndexProps> =  (_props) => {
           <Head>
             <title>Kalico | Email Campaigns </title>
           </Head>
-            <div className="user-projects-container">
-              <EmailCampaigns campaigns={emailCampaigns} user={user}/>
-            </div>
+          <div style={{maxWidth: '650px', margin: '0 auto'}}>
+            <EmailCampaigns campaigns={emailCampaigns} user={user}/>
+          </div>
+
         </>
     );
 }

@@ -39,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -197,6 +198,10 @@ public class LeadServiceImpl implements LeadService {
                       .toEpochSecond(ZoneOffset.UTC)).numOpened(it.getNumOpened()))
               .collect(Collectors.toList());
           emailCampaignMetrics.addCampaignsItem(new EmailCampaign()
+              .campaignId(campaignId)
+              .dateCreated(campaignEntity.getCreatedAt().toEpochSecond(ZoneOffset.UTC))
+              .numEmailsSent(campaignEntity.getNumEmailsSent())
+              .openRate(getOpenRate(emailMetrics.size(), campaignEntity.getNumEmailsSent()))
               .emailMetric(emailMetrics)
               .subject(campaignEntity.getSubject())
               .template(campaignEntity.getTemplate())
@@ -208,6 +213,15 @@ public class LeadServiceImpl implements LeadService {
     return emailCampaignMetrics;
   }
 
+  private BigDecimal getOpenRate(int numOpened, Long numEmailsSent) {
+    if (numEmailsSent > 0) {
+      double percent = numOpened / (numEmailsSent * 1.0) * 100;
+      return BigDecimal.valueOf(Math.round(percent * 100) / 100.0);
+    }
+    return BigDecimal.valueOf(0);
+  }
+
+
   @Override
   public GenericResponse createEmailCampaign(
       CreateEmailCampaignRequest createEmailCampaignRequest) {
@@ -218,6 +232,7 @@ public class LeadServiceImpl implements LeadService {
       entity.setSubject(createEmailCampaignRequest.getSubject());
       entity.setTemplate(createEmailCampaignRequest.getTemplate());
       entity.setPersonalizedByOther(createEmailCampaignRequest.getPersonalizedByOther());
+      entity.setNumEmailsSent(createEmailCampaignRequest.getNumEmailsSent());
       entity.setPersonalizedByName(createEmailCampaignRequest.getPersonalizedByName());
       emailCampaignRepo.save(entity);
       log.info(this.getClass().getSimpleName()+ ".createEmailCampaign: Create a new email campaign with id={}",

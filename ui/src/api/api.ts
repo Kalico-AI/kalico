@@ -123,6 +123,12 @@ export interface CreateEmailCampaignRequest {
     subject?: string;
     /**
      * 
+     * @type {number}
+     * @memberof CreateEmailCampaignRequest
+     */
+    num_emails_sent?: number;
+    /**
+     * 
      * @type {string}
      * @memberof CreateEmailCampaignRequest
      */
@@ -231,6 +237,12 @@ export interface EmailCampaign {
      * @type {string}
      * @memberof EmailCampaign
      */
+    campaign_id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EmailCampaign
+     */
     subject?: string;
     /**
      * 
@@ -238,6 +250,24 @@ export interface EmailCampaign {
      * @memberof EmailCampaign
      */
     template?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof EmailCampaign
+     */
+    num_emails_sent?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof EmailCampaign
+     */
+    open_rate?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof EmailCampaign
+     */
+    date_created?: number;
     /**
      * 
      * @type {boolean}
