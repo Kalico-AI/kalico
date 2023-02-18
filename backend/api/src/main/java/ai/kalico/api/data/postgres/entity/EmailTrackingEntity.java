@@ -33,7 +33,7 @@ public class EmailTrackingEntity {
 
     @Basic
     @Column(name = "num_opened")
-    private Long numOpened = 0L;
+    private Long numOpened = 1L;
 
     @Basic
     @Column(name = "campaign_id")

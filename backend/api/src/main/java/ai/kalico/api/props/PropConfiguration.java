@@ -27,7 +27,8 @@ import org.springframework.context.annotation.Configuration;
     YouTubeProps.class,
     WhisperProps.class,
     UserProps.class,
-    IpAddressProps.class
+    IpAddressProps.class,
+    LeadsProps.class
 })
 public class PropConfiguration {
 }

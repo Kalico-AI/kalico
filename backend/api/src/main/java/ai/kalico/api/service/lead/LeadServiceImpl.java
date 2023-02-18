@@ -10,6 +10,7 @@ import ai.kalico.api.data.postgres.repo.EmailCampaignRepo;
 import ai.kalico.api.data.postgres.repo.EmailTrackingRepo;
 import ai.kalico.api.data.postgres.repo.LeadsRepo;
 import ai.kalico.api.props.IpAddressProps;
+import ai.kalico.api.props.LeadsProps;
 import ai.kalico.api.props.UserProps;
 import ai.kalico.api.props.YouTubeProps;
 import ai.kalico.api.props.ZenRowsProps;
@@ -101,6 +102,7 @@ public class LeadServiceImpl implements LeadService {
   private final EmailCampaignRepo emailCampaignRepo;
   private final SecurityFilter securityFilter;
   private final UserProps userProps;
+  private final LeadsProps leadsProps;
 
   private byte[] trackingImage;
 
@@ -176,37 +178,40 @@ public class LeadServiceImpl implements LeadService {
 
     // Only admins are allowed to view campaign metrics
     if (userProps.getAdminEmails().contains(email)) {
-      List<EmailTrackingEntity> entities = emailTrackingRepo.findAllOrderByUpdatedAtDesc();
-      List<EmailCampaignEntity> campaignEntities = emailCampaignRepo.findAllOrderByCreatedAtDesc();
-      // Group by campaign
-      Map<String, List<EmailTrackingEntity>> entityMap = new HashMap<>();
-      for (EmailTrackingEntity entity : entities) {
-        List<EmailTrackingEntity> values = entityMap.getOrDefault(entity.getCampaignId(),
-            new ArrayList<>());
-        values.add(entity);
-        entityMap.put(entity.getCampaignId(), values);
-      }
-      for (EmailCampaignEntity campaignEntity : campaignEntities) {
-        // Iterate through the sorted list of campaigns and add metrics for all emails within that campaign
-        String campaignId = campaignEntity.getCampaignId();
-        if (entityMap.containsKey(campaignId)) {
-          // Get all the emails tracked for this campaign
-          List<EmailTrackingEntity> trackedEmails = entityMap.get(campaignId);
-          List<EmailMetric> emailMetrics = trackedEmails.stream().map(it -> new EmailMetric()
-                  .email(it.getEmail())
-                  .lastOpenedAt(it.getUpdatedAt()
-                      .toEpochSecond(ZoneOffset.UTC)).numOpened(it.getNumOpened()))
-              .collect(Collectors.toList());
-          emailCampaignMetrics.addCampaignsItem(new EmailCampaign()
-              .campaignId(campaignId)
-              .dateCreated(campaignEntity.getCreatedAt().toEpochSecond(ZoneOffset.UTC))
-              .numEmailsSent(campaignEntity.getNumEmailsSent())
-              .openRate(getOpenRate(emailMetrics.size(), campaignEntity.getNumEmailsSent()))
-              .emailMetric(emailMetrics)
-              .subject(campaignEntity.getSubject())
-              .template(campaignEntity.getTemplate())
-              .personalizedByName(campaignEntity.getPersonalizedByName())
-              .personalizedByOther(campaignEntity.getPersonalizedByOther()));
+      List<EmailTrackingEntity> entities = emailTrackingRepo
+          .findAllOrderByUpdatedAtDesc(leadsProps.getMinOpenCount());
+      if (entities.size() > 0) {
+        List<EmailCampaignEntity> campaignEntities = emailCampaignRepo.findAllOrderByCreatedAtDesc();
+        // Group by campaign
+        Map<String, List<EmailTrackingEntity>> entityMap = new HashMap<>();
+        for (EmailTrackingEntity entity : entities) {
+          List<EmailTrackingEntity> values = entityMap.getOrDefault(entity.getCampaignId(),
+              new ArrayList<>());
+          values.add(entity);
+          entityMap.put(entity.getCampaignId(), values);
+        }
+        for (EmailCampaignEntity campaignEntity : campaignEntities) {
+          // Iterate through the sorted list of campaigns and add metrics for all emails within that campaign
+          String campaignId = campaignEntity.getCampaignId();
+          if (entityMap.containsKey(campaignId)) {
+            // Get all the emails tracked for this campaign
+            List<EmailTrackingEntity> trackedEmails = entityMap.get(campaignId);
+            List<EmailMetric> emailMetrics = trackedEmails.stream().map(it -> new EmailMetric()
+                    .email(it.getEmail())
+                    .lastOpenedAt(it.getUpdatedAt()
+                        .toEpochSecond(ZoneOffset.UTC)).numOpened(it.getNumOpened()))
+                .collect(Collectors.toList());
+            emailCampaignMetrics.addCampaignsItem(new EmailCampaign()
+                .campaignId(campaignId)
+                .dateCreated(campaignEntity.getCreatedAt().toEpochSecond(ZoneOffset.UTC))
+                .numEmailsSent(campaignEntity.getNumEmailsSent())
+                .openRate(getOpenRate(emailMetrics.size(), campaignEntity.getNumEmailsSent()))
+                .emailMetric(emailMetrics)
+                .subject(campaignEntity.getSubject())
+                .template(campaignEntity.getTemplate())
+                .personalizedByName(campaignEntity.getPersonalizedByName())
+                .personalizedByOther(campaignEntity.getPersonalizedByOther()));
+          }
         }
       }
     }
