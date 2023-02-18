@@ -394,6 +394,39 @@
           }
         }
       }
+    },
+    "/lead/image/{image_hash}": {
+      "get": {
+        "tags": [
+          "lead"
+        ],
+        "summary": "Get user image",
+        "description": "Get user image",
+        "operationId": "getUserEmailImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "image_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

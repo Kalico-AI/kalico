@@ -5,6 +5,9 @@ import ai.kalico.api.service.lead.LeadService;
 import com.kalico.model.ChannelPageableResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,5 +24,12 @@ public class LeadController implements LeadApi {
   @Override
   public ResponseEntity<ChannelPageableResponse> getChannelInfo(String query) {
     return ResponseEntity.ok(leadService.getChannelInfo(query));
+  }
+
+  @Override
+  public ResponseEntity<byte[]> getUserEmailImage(String imageHash) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .contentType(MediaType.IMAGE_PNG)
+        .body(leadService.getUserEmailImage(imageHash));
   }
 }

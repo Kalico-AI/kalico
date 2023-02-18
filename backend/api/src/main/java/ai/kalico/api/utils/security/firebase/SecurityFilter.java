@@ -84,7 +84,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (IllegalArgumentException | FirebaseAuthException e) {
-            log.error("Authentication Error: {}", e.getLocalizedMessage());
+            log.error("SecurityFilter.verifyToken Authentication Error: {}", e.getLocalizedMessage());
         }
     }
 

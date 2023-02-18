@@ -26,7 +26,8 @@ import org.springframework.context.annotation.Configuration;
     OpenAiProps.class,
     YouTubeProps.class,
     WhisperProps.class,
-    UserProps.class
+    UserProps.class,
+    IpAddressProps.class
 })
 public class PropConfiguration {
 }

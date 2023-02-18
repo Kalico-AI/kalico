@@ -7,6 +7,7 @@ import ai.kalico.api.data.postgres.entity.LeadsEntity;
 import ai.kalico.api.data.postgres.repo.LeadsRepo;
 import ai.kalico.api.props.YouTubeProps;
 import ai.kalico.api.props.ZenRowsProps;
+import ai.kalico.api.service.utils.LeadServiceHelper;
 import ai.kalico.api.service.utils.ScraperUtils;
 import ai.kalico.api.service.youtubej.YoutubeDownloader;
 import ai.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
@@ -19,15 +20,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ChannelPageableResponse;
 import com.kalico.model.YouTubeChannelDetail;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
@@ -47,6 +47,8 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -76,6 +78,37 @@ public class LeadServiceImpl implements LeadService {
   private final ZenRowsProps zenRowsProps;
   private final YouTubeProps youTubeProps;
   private final LeadsRepo leadsRepo;
+  private final LeadServiceHelper leadServiceHelper;
+
+  private byte[] trackingImage;
+
+  @SneakyThrows
+  @PostConstruct
+  public void loadEmailTrackingImage() {
+    int width = 1;
+    int height = 1;
+    BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    //create random image pixel by pixel
+    for(int y = 0; y < height; y++){
+      for(int x = 0; x < width; x++){
+        int a = 0; //alpha
+        int r = 256; //red
+        int g = 256; //green
+        int b = 256; //blue
+
+        int p = (a<<24) | (r<<16) | (g<<8) | b; //pixel
+        img.setRGB(x, y, p);
+      }
+    }
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    try {
+      ImageIO.write(img, "png", baos);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    trackingImage = baos.toByteArray();
+  }
+
   @Override
   public ChannelPageableResponse getChannelInfo(String query) {
     Response<SearchResult> response = youtubeDownloader.search(
@@ -106,6 +139,12 @@ public class LeadServiceImpl implements LeadService {
     return new ChannelPageableResponse()
         .count(0)
         .records(new ArrayList<>());
+  }
+
+  @Override
+  public byte[] getUserEmailImage(String imageHash) {
+    leadServiceHelper.logImageRequest(imageHash);
+    return trackingImage;
   }
 
   @SneakyThrows
