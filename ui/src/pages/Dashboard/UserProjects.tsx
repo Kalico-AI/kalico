@@ -46,7 +46,7 @@ export interface UserProjectProps {
 const UserProjects: FC<UserProjectProps> = observer((props) => {
   const [userProjects, setUserProjects] = useState<UserProjectsResponse | undefined>(undefined)
   const [previews, setPreviews] = useState<{}>({})
-  const [urls, setUrls] = useState<[]>([])
+  const [urls, setUrls] = useState<string[]>([])
   const [previewsRequested, setPreviewsRequested] = useState<boolean>(false)
   const store = useStore()
 
@@ -54,7 +54,7 @@ const UserProjects: FC<UserProjectProps> = observer((props) => {
   useEffect(() => {
     setUserProjects(props.userProjects)
     if (props.userProjects?.records) {
-      const uniqueUrls = []
+      const uniqueUrls: string [] = []
       for (let i = 0; i < props.userProjects.records.length; i++) {
         const url = props.userProjects.records[i].content_url
         if (!uniqueUrls.includes(url)) {
@@ -100,13 +100,17 @@ const UserProjects: FC<UserProjectProps> = observer((props) => {
   const getProjectUrl = (projectUid: string) => {
     return PATHS.PROJECT + '/' + projectUid + "?editable=false"
   }
+
+  const getUserCount = () => {
+    return userProjects?.num_users ? userProjects?.num_users : 0
+  }
   return (
       <section>
         <Box sx={{pb: 1, pt: 10}}>
          <Box sx={{
            p: 2
          }}>
-           <Chip label={"Total users: " + userProjects?.num_users} color="success" />
+           <Chip label={"Total users: " + getUserCount()} color="success" />
          </Box>
         </Box>
         <Box sx={{pb: 15}}>

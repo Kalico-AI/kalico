@@ -3,10 +3,18 @@ package ai.kalico.api.service.lead;
 import static com.amazonaws.util.StringUtils.UTF8;
 
 import ai.kalico.api.RootConfiguration;
+import ai.kalico.api.data.postgres.entity.EmailCampaignEntity;
+import ai.kalico.api.data.postgres.entity.EmailTrackingEntity;
 import ai.kalico.api.data.postgres.entity.LeadsEntity;
+import ai.kalico.api.data.postgres.repo.EmailCampaignRepo;
+import ai.kalico.api.data.postgres.repo.EmailTrackingRepo;
 import ai.kalico.api.data.postgres.repo.LeadsRepo;
+import ai.kalico.api.props.IpAddressProps;
+import ai.kalico.api.props.UserProps;
 import ai.kalico.api.props.YouTubeProps;
 import ai.kalico.api.props.ZenRowsProps;
+import ai.kalico.api.service.utils.KALUtils;
+import ai.kalico.api.service.utils.LeadServiceHelper;
 import ai.kalico.api.service.utils.ScraperUtils;
 import ai.kalico.api.service.youtubej.YoutubeDownloader;
 import ai.kalico.api.service.youtubej.downloader.request.RequestSearchContinuation;
@@ -14,26 +22,33 @@ import ai.kalico.api.service.youtubej.downloader.request.RequestSearchResult;
 import ai.kalico.api.service.youtubej.downloader.response.Response;
 import ai.kalico.api.service.youtubej.model.search.SearchResult;
 import ai.kalico.api.service.youtubej.model.search.SearchResultItem;
+import ai.kalico.api.utils.security.firebase.SecurityFilter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ChannelPageableResponse;
+import com.kalico.model.CreateEmailCampaignRequest;
+import com.kalico.model.EmailCampaign;
+import com.kalico.model.EmailCampaignMetrics;
+import com.kalico.model.EmailMetric;
+import com.kalico.model.GenericResponse;
 import com.kalico.model.YouTubeChannelDetail;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,6 +62,10 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -76,6 +95,42 @@ public class LeadServiceImpl implements LeadService {
   private final ZenRowsProps zenRowsProps;
   private final YouTubeProps youTubeProps;
   private final LeadsRepo leadsRepo;
+  private final LeadServiceHelper leadServiceHelper;
+  private final IpAddressProps ipAddressProps;
+  private final EmailTrackingRepo emailTrackingRepo;
+  private final EmailCampaignRepo emailCampaignRepo;
+  private final SecurityFilter securityFilter;
+  private final UserProps userProps;
+
+  private byte[] trackingImage;
+
+  @SneakyThrows
+  @PostConstruct
+  public void loadEmailTrackingImage() {
+    int width = 1;
+    int height = 1;
+    BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    //create random image pixel by pixel
+    for(int y = 0; y < height; y++){
+      for(int x = 0; x < width; x++){
+        int a = 0; //alpha
+        int r = 256; //red
+        int g = 256; //green
+        int b = 256; //blue
+
+        int p = (a<<24) | (r<<16) | (g<<8) | b; //pixel
+        img.setRGB(x, y, p);
+      }
+    }
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    try {
+      ImageIO.write(img, "png", baos);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    trackingImage = baos.toByteArray();
+  }
+
   @Override
   public ChannelPageableResponse getChannelInfo(String query) {
     Response<SearchResult> response = youtubeDownloader.search(
@@ -106,6 +161,84 @@ public class LeadServiceImpl implements LeadService {
     return new ChannelPageableResponse()
         .count(0)
         .records(new ArrayList<>());
+  }
+
+  @Override
+  public byte[] getUserEmailImage(String imageHash, HttpServletRequest httpServletRequest) {
+    leadServiceHelper.logImageRequest(imageHash, getIp(httpServletRequest));
+    return trackingImage;
+  }
+
+  @Override
+  public EmailCampaignMetrics getEmailCampaignMetrics() {
+    String email = securityFilter.getUser().getEmail();
+    EmailCampaignMetrics emailCampaignMetrics = new EmailCampaignMetrics();
+
+    // Only admins are allowed to view campaign metrics
+    if (userProps.getAdminEmails().contains(email)) {
+      List<EmailTrackingEntity> entities = emailTrackingRepo.findAllOrderByUpdatedAtDesc();
+      List<EmailCampaignEntity> campaignEntities = emailCampaignRepo.findAllOrderByCreatedAtDesc();
+      // Group by campaign
+      Map<String, List<EmailTrackingEntity>> entityMap = new HashMap<>();
+      for (EmailTrackingEntity entity : entities) {
+        List<EmailTrackingEntity> values = entityMap.getOrDefault(entity.getCampaignId(),
+            new ArrayList<>());
+        values.add(entity);
+        entityMap.put(entity.getCampaignId(), values);
+      }
+      for (EmailCampaignEntity campaignEntity : campaignEntities) {
+        // Iterate through the sorted list of campaigns and add metrics for all emails within that campaign
+        String campaignId = campaignEntity.getCampaignId();
+        if (entityMap.containsKey(campaignId)) {
+          // Get all the emails tracked for this campaign
+          List<EmailTrackingEntity> trackedEmails = entityMap.get(campaignId);
+          List<EmailMetric> emailMetrics = trackedEmails.stream().map(it -> new EmailMetric()
+                  .email(it.getEmail())
+                  .lastOpenedAt(it.getUpdatedAt()
+                      .toEpochSecond(ZoneOffset.UTC)).numOpened(it.getNumOpened()))
+              .collect(Collectors.toList());
+          emailCampaignMetrics.addCampaignsItem(new EmailCampaign()
+              .campaignId(campaignId)
+              .dateCreated(campaignEntity.getCreatedAt().toEpochSecond(ZoneOffset.UTC))
+              .numEmailsSent(campaignEntity.getNumEmailsSent())
+              .openRate(getOpenRate(emailMetrics.size(), campaignEntity.getNumEmailsSent()))
+              .emailMetric(emailMetrics)
+              .subject(campaignEntity.getSubject())
+              .template(campaignEntity.getTemplate())
+              .personalizedByName(campaignEntity.getPersonalizedByName())
+              .personalizedByOther(campaignEntity.getPersonalizedByOther()));
+        }
+      }
+    }
+    return emailCampaignMetrics;
+  }
+
+  private BigDecimal getOpenRate(int numOpened, Long numEmailsSent) {
+    if (numEmailsSent > 0) {
+      double percent = numOpened / (numEmailsSent * 1.0) * 100;
+      return BigDecimal.valueOf(Math.round(percent * 100) / 100.0);
+    }
+    return BigDecimal.valueOf(0);
+  }
+
+
+  @Override
+  public GenericResponse createEmailCampaign(
+      CreateEmailCampaignRequest createEmailCampaignRequest) {
+    if (!ObjectUtils.isEmpty(createEmailCampaignRequest.getSubject()) &&
+        !ObjectUtils.isEmpty(createEmailCampaignRequest.getTemplate())) {
+      EmailCampaignEntity entity = new EmailCampaignEntity();
+      entity.setCampaignId(KALUtils.generateUid());
+      entity.setSubject(createEmailCampaignRequest.getSubject());
+      entity.setTemplate(createEmailCampaignRequest.getTemplate());
+      entity.setPersonalizedByOther(createEmailCampaignRequest.getPersonalizedByOther());
+      entity.setNumEmailsSent(createEmailCampaignRequest.getNumEmailsSent());
+      entity.setPersonalizedByName(createEmailCampaignRequest.getPersonalizedByName());
+      emailCampaignRepo.save(entity);
+      log.info(this.getClass().getSimpleName()+ ".createEmailCampaign: Create a new email campaign with id={}",
+          entity.getCampaignId());
+    }
+    return new GenericResponse().status("OK");
   }
 
   @SneakyThrows
@@ -506,6 +639,54 @@ public class LeadServiceImpl implements LeadService {
       }
     }
     return channels;
+  }
+
+  private Map<String, String> getRequestHeaders(HttpServletRequest httpServletRequest) {
+    // Normalize the headers by lower-casing all the keys
+    Map<String, String> normalized = new HashMap<>();
+    Enumeration<String> headers = httpServletRequest.getHeaderNames();
+    while (headers.hasMoreElements()) {
+      String header = headers.nextElement();
+      normalized.put(header.toLowerCase(), httpServletRequest.getHeader(header));
+    }
+    return normalized;
+  }
+
+  @Nullable
+  private String getIp(HttpServletRequest httpServletRequest) {
+    Map<String, String> normalizedHeaders = getRequestHeaders(httpServletRequest);
+    Set<String> possibleIpAddressKeys = ipAddressProps.getHeaders();
+    for (String header : possibleIpAddressKeys) {
+      String ipList = normalizedHeaders.get(header.toLowerCase());
+      if (!ObjectUtils.isEmpty(ipList)) {
+        try {
+          return ipList.split(",")[0];
+        } catch (Exception ex) {
+          log.error("RootConfiguration.getIp for ipList: {}, ex: {}"
+              , ipList
+              , ex.getLocalizedMessage());
+        }
+      }
+    }
+    // If the IP address is not set in any of the headers, then use the remote address
+    String remoteAddress = httpServletRequest.getRemoteAddr();
+
+    // Our own IP addresses are whitelisted so those must not be considered
+    if (!whitelisted(remoteAddress)) {
+      return remoteAddress;
+    }
+    return null;
+  }
+
+  private boolean whitelisted(String ipAddress) {
+    // Check if an IP address is whitelisted. Because of subnetting, we only want
+    // to check that the prefix
+    for (String whitelistIpPrefix : ipAddressProps.getWhitelist()) {
+      if (ipAddress.indexOf(whitelistIpPrefix) == 0) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private LeadsEntity mapDetailToEntity(YouTubeChannelDetail detail) {

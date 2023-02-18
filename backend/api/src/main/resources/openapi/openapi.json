@@ -16,6 +16,61 @@
     }
   ],
   "paths": {
+    "/campaigns/all": {
+      "get": {
+        "tags": [
+          "lead"
+        ],
+        "summary": "Get email campaign metrics",
+        "description": "Get email campaign metrics",
+        "operationId": "getEmailCampaignMetrics",
+        "responses": {
+          "200": {
+            "description": "Campaign metrics response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailCampaignMetrics"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaigns/create": {
+      "post": {
+        "tags": [
+          "lead"
+        ],
+        "summary": "Create an email campaign",
+        "description": "Create an email campaign",
+        "operationId": "createEmailCampaign",
+        "requestBody": {
+          "required": true,
+          "description": "Create campaign request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEmailCampaignRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create campaign response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user/": {
       "get": {
         "tags": [
@@ -394,6 +449,39 @@
           }
         }
       }
+    },
+    "/lead/image/{image_hash}": {
+      "get": {
+        "tags": [
+          "lead"
+        ],
+        "summary": "Get user image",
+        "description": "Get user image",
+        "operationId": "getUserEmailImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "image_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -405,6 +493,91 @@
       }
     },
     "schemas": {
+      "CreateEmailCampaignRequest": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "num_emails_sent": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "template": {
+            "type": "string"
+          },
+          "personalized_by_name": {
+            "type": "boolean"
+          },
+          "personalized_by_other": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EmailCampaignMetrics": {
+        "type": "object",
+        "properties": {
+          "campaigns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailCampaign"
+            }
+          }
+        }
+      },
+      "EmailCampaign": {
+        "type": "object",
+        "properties": {
+          "campaign_id": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          },
+          "num_emails_sent": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "open_rate": {
+            "type": "number"
+          },
+          "date_created": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "personalized_by_name": {
+            "type": "boolean"
+          },
+          "personalized_by_other": {
+            "type": "boolean"
+          },
+          "email_metric": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailMetric"
+            }
+          }
+        }
+      },
+      "EmailMetric": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "num_opened": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "last_opened_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "ContentPreviewResponse": {
         "type": "object",
         "properties": {

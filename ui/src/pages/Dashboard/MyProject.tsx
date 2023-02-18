@@ -1,8 +1,7 @@
-import React, {createRef, FC, RefObject, useState} from 'react';
+import React, {FC, RefObject, useState} from 'react';
 import {observer} from "mobx-react";
 import {Grid} from "@mui/material";
 import ForcedLayoutEditor from "@/components/SlateEditor/ForcedLayoutEditor";
-import ExportDialog from "@/pages/Dashboard/ExportDialog";
 import {ProjectDetail} from "@/api";
 import {AuthUserContext} from "next-firebase-auth";
 import {CenterAlignedProgress} from "@/utils/utils";
@@ -15,7 +14,7 @@ export interface MyProjectsProps {
 }
 
 const MyProject: FC<MyProjectsProps> = observer((props) => {
-  const [editorRef, setEditorRef] = useState<RefObject<HTMLElement> | undefined>(undefined)
+  const [_editorRef, setEditorRef] = useState<RefObject<HTMLElement> | undefined>(undefined)
 
   const handleSetEditorRef = (ref: RefObject<HTMLElement>) => {
     setEditorRef(ref)

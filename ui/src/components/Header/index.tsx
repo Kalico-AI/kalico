@@ -13,6 +13,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import ForumIcon from '@mui/icons-material/Forum';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+import CampaignIcon from '@mui/icons-material/Campaign';
 
 initAuth()
 
@@ -45,6 +46,12 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
   const gotoProjects = () => {
     router.push({
       pathname: PATHS.MY_PROJECTS,
+    }).catch(e => console.log(e))
+  }
+
+  const gotoCampaigns = () => {
+    router.push({
+      pathname: PATHS.CAMPAIGNS,
     }).catch(e => console.log(e))
   }
 
@@ -133,6 +140,7 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                         >My Projects</Button>
                       </Box>
                       {user.email === ADMIN_EMAIL &&
+                          <>
                           <Box sx={{mr: 3, mb: 1, mt: 1}}>
                             <Button
                                 color="secondary"
@@ -143,6 +151,17 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                                 onClick={gotoUsers}
                             >User Projects</Button>
                           </Box>
+                            <Box sx={{mr: 3, mb: 1, mt: 1}}>
+                              <Button
+                                  color="primary"
+                                  startIcon={<CampaignIcon/>}
+                                  className="upgrade-button"
+                                  size='large'
+                                  variant='contained'
+                                  onClick={gotoCampaigns}
+                              >Email Campaigns</Button>
+                            </Box>
+                          </>
                       }
                       <Box sx={{mr: 3, mb: 1, mt: 1}}>
                         <Button
