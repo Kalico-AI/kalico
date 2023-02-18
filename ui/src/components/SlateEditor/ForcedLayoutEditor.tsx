@@ -120,7 +120,7 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
       .then(tokenResult => {
         const projectApi = new ProjectApi(headerConfig(tokenResult))
         projectApi.updateProjectContent({
-          id: props.project.id,
+          project_uid: props.project.id,
           content: content as ContentItem[]
         })
         .then(_ => {

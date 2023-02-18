@@ -112,6 +112,37 @@ export interface ContentPreviewResponse {
 /**
  * 
  * @export
+ * @interface CreateEmailCampaignRequest
+ */
+export interface CreateEmailCampaignRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateEmailCampaignRequest
+     */
+    subject?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateEmailCampaignRequest
+     */
+    template?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateEmailCampaignRequest
+     */
+    personalized_by_name?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateEmailCampaignRequest
+     */
+    personalized_by_other?: boolean;
+}
+/**
+ * 
+ * @export
  * @interface CreateProjectRequest
  */
 export interface CreateProjectRequest {
@@ -188,6 +219,81 @@ export interface CreateProjectResponse {
      * @memberof CreateProjectResponse
      */
     error?: string;
+}
+/**
+ * 
+ * @export
+ * @interface EmailCampaign
+ */
+export interface EmailCampaign {
+    /**
+     * 
+     * @type {string}
+     * @memberof EmailCampaign
+     */
+    subject?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EmailCampaign
+     */
+    template?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof EmailCampaign
+     */
+    personalized_by_name?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof EmailCampaign
+     */
+    personalized_by_other?: boolean;
+    /**
+     * 
+     * @type {Array<EmailMetric>}
+     * @memberof EmailCampaign
+     */
+    email_metric?: Array<EmailMetric>;
+}
+/**
+ * 
+ * @export
+ * @interface EmailCampaignMetrics
+ */
+export interface EmailCampaignMetrics {
+    /**
+     * 
+     * @type {Array<EmailCampaign>}
+     * @memberof EmailCampaignMetrics
+     */
+    campaigns?: Array<EmailCampaign>;
+}
+/**
+ * 
+ * @export
+ * @interface EmailMetric
+ */
+export interface EmailMetric {
+    /**
+     * 
+     * @type {string}
+     * @memberof EmailMetric
+     */
+    email?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof EmailMetric
+     */
+    num_opened?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof EmailMetric
+     */
+    last_opened_at?: number;
 }
 /**
  * 
@@ -379,10 +485,10 @@ export interface Project {
 export interface ProjectDetail {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof ProjectDetail
      */
-    id?: number;
+    id?: string;
     /**
      * 
      * @type {string}
@@ -459,10 +565,10 @@ export interface ProjectJobStatus {
 export interface UpdateProjectContentRequest {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof UpdateProjectContentRequest
      */
-    id?: number;
+    project_uid?: string;
     /**
      * 
      * @type {Array<ContentItem>}
@@ -802,6 +908,42 @@ export interface YouTubeChannelDetail {
 export const LeadApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * Create an email campaign
+         * @summary Create an email campaign
+         * @param {CreateEmailCampaignRequest} createEmailCampaignRequest Create campaign request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createEmailCampaign: async (createEmailCampaignRequest: CreateEmailCampaignRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createEmailCampaignRequest' is not null or undefined
+            assertParamExists('createEmailCampaign', 'createEmailCampaignRequest', createEmailCampaignRequest)
+            const localVarPath = `/campaigns/create`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createEmailCampaignRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 
          * @summary Get YouTube channel info
          * @param {string} query 
@@ -838,6 +980,70 @@ export const LeadApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Get email campaign metrics
+         * @summary Get email campaign metrics
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEmailCampaignMetrics: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/campaigns/all`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get user image
+         * @summary Get user image
+         * @param {string} imageHash 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserEmailImage: async (imageHash: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'imageHash' is not null or undefined
+            assertParamExists('getUserEmailImage', 'imageHash', imageHash)
+            const localVarPath = `/lead/image/{image_hash}`
+                .replace(`{${"image_hash"}}`, encodeURIComponent(String(imageHash)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -849,6 +1055,17 @@ export const LeadApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = LeadApiAxiosParamCreator(configuration)
     return {
         /**
+         * Create an email campaign
+         * @summary Create an email campaign
+         * @param {CreateEmailCampaignRequest} createEmailCampaignRequest Create campaign request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createEmailCampaign(createEmailCampaignRequest: CreateEmailCampaignRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createEmailCampaign(createEmailCampaignRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * 
          * @summary Get YouTube channel info
          * @param {string} query 
@@ -857,6 +1074,27 @@ export const LeadApiFp = function(configuration?: Configuration) {
          */
         async getChannelInfo(query: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChannelPageableResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getChannelInfo(query, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Get email campaign metrics
+         * @summary Get email campaign metrics
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getEmailCampaignMetrics(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EmailCampaignMetrics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getEmailCampaignMetrics(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Get user image
+         * @summary Get user image
+         * @param {string} imageHash 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUserEmailImage(imageHash: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserEmailImage(imageHash, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -870,6 +1108,16 @@ export const LeadApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = LeadApiFp(configuration)
     return {
         /**
+         * Create an email campaign
+         * @summary Create an email campaign
+         * @param {CreateEmailCampaignRequest} createEmailCampaignRequest Create campaign request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createEmailCampaign(createEmailCampaignRequest: CreateEmailCampaignRequest, options?: any): AxiosPromise<GenericResponse> {
+            return localVarFp.createEmailCampaign(createEmailCampaignRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 
          * @summary Get YouTube channel info
          * @param {string} query 
@@ -878,6 +1126,25 @@ export const LeadApiFactory = function (configuration?: Configuration, basePath?
          */
         getChannelInfo(query: string, options?: any): AxiosPromise<ChannelPageableResponse> {
             return localVarFp.getChannelInfo(query, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get email campaign metrics
+         * @summary Get email campaign metrics
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEmailCampaignMetrics(options?: any): AxiosPromise<EmailCampaignMetrics> {
+            return localVarFp.getEmailCampaignMetrics(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get user image
+         * @summary Get user image
+         * @param {string} imageHash 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserEmailImage(imageHash: string, options?: any): AxiosPromise<string> {
+            return localVarFp.getUserEmailImage(imageHash, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -890,6 +1157,18 @@ export const LeadApiFactory = function (configuration?: Configuration, basePath?
  */
 export class LeadApi extends BaseAPI {
     /**
+     * Create an email campaign
+     * @summary Create an email campaign
+     * @param {CreateEmailCampaignRequest} createEmailCampaignRequest Create campaign request
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LeadApi
+     */
+    public createEmailCampaign(createEmailCampaignRequest: CreateEmailCampaignRequest, options?: any) {
+        return LeadApiFp(this.configuration).createEmailCampaign(createEmailCampaignRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * 
      * @summary Get YouTube channel info
      * @param {string} query 
@@ -899,6 +1178,29 @@ export class LeadApi extends BaseAPI {
      */
     public getChannelInfo(query: string, options?: any) {
         return LeadApiFp(this.configuration).getChannelInfo(query, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get email campaign metrics
+     * @summary Get email campaign metrics
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LeadApi
+     */
+    public getEmailCampaignMetrics(options?: any) {
+        return LeadApiFp(this.configuration).getEmailCampaignMetrics(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get user image
+     * @summary Get user image
+     * @param {string} imageHash 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LeadApi
+     */
+    public getUserEmailImage(imageHash: string, options?: any) {
+        return LeadApiFp(this.configuration).getUserEmailImage(imageHash, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

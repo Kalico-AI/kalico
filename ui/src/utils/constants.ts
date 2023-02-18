@@ -5,6 +5,7 @@ export const PATHS = {
   SIGN_UP: '/account/sign-up',
   DASHBOARD: '/dashboard',
   MY_PROJECTS: '/dashboard/projects',
+  CAMPAIGNS: '/dashboard/campaigns',
   PROJECT: '/dashboard/project',
   PRICING: '/pricing',
   BETA_USER: '/dashboard/beta',

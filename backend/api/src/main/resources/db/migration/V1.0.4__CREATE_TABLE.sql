@@ -1,3 +1,7 @@
+CREATE SEQUENCE IF NOT EXISTS pk_email_campaign
+    start 1
+  increment 1;
+
 CREATE SEQUENCE IF NOT EXISTS pk_email_tracking
     start 1
   increment 1;
