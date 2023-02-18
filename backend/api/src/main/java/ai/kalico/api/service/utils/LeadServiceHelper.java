@@ -32,8 +32,6 @@ public class LeadServiceHelper {
     if (tokens.length > 1) {
       String email = tokens[0];
       String campaignId = tokens[1];
-      log.info("Email Tracking: Image request received from {}:{}", email, campaignId);
-
       EmailTrackingEntity entity = null;
       // Locate the existing tracked emails  by campaign id and ip address. We need to do the lookup
       // using these two parameters so each device can only create a single record even if they're
@@ -49,6 +47,7 @@ public class LeadServiceHelper {
         if (LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - entity.getUpdatedAt().toEpochSecond(ZoneOffset.UTC)
             >= leadsProps.getOpenRateThreshold()) {
           entity.setNumOpened(entity.getNumOpened() + 1);
+          log.info("Email opened campaignId={}\t email={}", campaignId, email);
         }
       } else {
         entity = new EmailTrackingEntity();
