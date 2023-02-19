@@ -140,7 +140,7 @@ public class LeadServiceImpl implements LeadService {
     if (response.ok()) {
       SearchResult result = response.data();
       Set<String> channels = new HashSet<>(getChannels(result));
-      while (result.hasContinuation() && channels.size() < youTubeProps.getMaxChannelResults()) {
+      while (result != null && result.hasContinuation() && channels.size() < youTubeProps.getMaxChannelResults()) {
         result = youtubeDownloader.searchContinuation(new RequestSearchContinuation(result)).data();
         channels.addAll(getChannels(result));
       }
