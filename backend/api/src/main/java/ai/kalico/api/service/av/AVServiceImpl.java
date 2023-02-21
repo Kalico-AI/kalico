@@ -1,5 +1,7 @@
 package ai.kalico.api.service.av;
 
+import static com.amazonaws.util.StringUtils.UTF8;
+
 import ai.kalico.api.data.postgres.entity.MediaContentEntity;
 import ai.kalico.api.data.postgres.entity.ProjectEntity;
 import ai.kalico.api.data.postgres.entity.UserEntity;
@@ -13,22 +15,34 @@ import ai.kalico.api.service.parser.InstagramParser;
 import ai.kalico.api.service.utils.AVAsyncHelper;
 import ai.kalico.api.service.utils.KALUtils;
 import ai.kalico.api.service.youtubej.YoutubeDownloader;
+import ai.kalico.api.service.youtubej.downloader.request.RequestSubtitlesDownload;
 import ai.kalico.api.service.youtubej.downloader.request.RequestVideoFileDownload;
 import ai.kalico.api.service.youtubej.downloader.request.RequestVideoInfo;
 import ai.kalico.api.service.youtubej.downloader.response.Response;
+import ai.kalico.api.service.youtubej.model.Extension;
+import ai.kalico.api.service.youtubej.model.subtitles.SubtitlesInfo;
 import ai.kalico.api.service.youtubej.model.videos.VideoInfo;
 import ai.kalico.api.service.youtubej.model.videos.formats.Format;
 import ai.kalico.api.service.utils.Platform;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.kalico.model.ContentPreviewResponse;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +75,7 @@ public class AVServiceImpl implements AVService {
   private final ProjectProps projectProps;
   private final ProjectRepo projectRepo;
   private final UserRepo userRepo;
+  private final ObjectMapper objectMapper;
 
 
   // Refer to https://gist.github.com/sidneys/7095afe4da4ae58694d128b1034e01e2 for YouTube
@@ -200,8 +215,63 @@ public class AVServiceImpl implements AVService {
       if (!Files.exists(Path.of(path))) {
         youtubeDownloader.downloadVideoFile(request);
       }
+    // Download the transcript, if available
+    downloadYouTubeTranscript(mediaId, videoInfoDto);
     submitAsyncTasks(path, mediaId, true, projectId);
   }
+
+  private void downloadYouTubeTranscript(String mediaId, VideoInfoDto videoInfoDto) {
+    log.info(this.getClass().getSimpleName() + ".downloadYouTubeTranscript: Attempting to download transcript for mediaId={}",
+        mediaId);
+    String transcriptPath = asyncHelper.getTranscriptPath(mediaId);
+    if (!Files.exists(Path.of(transcriptPath))) {
+      if (videoInfoDto != null &&
+          videoInfoDto.getVideoInfo() != null &&
+          !ObjectUtils.isEmpty(videoInfoDto.getVideoInfo().subtitlesInfo())) {
+        List<SubtitlesInfo> subtitleInfos = videoInfoDto.getVideoInfo().subtitlesInfo();
+        for (SubtitlesInfo subtitleInfo : subtitleInfos) {
+          if (subtitleInfo.getLanguage().equals("en")) {
+            RequestSubtitlesDownload request = new RequestSubtitlesDownload(subtitleInfo)
+                .formatTo(Extension.JSON3);
+            Response<String> responseSubtitle = youtubeDownloader.downloadSubtitle(request);
+            try {
+              StringJoiner joiner = new StringJoiner(" ");
+              JsonNode transcriptNode = objectMapper.readValue(responseSubtitle.data(), JsonNode.class);
+              JsonNode events = transcriptNode.get("events");
+              if (events != null) {
+                for (int i = 0; i < events.size(); i++) {
+                  JsonNode segs = events.get(i).get("segs");
+                  if (segs != null && segs.size() > 0) {
+                    StringJoiner sentenceJoiner = new StringJoiner(" ");
+                    for (int j = 0; j < segs.size(); j++) {
+                      JsonNode text = segs.get(j).get("utf8");
+                      if (text != null) {
+                        sentenceJoiner.add(text.asText().replace("\n", " ").strip());
+                      }
+                    }
+                    String sentence = sentenceJoiner.toString();
+                    if (!ObjectUtils.isEmpty(sentence)) {
+                      joiner.add(sentence);
+                    }
+                  }
+                }
+              }
+              // Save the transcript to disk
+              String rawTranscript = joiner.toString().replace("\n", " ");
+              saveFileStr(rawTranscript, transcriptPath);
+              log.info(this.getClass().getSimpleName() + ".downloadYouTubeTranscript: Downloaded transcript for {} from YouTube",
+                  mediaId);
+            } catch (JsonProcessingException e) {
+              log.error(this.getClass().getSimpleName() + ".downloadYouTubeTranscript: {}",
+                  e.getLocalizedMessage());
+            }
+          }
+        }
+      }
+    }
+  }
+
+
 
   @Override
   public void processUploadedVideo(String file, String fileExtension, String mediaId, Long projectId) {
@@ -301,6 +371,20 @@ public class AVServiceImpl implements AVService {
       Files.copy(in, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
     } catch (Exception e) {
       log.error("Error in AVServiceImpl.saveFile: {}", e.getLocalizedMessage());
+    }
+  }
+
+  private void saveFileStr(String rawTranscript, String transcriptPath) {
+    try (InputStream in = new ByteArrayInputStream(rawTranscript.getBytes(UTF8))) {
+      // Save the file to disk
+      if (!new File(transcriptPath).exists()) {
+        new File(transcriptPath).mkdirs();
+      }
+      File output = new File(transcriptPath);
+      Files.copy(in, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      log.error(this.getClass().getSimpleName() + ".saveFileStr: {}",
+          e.getLocalizedMessage());
     }
   }
 

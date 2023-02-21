@@ -26,6 +26,7 @@ import com.kalico.model.GenericResponse;
 import com.kalico.model.GifRequest;
 import com.kalico.model.GifResponse;
 import com.kalico.model.JobStatus;
+import com.kalico.model.KalicoContentType;
 import com.kalico.model.MediaContent;
 import com.kalico.model.PageableResponse;
 import com.kalico.model.ProjectDetail;
@@ -109,7 +110,11 @@ public class ProjectServiceImpl implements ProjectService {
       entity.setUserId(userId);
       entity.setEmbedImages(createProjectRequest.getEmbedImages().get());
       entity.setParaphrase(createProjectRequest.getParaphrase().get());
-      entity.setContentType(createProjectRequest.getContentType().get().getValue());
+      if (!createProjectRequest.getContentType().isPresent()) {
+        entity.setContentType(KalicoContentType.OTHER.getValue());
+      } else {
+        entity.setContentType(createProjectRequest.getContentType().get().getValue());
+      }
       entity.setContentLink(url);
       entity.setProjectUid(KALUtils.generateUid());
       projectRepo.save(entity);
