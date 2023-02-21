@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 @ConfigurationProperties(prefix = "openai")
 public class OpenAiProps {
+    private int numRetries = 5;
     private String apiKey;
     private double temp = 0.5;
     private int maxTokens = 2048;
