@@ -407,19 +407,18 @@ public class LanguageServiceImpl implements LanguageService {
 
   @Override
   public List<String> chunkTranscript(String source, int chunkSize) {
-    List<String> sentences = getSentences(source);
+    List<String> tokens = new ArrayList<>(List.of(source.split(" ")));
     List<String> chunks = new ArrayList<>();
     StringJoiner joiner = new StringJoiner(" ");
     int currChunkSize = 0;
-    for (String sentence : sentences) {
-      currChunkSize += new ArrayList<>(Stream.of(sentence.split(" "))
-          .filter(it -> !ObjectUtils.isEmpty(it))
-          .collect(Collectors.toList())).size();
-      joiner.add(sentence);
+    for (String token : tokens) {
       if (currChunkSize >= chunkSize) {
         chunks.add(joiner.toString());
         joiner = new StringJoiner(" ");
         currChunkSize = 0;
+      } else {
+        joiner.add(token);
+        currChunkSize++;
       }
     }
     String chunk = joiner.toString().trim();
@@ -427,19 +426,6 @@ public class LanguageServiceImpl implements LanguageService {
       chunks.add(chunk);
     }
     return chunks;
-  }
-
-  private List<String> getSentences(String source) {
-    // Split the input text into sentences first and then chunk them at the sentence level
-    // rather than word
-    List<String> sentences = new ArrayList<>();
-    BreakIterator iterator = BreakIterator.getSentenceInstance(Locale.US);
-    iterator.setText(source);
-    int start = iterator.first();
-    for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {
-      sentences.add(source.substring(start,end).trim());
-    }
-    return sentences;
   }
 
   @Override
