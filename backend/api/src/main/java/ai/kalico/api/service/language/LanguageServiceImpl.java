@@ -85,42 +85,48 @@ public class LanguageServiceImpl implements LanguageService {
         log.info("LanguageServiceImpl.generateContent Clustering transcript for projectId={}",
             projectId);
         List<GptResponse> clusters = clusterTranscript(chunkedTranscript);
-        List<ClusterItem> clustersWithHeadings = getClustersWithHeadings(clusters);
+        List<ClusterItem> clustersWithHeadings;
+        // Do no proceed if there are no clusters
+        if (!ObjectUtils.isEmpty(clusters) &&
+            !ObjectUtils.isEmpty(clusters.get(0).getCompletionChoices())) {
+          clustersWithHeadings = getClustersWithHeadings(clusters);
 
-        // Each cluster is broken down into paragraphs and the grammar and writing style is
-        // improved. This acts as a section in the final output with its own subheading.
-        // Subheadings are needed for longer texts, depending on the niche.
-        // TODO: We can correlate the paragraphs back to the timestamped transcript to determine
-        //      the best image or GIF for it automatically
-        log.info("LanguageServiceImpl.generateContent Generating paragraphs for projectId={}",
-            projectId);
-        List<ClusterItem> paragraphsByCluster = clustersIntoParagraphs(clustersWithHeadings);
-
-        // Generate a title using the first chunk of the transcript. This eats into the token usage
-        // because we have to send the entire chunk for context.
-        // TODO: Design a better prompt to generate the title and do the cluster at the same time
-        log.info("LanguageServiceImpl.generateContent Generating title for projectId={}",
-            projectId);
-        GptResponse title = gptCompletion(0, openAiProps.getPromptTitle(),
-            chunkedTranscript.get(0), null);
-
-        GptResponse recipe = null;
-        if (contentType != null && contentType.equals(KalicoContentType.FOOD_RECIPE)) {
-          // Extract recipe information
-          // TODO: Not sure how to reconcile food recipes where the detail is spread across multiple chunks
-          log.info("LanguageServiceImpl.generateContent Generating recipe for projectId={}",
+          // Each cluster is broken down into paragraphs and the grammar and writing style is
+          // improved. This acts as a section in the final output with its own subheading.
+          // Subheadings are needed for longer texts, depending on the niche.
+          // TODO: We can correlate the paragraphs back to the timestamped transcript to determine
+          //      the best image or GIF for it automatically
+          log.info("LanguageServiceImpl.generateContent Generating paragraphs for projectId={}",
               projectId);
-          recipe = gptCompletion(0, openAiProps.getPromptRecipe(),
-              chunkedTranscript.get(0), null);
-        }
+          List<ClusterItem> paragraphsByCluster = clustersIntoParagraphs(clustersWithHeadings);
 
-        log.info("LanguageServiceImpl.generateContent Generating structured content projectId={}",
-            projectId);
-        List<ContentItem> content = generateContent(title, paragraphsByCluster, recipe);
-        saveContent(contentEntity.getProjectId(), content);
-        log.info("LanguageServiceImpl.generateContent Finished content generation for projectId={}",
-            projectId);
-        return content;
+          // Generate a title using the first chunk of the transcript. This eats into the token usage
+          // because we have to send the entire chunk for context.
+          // TODO: Design a better prompt to generate the title and do the cluster at the same time
+          log.info("LanguageServiceImpl.generateContent Generating title for projectId={}",
+              projectId);
+          GptResponse title = gptCompletion(0, openAiProps.getPromptTitle(),
+              chunkedTranscript.get(0), null);
+
+          GptResponse recipe = null;
+          if (contentType != null && contentType.equals(KalicoContentType.FOOD_RECIPE)) {
+            // Extract recipe information
+            // TODO: Not sure how to reconcile food recipes where the detail is spread across multiple chunks
+            log.info("LanguageServiceImpl.generateContent Generating recipe for projectId={}",
+                projectId);
+            recipe = gptCompletion(0, openAiProps.getPromptRecipe(),
+                chunkedTranscript.get(0), null);
+          }
+
+          log.info("LanguageServiceImpl.generateContent Generating structured content projectId={}",
+              projectId);
+          List<ContentItem> content = generateContent(title, paragraphsByCluster, recipe);
+          saveContent(contentEntity.getProjectId(), content);
+          log.info(
+              "LanguageServiceImpl.generateContent Finished content generation for projectId={}",
+              projectId);
+          return content;
+        }
       } else {
         setProjectFailure(contentEntity.getProjectId(), "Submitted audio/video does not contain any spoken words");
       }
@@ -184,33 +190,37 @@ public class LanguageServiceImpl implements LanguageService {
   private List<ContentItem> generateContent(GptResponse title, List<ClusterItem> paragraphsByCluster,
       GptResponse recipe) {
     List<ContentItem> content = new ArrayList<>();
-    ContentItem item = new ContentItem()
-        .type("title")
-        .children(List.of(new ContentItemChildren()
-            .text(cleanup(extractTitle(title.completionChoices.get(0).getText())))));
-    content.add(item);
+    if (title != null && !ObjectUtils.isEmpty(title.getCompletionChoices())) {
+      ContentItem item = new ContentItem()
+          .type("title")
+          .children(List.of(new ContentItemChildren()
+              .text(cleanup(extractTitle(title.getCompletionChoices().get(0).getText())))));
+      content.add(item);
+    }
     // Sort the clusters
-    paragraphsByCluster.sort(Comparator.comparing(ClusterItem::getSortOrder));
-    for (ClusterItem clusterItem : paragraphsByCluster) {
-      // TODO: This is where we insert the section headers
-      if (!ObjectUtils.isEmpty(clusterItem.getTitle())) {
-        content.add(new ContentItem()
-            .type("heading")
-            .children(List.of(new ContentItemChildren()
-                .text(cleanup(clusterItem.getTitle())))));
-      }
-      // If this cluster doesn't have paragraphs, then use the raw text
-      if (ObjectUtils.isEmpty(clusterItem.getParagraphs())) {
-        content.add(new ContentItem()
-            .type("paragraph")
-            .children(List.of(new ContentItemChildren()
-                .text(cleanup(clusterItem.getRawText())))));
-      } else {
-        for (String paragraph : clusterItem.getParagraphs()) {
+    if (!ObjectUtils.isEmpty(paragraphsByCluster)) {
+      paragraphsByCluster.sort(Comparator.comparing(ClusterItem::getSortOrder));
+      for (ClusterItem clusterItem : paragraphsByCluster) {
+        // TODO: This is where we insert the section headers
+        if (!ObjectUtils.isEmpty(clusterItem.getTitle())) {
+          content.add(new ContentItem()
+              .type("heading")
+              .children(List.of(new ContentItemChildren()
+                  .text(cleanup(clusterItem.getTitle())))));
+        }
+        // If this cluster doesn't have paragraphs, then use the raw text
+        if (ObjectUtils.isEmpty(clusterItem.getParagraphs())) {
           content.add(new ContentItem()
               .type("paragraph")
               .children(List.of(new ContentItemChildren()
-                  .text(paragraph))));
+                  .text(cleanup(clusterItem.getRawText())))));
+        } else {
+          for (String paragraph : clusterItem.getParagraphs()) {
+            content.add(new ContentItem()
+                .type("paragraph")
+                .children(List.of(new ContentItemChildren()
+                    .text(paragraph))));
+          }
         }
       }
     }
@@ -232,7 +242,7 @@ public class LanguageServiceImpl implements LanguageService {
 
   private List<ContentItem> generateRecipe(GptResponse recipe) {
     List<ContentItem> content = new ArrayList<>();
-    if (recipe != null) {
+    if (recipe != null && !ObjectUtils.isEmpty(recipe.getCompletionChoices())) {
       List<String> recipeDetails = Stream.of(recipe.getCompletionChoices().get(0)
               .getText().split("\n"))
           .filter(text -> !ObjectUtils.isEmpty(cleanup(text))).collect(Collectors.toList());
@@ -356,7 +366,23 @@ public class LanguageServiceImpl implements LanguageService {
         .user(openAiProps.getUser())
         .logitBias(new HashMap<>())
         .build();
-    return new GptResponse(sortOrder, openAiService.createCompletion(completionRequest).getChoices(), clusterItem);
+    int retried = 0;
+    while (retried < openAiProps.getNumRetries()) {
+      try {
+        return new GptResponse(sortOrder, openAiService.createCompletion(completionRequest).getChoices(), clusterItem);
+      } catch (Exception e) {
+        // Catch network timeout errors and retry
+        try {
+          // Sleep for 5 seconds
+          Thread.sleep(5000L);
+        } catch (InterruptedException ex) {
+          // ignore
+        }
+        retried++;
+        log.error("LanguageServiceImpl.gptCompletion {}", e.getLocalizedMessage());
+      }
+    }
+    return new GptResponse(0, new ArrayList<>(), null);
   }
 
   private List<GptResponse> await(List<CompletableFuture<GptResponse>> tasks) {
