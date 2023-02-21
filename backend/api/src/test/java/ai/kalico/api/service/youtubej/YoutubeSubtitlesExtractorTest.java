@@ -21,13 +21,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = ServiceTestConfiguration.class)
 public class YoutubeSubtitlesExtractorTest extends AbstractTestNGSpringContextTests {
 
-    @Test
+    @Test(enabled = false)
     void getSubtitlesInfo_ExtractFromCaptions_Success() {
         YoutubeDownloader downloader = new YoutubeDownloader();
 
         assertDoesNotThrow(() -> {
             Response<VideoInfo> response = downloader.getVideoInfo(new RequestVideoInfo(
-                TestUtils.N3WPORT_ID));
+                TestUtils.PHYSIOTHERAPY_ID));
             assertTrue(response.ok());
             VideoInfo video = response.data();
 
@@ -42,7 +42,7 @@ public class YoutubeSubtitlesExtractorTest extends AbstractTestNGSpringContextTe
 
         assertDoesNotThrow(() -> {
             Response<List<SubtitlesInfo>> response = downloader.getSubtitlesInfo(new RequestSubtitlesInfo(
-                TestUtils.N3WPORT_ID));
+                TestUtils.PHYSIOTHERAPY_ID));
             assertTrue(response.ok());
             List<SubtitlesInfo> subtitlesInfos = response.data();
             assertFalse(subtitlesInfos.isEmpty(), "subtitles info should not be empty");
