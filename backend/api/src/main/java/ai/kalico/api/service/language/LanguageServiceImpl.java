@@ -15,6 +15,7 @@ import com.kalico.model.ContentItem;
 import com.kalico.model.ContentItemChildren;
 import com.kalico.model.KalicoContentType;
 import java.text.BreakIterator;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,6 +61,7 @@ public class LanguageServiceImpl implements LanguageService {
   @Override
   public List<ContentItem> generateContent(Long projectId) {
     MediaContentEntity contentEntity = mediaContentRepo.findByProjectId(projectId);
+    long then = Instant.now().toEpochMilli();
     if (contentEntity != null) {
       if (!ObjectUtils.isEmpty(contentEntity.getRawTranscript()) &&
           contentEntity.getRawTranscript().length() > 0) {
@@ -122,9 +124,16 @@ public class LanguageServiceImpl implements LanguageService {
               projectId);
           List<ContentItem> content = generateContent(title, paragraphsByCluster, recipe);
           saveContent(contentEntity.getProjectId(), content);
+
+          // Log total time
+          long now = Instant.now().toEpochMilli();
+          double minutes = Math.round(((now - then)/(1000*60.0)) * 100)/100.0;
           log.info(
-              "LanguageServiceImpl.generateContent Finished content generation for projectId={}",
-              projectId);
+              "LanguageServiceImpl.generateContent Finished content generation for projectId={}. "
+                  + "Total time: {} minutes",
+              projectId,
+              minutes);
+
           return content;
         }
       } else {
