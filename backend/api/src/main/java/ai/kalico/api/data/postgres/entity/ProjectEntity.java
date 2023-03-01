@@ -42,6 +42,10 @@ public class ProjectEntity {
     private Boolean paraphrase = true;
 
     @Basic
+    @Column(name = "get_raw_transcript")
+    private Boolean getRawTranscript = false;
+
+    @Basic
     @Column(name = "embed_images")
     private Boolean embedImages = false;
 
