@@ -75,6 +75,7 @@ public interface ProjectMapper {
     detail.setId(projectEntity.getProjectUid());
     detail.setName(JsonNullable.of(projectEntity.getProjectName()));
     detail.setDateCreated(projectEntity.getCreatedAt().toEpochSecond(ZoneOffset.UTC));
+    detail.setRawTranscript(projectEntity.getGetRawTranscript());
     if (projectEntity.getContent() != null) {
       try {
         detail.setContent(objectMapper.readValue(projectEntity.getContent().toString(), typeRef));

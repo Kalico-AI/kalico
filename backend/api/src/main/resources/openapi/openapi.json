@@ -656,6 +656,11 @@
             "nullable": true,
             "default": false
           },
+          "get_raw_transcript": {
+            "type": "boolean",
+            "nullable": false,
+            "default": false
+          },
           "embed_images": {
             "type": "boolean",
             "nullable": true,
@@ -770,6 +775,10 @@
           "name": {
             "type": "string",
             "nullable": true
+          },
+          "raw_transcript": {
+            "type": "boolean",
+            "nullable": false
           },
           "date_created": {
             "type": "integer",

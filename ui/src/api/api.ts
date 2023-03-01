@@ -181,6 +181,12 @@ export interface CreateProjectRequest {
      * @type {boolean}
      * @memberof CreateProjectRequest
      */
+    get_raw_transcript?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateProjectRequest
+     */
     embed_images?: boolean | null;
     /**
      * 
@@ -525,6 +531,12 @@ export interface ProjectDetail {
      * @memberof ProjectDetail
      */
     name?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProjectDetail
+     */
+    raw_transcript?: boolean;
     /**
      * 
      * @type {number}

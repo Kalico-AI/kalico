@@ -117,6 +117,9 @@ public class ProjectServiceImpl implements ProjectService {
       }
       entity.setContentLink(url);
       entity.setProjectUid(KALUtils.generateUid());
+      if (createProjectRequest.getGetRawTranscript() != null) {
+        entity.setGetRawTranscript(createProjectRequest.getGetRawTranscript());
+      }
       projectRepo.save(entity);
       avService.processMedia(url, entity.getId(), file, ext);
       return new CreateProjectResponse()

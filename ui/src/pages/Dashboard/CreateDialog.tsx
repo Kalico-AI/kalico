@@ -14,11 +14,11 @@ import {
   Avatar,
   Box,
   Divider,
-  FormControl,
+  FormControl, FormControlLabel,
   Grid,
   InputLabel,
   Select,
-  styled,
+  styled, Switch,
   Typography,
 } from '@mui/material';
 import {CreateProjectRequest, KalicoContentType, ProjectApi} from "@/api";
@@ -80,6 +80,7 @@ export interface CreateDialogProps {
 
 const CreateDialog: FC<CreateDialogProps> = (props) => {
   const [paraphrase, setParaphrase] = useState(true)
+  const [getRawTranscript, setGetRawTranscript] = useState(false)
   const [embedImages, setEmbedImages] = useState(false)
   const [projectName, setProjectName] = useState('')
   const [contentLink, setContentLink] = useState('')
@@ -103,6 +104,7 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
     setShowFileName(false)
     setParaphrase(false)
     setEmbedImages(false)
+    setGetRawTranscript(false)
   }, [])
 
   const getContentPreview = (url: string) => {
@@ -138,6 +140,11 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
     setParaphrase(event.target.checked)
   }
 
+  const handleRawTranscript = (event: any) => {
+    event.preventDefault()
+    setGetRawTranscript(event.target.checked)
+  }
+
   const handleEmbedImages = (event: any) => {
     event.preventDefault()
     setEmbedImages(event.target.checked)
@@ -169,11 +176,11 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const conversionFactor = 1024*1024
-    const maxFileSize = 100*conversionFactor // 100MB
+    const maxFileSize = 1024*conversionFactor // 1 GB
     if (acceptedFiles && acceptedFiles.length > 0) {
       const f = acceptedFiles[0]
       if (f.size > maxFileSize) {
-        showToast(`File size of ${Math.round(f.size/conversionFactor)} MB is too big. Max allowed is 100MB`, 'error')
+        showToast(`File size of ${Math.round(f.size/conversionFactor)} MB is too big. Max allowed is 1GB`, 'error')
       } else {
         convertBase64(f).then(binaryData => {
           setFile(binaryData + '')
@@ -226,7 +233,8 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
       content_link: contentLink,
       content_type: contentType,
       file: file,
-      file_extension: fileExtension
+      file_extension: fileExtension,
+      get_raw_transcript: getRawTranscript
     })
   }
   return (
@@ -241,6 +249,12 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
               <img src="/assets/images/youtube.svg" alt="YouTube" width={128} style={{display: 'inline-block'}}/>
               <img src="/assets/images/instagram.svg" alt="Instagram" width={64} style={{display: 'inline-block'}}/>
             </div>
+            <Box p={0} sx={{ml: 3}}>
+              <FormControlLabel
+                  control={<Switch color="warning" defaultChecked={false} onChange={handleRawTranscript}/>}
+                  label={'Get Raw Transcript'}
+              />
+            </Box>
             {/*<Box p={0}>*/}
             {/*  <FormControlLabel*/}
             {/*      control={<Switch color="warning" defaultChecked={false} onChange={handleParaphrase}/>}*/}
