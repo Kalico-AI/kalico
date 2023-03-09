@@ -9,8 +9,6 @@ import {ADMIN_EMAIL, PATHS} from "@/utils/constants";
 import initAuth from "@/auth/nextAuth";
 import {useAuthUser} from "next-firebase-auth";
 import Link from "next/link";
-import BoltIcon from '@mui/icons-material/Bolt';
-import ForumIcon from '@mui/icons-material/Forum';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import CampaignIcon from '@mui/icons-material/Campaign';
@@ -25,17 +23,17 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
   const router = useRouter()
   const user = useAuthUser()
 
-  const gotoPricing = () => {
-    router.push({
-      pathname: PATHS.PRICING,
-    }).catch(e => console.log(e))
-  }
+  // const gotoPricing = () => {
+  //   router.push({
+  //     pathname: PATHS.PRICING,
+  //   }).catch(e => console.log(e))
+  // }
 
-  const gotoBetaUser = () => {
-    router.push({
-      pathname: PATHS.BETA_USER,
-    }).catch(e => console.log(e))
-  }
+  // const gotoBetaUser = () => {
+  //   router.push({
+  //     pathname: PATHS.BETA_USER,
+  //   }).catch(e => console.log(e))
+  // }
 
   const gotoUsers = () => {
     router.push({
@@ -163,26 +161,26 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                             </Box>
                           </>
                       }
-                      <Box sx={{mr: 3, mb: 1, mt: 1}}>
-                        <Button
-                            color="error"
-                            startIcon={<ForumIcon/>}
-                            className="upgrade-button"
-                            size='large'
-                            variant='contained'
-                            onClick={gotoBetaUser}
-                        >Help Us Improve Kalico</Button>
-                      </Box>
-                      <Box sx={{mr: 3, mb: 1, mt: 1}}>
-                      <Button
-                          color="warning"
-                          startIcon={<BoltIcon/>}
-                          className="upgrade-button"
-                          size='large'
-                          variant='contained'
-                          onClick={gotoPricing}
-                      >Upgrade</Button>
-                      </Box>
+                      {/*<Box sx={{mr: 3, mb: 1, mt: 1}}>*/}
+                      {/*  <Button*/}
+                      {/*      color="error"*/}
+                      {/*      startIcon={<ForumIcon/>}*/}
+                      {/*      className="upgrade-button"*/}
+                      {/*      size='large'*/}
+                      {/*      variant='contained'*/}
+                      {/*      onClick={gotoBetaUser}*/}
+                      {/*  >Help Us Improve Kalico</Button>*/}
+                      {/*</Box>*/}
+                      {/*<Box sx={{mr: 3, mb: 1, mt: 1}}>*/}
+                      {/*<Button*/}
+                      {/*    color="warning"*/}
+                      {/*    startIcon={<BoltIcon/>}*/}
+                      {/*    className="upgrade-button"*/}
+                      {/*    size='large'*/}
+                      {/*    variant='contained'*/}
+                      {/*    onClick={gotoPricing}*/}
+                      {/*>Upgrade</Button>*/}
+                      {/*</Box>*/}
                       <Box sx={{ mb: 1, mt: 1}}>
                         <Button
                             color="primary"
@@ -215,7 +213,7 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
                       <Link href="/#support" className="nav-link dropdown-toggle">Support</Link>
                     </li>
                       <li className="nav-item dropdown submenu mega-menu active">
-                        <Link href="/pricing" className="nav-link dropdown-toggle">Pricing</Link>
+                        <Link href="/blog" className="nav-link dropdown-toggle">Blog</Link>
                       </li>
                   </ul>
                     <div className="right-nav">
