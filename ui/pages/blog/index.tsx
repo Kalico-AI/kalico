@@ -6,18 +6,17 @@ import ListView from "@/components/Blog/ListView";
 import BlogHero from "@/components/Blog/hero";
 
 export async function getServerSideProps() {
-  const response = await fetch(urls.getAllPosts)
-  const posts = await response.text()
   let textResponse = []
   try {
+    const response = await fetch(urls.getAllPosts)
+    const posts = await response.text()
     textResponse = posts ? JSON.parse(posts)?.posts : []
   } catch (e) {
     console.log(e)
   }
-  console.log(textResponse)
   return {
     props: {
-      posts: textResponse
+      posts: textResponse.filter(it => it.published)
     }
   }
 }

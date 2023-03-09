@@ -9,13 +9,10 @@ interface ListViewProps {
 
 const ListView: FC<ListViewProps> = (props) => {
     return (
-        <div className="container mx-auto px-2 py-4">
+        <div className="container mx-auto px-2 py-4" style={{padding: '10px'}}>
           {
             props?.posts?.map(item => {
-              let url = '/post/' + item.slug
-              if (props.dashboard) {
-                url = '/editor/' + item.uid
-              }
+              const url = '/blog/' + item.slug
               let date = moment(item.createdAt * 1000).format('ll')
               return (
                 <div className="py-2 mb-2 prose" key={item.slug}>

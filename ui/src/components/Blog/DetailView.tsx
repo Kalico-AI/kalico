@@ -1,21 +1,18 @@
 import React, {FC} from "react";
-import {DocumentDetail} from "./types";
 import moment from "moment";
+import {DocumentDetail} from "@/types/types";
 
 interface DetailViewProps {
   post?: DocumentDetail
 }
 
 const DetailView: FC<DetailViewProps> = (props) => {
-  let date = moment(props.post.createdAt * 1000).format('ll')
-  if (props.post.customDateString) {
-    date = props.post.customDateString
-  }
+  let date = moment(props.post?.createdAt * 1000).format('ll')
     return (
-        <div>
+        <div className="blog-detail-container">
           <article className="container px-2 mx-auto mb4" itemScope={true}
                    itemType="http://schema.org/BlogPosting">
-            <h1 className="h0 col-12 sm-width-full py-4 mt-3 inline-block"
+            <h1 className="h0-blog-detail col-12 sm-width-full py-4 mt-3 inline-block"
                 itemProp="name headline">{props.post?.title}</h1>
             <div className="col-4 sm-width-full mt-1 border-top-thin ">
               <p className="mb-3 py-2 bold h4">

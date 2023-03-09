@@ -32,17 +32,17 @@ h1,h2,h3,h4,h5,h6 {
   margin-bottom: 0.25em
 }
 
-h1,.h1 {
-  font-size: 40px
-}
+/*h1,.h1 {*/
+/*  font-size: 40px*/
+/*}*/
 
-h2,.h2 {
-  font-size: 32px
-}
+/*h2,.h2 {*/
+/*  font-size: 32px*/
+/*}*/
 
-h3,.h3 {
-  font-size: 24px
-}
+/*h3,.h3 {*/
+/*  font-size: 24px*/
+/*}*/
 
 object {
   max-width: 100%;
@@ -211,11 +211,14 @@ code {
   border-bottom: 2px solid #181818
 }
 
-.h0 {
+.h0, .h0-blog-detail {
   font-size: 64px;
   line-height: 1.0125;
   margin-top: 0.85em;
   word-wrap: break-word
+}
+.h0-blog-detail {
+  font-size: 72px;
 }
 
 @media (min-width: 52em) {
@@ -284,10 +287,14 @@ code {
 .header-border {
   border-color: #181818
 }
-.blog-hero-container {
-  padding-top: 50px;
+
+.blog-hero-container, .blog-detail-container {
+  padding-top: 90px;
   padding-left: 10px;
-  padding-right: 10px;
+  padding-right: 10px;;
+}
+.blog-detail-container {
+  padding-bottom: 50px
 }
 .header-title {
   color: #181818;
