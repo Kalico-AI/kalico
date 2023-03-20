@@ -7,7 +7,7 @@ h1, h2, h4, h5 {
 }
 .hero {
   text-align: center;
-  margin-top: 160px
+  margin-top: 120px
 }
 input:focus, textarea:focus {
   border: none;
@@ -17,7 +17,7 @@ input:focus, textarea:focus {
   max-width: 712px;
   margin: 0 auto;
   margin-top: 50px;
-  width: 100%;
+  width: 95%;
 }
 .list-item-card {
   /*height: 580px;*/
@@ -94,4 +94,48 @@ input:focus, textarea:focus {
 }
 .view-all-button:hover {
   background: #ce9d86;
+}
+footer {
+  background-color: #fdfafa;
+  display: inline-flex;
+  width: 100%;
+  text-transform: uppercase;
+  font: 10.5px Mulish,sans-serif;
+  letter-spacing: 2px;
+  padding: 28px 0 25px;
+  padding-left: 40px;
+  padding-right: 40px;
+  line-height: 1.5;
+}
+.header {
+  display: inline-flex;
+  width: 100%;
+  text-transform: uppercase;
+  font: 14px Mulish,sans-serif;
+  letter-spacing: 2px;
+  padding: 28px 0 25px;
+  padding-left: 40px;
+  padding-right: 40px;
+  line-height: 1.5;
+}
+.footer-left, .header-left {
+  width: 50%;
+  text-align: left;
+}
+.footer-right, .header-right {
+  width: 50%;
+  text-align: right;
+  margin: 0;
+}
+
+footer a, .header a {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+}
+a {
+  text-decoration: none !important;
+}
+a:hover {
+  color: #dcb781;
 }

@@ -14,7 +14,7 @@ function TopRecipes() {
     <Box className="top-recipes-view-all">
         <button
             className="view-all-button"
-        >Read More</button>
+        >View All</button>
     </Box>
   </Container>
 
