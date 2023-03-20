@@ -1,9 +1,7 @@
 import React from 'react';
-import Landing from "@/pages/Landing";
-import {CenterAlignedProgress} from "@/utils/utils";
 import initAuth from "@/auth/nextAuth";
-import {AuthAction, withAuthUser} from "next-firebase-auth";
 import Head from "next/head";
+import RecipeLanding from "@/pages/RecipeLanding";
 
 initAuth()
 
@@ -11,15 +9,16 @@ function Index() {
   return (
     <>
       <Head>
-        <title>Kalico | Audio and Video Content Repurposing</title>
+        <title>Kalico | Best Recipes</title>
       </Head>
-      <Landing/>
+      <RecipeLanding/>
     </>
   );
 }
-export default withAuthUser({
-  whenAuthed: AuthAction.REDIRECT_TO_APP,
-  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
-  whenUnauthedAfterInit: AuthAction.RENDER,
-  LoaderComponent: () => <CenterAlignedProgress/>,
-})(Index);
+export default Index
+// export default withAuthUser({
+//   whenAuthed: AuthAction.REDIRECT_TO_APP,
+//   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+//   whenUnauthedAfterInit: AuthAction.RENDER,
+//   LoaderComponent: () => <CenterAlignedProgress/>,
+// })(Index);

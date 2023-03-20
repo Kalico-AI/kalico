@@ -14,6 +14,7 @@ import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth
 import 'react-toastify/dist/ReactToastify.css';
 import {CenterAlignedProgress} from "@/utils/utils";
 import "style/blog.css"
+import "style/food-blog.css"
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;

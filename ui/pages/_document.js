@@ -42,6 +42,17 @@ export default function Document() {
           <meta name="theme-color" content="#fff" />
           <meta name="apple-mobile-web-app-capable" content="yes"/>
           <meta name="mobile-web-app-capable" content="yes"/>
+
+          <link rel="preconnect" href="https://fonts.googleapis.com"/>
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin={"true"}/>
+          <link
+                  href="https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Karla:wght@300;400;600;800&display=swap"
+                  rel="stylesheet"/>
+
+
+
+
+
           <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
           {/*Fontawesome CSS*/}
           <link rel="stylesheet" href="/assets/css/fontawesome.min.css" />
