@@ -3,12 +3,10 @@ import {observer} from "mobx-react";
 import {Grid} from "@mui/material";
 import ForcedLayoutEditor from "@/components/SlateEditor/ForcedLayoutEditor";
 import {ProjectDetail} from "@/api";
-import {AuthUserContext} from "next-firebase-auth";
 import {CenterAlignedProgress} from "@/utils/utils";
 
 export interface MyProjectsProps {
   project: ProjectDetail,
-  user: AuthUserContext,
   showProgress: boolean,
   editable?: boolean
 }
@@ -31,7 +29,7 @@ const MyProject: FC<MyProjectsProps> = observer((props) => {
                       editable={props.editable}
                       setEditorRef={handleSetEditorRef}
                       project={props.project}
-                      user={props.user}/>
+                  />
                 </>
           }
         </Grid>

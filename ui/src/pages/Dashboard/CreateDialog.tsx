@@ -24,7 +24,7 @@ import {
 import {CreateProjectRequest, KalicoContentType, ProjectApi} from "@/api";
 import {toast, TypeOptions} from "react-toastify";
 import {headerConfig} from "@/api/headerConfig";
-import {AuthUserContext} from "next-firebase-auth";
+import {auth} from "@/utils/firebase-setup";
 
 
 const BoxUploadWrapper = styled(Box)(
@@ -72,7 +72,6 @@ const AvatarSuccess = styled(Avatar)(
 );
 
 export interface CreateDialogProps {
-  user?: AuthUserContext,
   open: boolean,
   onClose: () => void,
   onSubmit: (data: CreateProjectRequest) => void
@@ -109,46 +108,49 @@ const CreateDialog: FC<CreateDialogProps> = (props) => {
 
   const getContentPreview = (url: string) => {
     if (url && url.includes("http")) {
-      props?.user?.getIdToken(false)
-      .then(tokenResult => {
-        const projectApi = new ProjectApi(headerConfig(tokenResult))
-        projectApi.getContentPreview(url)
-        .then(response => {
-          if (response.data.title) {
-            let shortTitle = response.data.title.substring(0, 200) + "..."
-            setContentTitle(shortTitle)
-          } else {
-            setContentTitle('')
-          }
-          if (response.data.thumbnail) {
-            setContentThumbnail(response.data.thumbnail)
-          } else {
-            setContentThumbnail('')
-          }
-          if (response.data.duration) {
-            setContentDuration(response.data.duration)
-          } else {
-            setContentDuration('')
-          }
-        }).catch(e => console.log(e))
-      }).catch(e => console.log(e))
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          user.getIdToken(false)
+          .then(tokenResult => {
+            const projectApi = new ProjectApi(headerConfig(tokenResult))
+            projectApi.getContentPreview(url)
+            .then(response => {
+              if (response.data.title) {
+                let shortTitle = response.data.title.substring(0, 200) + "..."
+                setContentTitle(shortTitle)
+              } else {
+                setContentTitle('')
+              }
+              if (response.data.thumbnail) {
+                setContentThumbnail(response.data.thumbnail)
+              } else {
+                setContentThumbnail('')
+              }
+              if (response.data.duration) {
+                setContentDuration(response.data.duration)
+              } else {
+                setContentDuration('')
+              }
+            }).catch(e => console.log(e))
+          }).catch(e => console.log(e))
+        }})
     }
   }
 
-  const handleParaphrase = (event: any) => {
-    event.preventDefault()
-    setParaphrase(event.target.checked)
-  }
+  // const handleParaphrase = (event: any) => {
+  //   event.preventDefault()
+  //   setParaphrase(event.target.checked)
+  // }
 
   const handleRawTranscript = (event: any) => {
     event.preventDefault()
     setGetRawTranscript(event.target.checked)
   }
 
-  const handleEmbedImages = (event: any) => {
-    event.preventDefault()
-    setEmbedImages(event.target.checked)
-  }
+  // const handleEmbedImages = (event: any) => {
+  //   event.preventDefault()
+  //   setEmbedImages(event.target.checked)
+  // }
 
   const handleProjectName = (event: any) => {
     event.preventDefault()

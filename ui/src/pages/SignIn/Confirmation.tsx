@@ -13,7 +13,7 @@ import {useRouter} from "next/router";
 import {PATHS} from "@/utils/constants";
 
 
-const SignInConfirmation: FC<any> = observer((props) => {
+const SignInConfirmation: FC<any> = observer((_props) => {
   const store = useStore()
   const router = useRouter()
 
@@ -32,7 +32,7 @@ const SignInConfirmation: FC<any> = observer((props) => {
       if (email) {
         // The client SDK will parse the code from the link for you.
         signInWithEmailLink(auth, email, window.location.href)
-        .then((result) => {
+        .then((_result) => {
           // Clear email from storage.
           window.localStorage.removeItem('emailForSignIn');
           // You can access the new user via result.user

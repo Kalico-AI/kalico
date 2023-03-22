@@ -9,10 +9,7 @@ import {RootStoreProvider} from "@/store/RootStoreContext";
 import Script from 'next/script'
 import Footer from "@/components/Footer";
 import HeaderNav from "@/components/Header";
-import initAuth from "@/auth/nextAuth";
-import {AuthAction, withAuthUser, withAuthUserTokenSSR} from "next-firebase-auth";
 import 'react-toastify/dist/ReactToastify.css';
-import {CenterAlignedProgress} from "@/utils/utils";
 import "style/blog.css"
 import "style/food-blog.css"
 
@@ -20,18 +17,14 @@ type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-// Init Next Firebase Auth
-initAuth()
 
-export const getServerSideProps = withAuthUserTokenSSR({
-})(async ({ AuthUser }) => {
+export const getServerSideProps = () => {
   return {
     props: {
       title: "Kalico AI | Video and Audio Content Re-purposing",
-      userId: AuthUser.id
     }
   }
-})
+}
 
 interface DefaultAppProps extends AppProps {
   Component: NextPageWithLayout;
@@ -107,11 +100,6 @@ const MyApp: FC<DefaultAppProps> = (props) => {
   );
 }
 
-export default withAuthUser({
-  whenAuthed: AuthAction.RENDER,
-  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
-  whenUnauthedAfterInit: AuthAction.RENDER,
-  LoaderComponent: () => <CenterAlignedProgress/>
-})(MyApp);
+export default MyApp
 
 

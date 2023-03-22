@@ -4,7 +4,6 @@ import {Box, Chip} from "@mui/material";
 import {PATHS} from "@/utils/constants";
 import {ProjectApi, UserProjectsResponse} from "@/api";
 import {headerConfig} from "@/api/headerConfig";
-import {AuthUserContext} from "next-firebase-auth";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,6 +14,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {getFormattedDate} from "@/utils/utils";
 import {useStore} from "@/hooks/useStore";
+import firebase from "firebase/compat";
+import User = firebase.User;
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -40,7 +41,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export interface UserProjectProps {
   userProjects?: UserProjectsResponse,
-  user: AuthUserContext
+  user: User
 }
 
 const UserProjects: FC<UserProjectProps> = observer((props) => {

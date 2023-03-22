@@ -1,8 +1,6 @@
 import React, {FC, useEffect, useState} from 'react';
-import {AuthAction, useAuthUser, withAuthUser} from "next-firebase-auth";
 import {ProjectApi, UserProjectsResponse} from "@/api";
 import {headerConfig} from "@/api/headerConfig";
-import {CenterAlignedProgress} from "@/utils/utils";
 import Head from "next/head";
 import {ADMIN_EMAIL, INTEGER_32_MAX, PATHS} from "@/utils/constants";
 import {useRouter} from "next/router";
@@ -17,7 +15,7 @@ export interface ProjectIndexProps {
 
 const UsersIndex: FC<ProjectIndexProps> =  (_props) => {
   const [userProjects, setUserProjects] = useState<UserProjectsResponse | undefined>(undefined)
-  const user = useAuthUser()
+  const user = null;
   const router = useRouter()
 
   const fetchProjects = () => {
@@ -55,9 +53,4 @@ const UsersIndex: FC<ProjectIndexProps> =  (_props) => {
     );
 }
 
-export default withAuthUser({
-  whenAuthed: AuthAction.RENDER,
-  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
-  LoaderComponent: () => <CenterAlignedProgress/>,
-})(UsersIndex);
+export default UsersIndex

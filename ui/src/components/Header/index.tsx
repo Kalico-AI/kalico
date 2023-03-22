@@ -2,22 +2,14 @@ import React, {FC} from 'react';
 import {observer} from "mobx-react";
 import {Box} from "@mui/material";
 import {PATHS} from "@/utils/constants";
-import initAuth from "@/auth/nextAuth";
-import {useAuthUser} from "next-firebase-auth";
 import Link from "next/link";
-
-initAuth()
 
 export interface HeaderNavProps {
 }
 
 const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
-  const user = useAuthUser()
 
   let navbarClasses = "container-fluid"
-  if (user && user.id) {
-    navbarClasses = "container-fluid dashboard-navbar"
-  }
 
   return (
       <header className="header">

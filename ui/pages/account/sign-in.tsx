@@ -1,7 +1,5 @@
 import React from 'react';
 import SignIn from "@/pages/SignIn";
-import {AuthAction, withAuthUser} from "next-firebase-auth";
-import {CenterAlignedProgress} from "@/utils/utils";
 import Head from "next/head";
 
 export async function getServerSideProps(context) {
@@ -24,9 +22,4 @@ function SignInIndex(props) {
 }
 
 
-export default withAuthUser({
-  whenAuthed: AuthAction.REDIRECT_TO_APP,
-  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
-  whenUnauthedAfterInit: AuthAction.RENDER,
-  LoaderComponent: () => <CenterAlignedProgress/>,
-})(SignInIndex);
+export default SignInIndex

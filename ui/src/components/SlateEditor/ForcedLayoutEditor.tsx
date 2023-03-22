@@ -18,13 +18,10 @@ import { withHistory } from 'slate-history'
 import {Box, Button, Grid} from "@mui/material";
 import {
   EditorElement,
-  InsertImageButton,
-  Toolbar,
   withImages,
   withLayout
 } from "@/components/SlateEditor/utils";
 import {ContentItem, ProjectApi, ProjectDetail} from "@/api";
-import {AuthUserContext} from "next-firebase-auth";
 import {headerConfig} from "@/api/headerConfig";
 import {debounce} from "lodash";
 import SaveIcon from '@mui/icons-material/Save';
@@ -32,14 +29,14 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import EditOffIcon from '@mui/icons-material/EditOff';
 import {toast, ToastContainer} from "react-toastify";
-import { pdf } from '@react-pdf/renderer';
-import { saveAs } from 'file-saver';
-import PDFGenerator from "@/components/SlateEditor/PDFGenerator";
+import {auth} from "@/utils/firebase-setup";
+// import { pdf } from '@react-pdf/renderer';
+// import { saveAs } from 'file-saver';
+// import PDFGenerator from "@/components/SlateEditor/PDFGenerator";
 
 
 export interface EditorProps {
   project: ProjectDetail,
-  user: AuthUserContext,
   setEditorRef: (ref: RefObject<HTMLElement>) => void,
   editable?: boolean
 }
@@ -99,11 +96,11 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
     }
   }
 
-  const exportPdf = async () => {
-    const blob = await pdf((<PDFGenerator content={contentSaved ? content : props.project.content as Descendant[]}/>))
-    .toBlob();
-    saveAs(blob, props.project.name + '.pdf');
-  };
+  // const exportPdf = async () => {
+  //   const blob = await pdf((<PDFGenerator content={contentSaved ? content : props.project.content as Descendant[]}/>))
+  //   .toBlob();
+  //   saveAs(blob, props.project.name + '.pdf');
+  // };
 
   const quickSaveToDb = () => {
     saveToDb(contentSaved ? content : props.project.content as Descendant[])
@@ -116,16 +113,19 @@ const ForcedLayoutEditor: FC<EditorProps> = (props) => {
 
   const saveToDb = (content: Descendant[]) => {
     if (props.editable) {
-      props.user?.getIdToken(false)
-      .then(tokenResult => {
-        const projectApi = new ProjectApi(headerConfig(tokenResult))
-        projectApi.updateProjectContent({
-          project_uid: props.project.id,
-          content: content as ContentItem[]
-        })
-        .then(_ => {
-        }).catch(e => console.log(e))
-      }).catch(e => console.log(e))
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          user.getIdToken(false)
+          .then(tokenResult => {
+            const projectApi = new ProjectApi(headerConfig(tokenResult))
+            projectApi.updateProjectContent({
+              project_uid: props.project.id,
+              content: content as ContentItem[]
+            })
+            .then(_ => {
+            }).catch(e => console.log(e))
+          }).catch(e => console.log(e))
+        }})
     }
   }
 

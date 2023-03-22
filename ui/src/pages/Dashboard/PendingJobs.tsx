@@ -2,8 +2,8 @@ import {Avatar, Box, Card, LinearProgress, styled, Typography} from '@mui/materi
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import {FC, useEffect, useState} from "react";
 import {JobStatus, Project, ProjectApi} from "@/api";
-import {AuthUserContext} from "next-firebase-auth";
 import {headerConfig} from "@/api/headerConfig";
+import {auth} from "@/utils/firebase-setup";
 
 const AvatarWrapperError = styled(Avatar)(
   ({ theme }) => `
@@ -18,7 +18,7 @@ const AvatarWrapperError = styled(Avatar)(
 
 export interface PendingJobsProps {
   project?: Project,
-  user?: AuthUserContext,
+  user?: {},
   onRefreshProjectList: () => void
 }
 const PendingJobs: FC<PendingJobsProps> = (props) => {
@@ -59,30 +59,35 @@ const PendingJobs: FC<PendingJobsProps> = (props) => {
   }, [])
 
   const getProgress = () => {
-      props?.user?.getIdToken(false)
-      .then(tokenResult => {
-        const projectApi = new ProjectApi(headerConfig(tokenResult))
-        projectApi.getProjectJobStatus(-1)
-        .then(response => {
-          if (response.data) {
-            if (response.data.project_id) {
-              if (response.data.status === JobStatus.Failed) {
-                setFailed(true)
-                setReasonFailed(response.data.message)
-              } else {
-                setPercent(response.data.percent_complete)
-                setEstimatedTime(response.data.estimated_time)
-                setFailed(failed)
-                setReasonFailed('')
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        user.getIdToken(false)
+        .then(tokenResult => {
+          const projectApi = new ProjectApi(headerConfig(tokenResult))
+          projectApi.getProjectJobStatus("")
+          .then(response => {
+            if (response.data) {
+              if (response.data.project_id) {
+                if (response.data.status === JobStatus.Failed) {
+                  setFailed(true)
+                  setReasonFailed(response.data.message)
+                } else {
+                  setPercent(response.data.percent_complete)
+                  setEstimatedTime(response.data.estimated_time)
+                  setFailed(failed)
+                  setReasonFailed('')
+                }
+                setPendingJob({
+                  project_name: response.data.project_name,
+                  project_uid: response.data.project_id
+                })
               }
-              setPendingJob({
-                project_name: response.data.project_name,
-                id: response.data.project_id
-              })
             }
-          }
+          }).catch(e => console.log(e))
         }).catch(e => console.log(e))
-      }).catch(e => console.log(e))
+      }
+
+    })
   }
 
   if (!pendingJob) {

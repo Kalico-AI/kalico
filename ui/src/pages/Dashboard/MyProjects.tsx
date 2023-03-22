@@ -6,15 +6,14 @@ import ConfirmActionDialog from "@/pages/Dashboard/ConfirmActionDialog";
 import {useRouter} from "next/router";
 import {PATHS} from "@/utils/constants";
 import PendingJobs from "@/pages/Dashboard/PendingJobs";
-import CreateDialog from "@/pages/Dashboard/CreateDialog";
 import {toast, ToastContainer, TypeOptions} from "react-toastify";
 import {CreateProjectRequest, Project, ProjectApi} from "@/api";
 import {headerConfig} from "@/api/headerConfig";
-import {AuthUserContext} from "next-firebase-auth";
+import {auth} from "@/utils/firebase-setup";
+import CreateDialog from "@/pages/Dashboard/CreateDialog";
 
 export interface MyProjectsProps {
-  projects?: Project[],
-  user: AuthUserContext
+  projects?: Project[]
 }
 
 const folderColors = {
@@ -41,69 +40,77 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
   }
 
   const onSubmitProject = (request: CreateProjectRequest) => {
-    props.user.getIdToken(false)
-    .then(tokenResult => {
-      const projectApi = new ProjectApi(headerConfig(tokenResult))
-      if (request.file) {
-        // If there is a file to upload, show upload progress
-        toast.promise(
-            projectApi.createProject(request),
-            {
-              pending: 'Uploading file...',
-              success: 'Your project is now being processed',
-            }
-        ).then(result => {
-          if (result && result.data) {
-            const newProject: Project = {
-              project_name: result.data.project_name,
-              project_uid: result.data.project_id
-            }
-            setProjectInProgress(newProject)
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        user.getIdToken(false)
+        .then(tokenResult => {
+          const projectApi = new ProjectApi(headerConfig(tokenResult))
+          if (request.file) {
+            // If there is a file to upload, show upload progress
+            toast.promise(
+                projectApi.createProject(request),
+                {
+                  pending: 'Uploading file...',
+                  success: 'Your project is now being processed',
+                }
+            ).then(result => {
+              if (result && result.data) {
+                const newProject: Project = {
+                  project_name: result.data.project_name,
+                  project_uid: result.data.project_id
+                }
+                setProjectInProgress(newProject)
+              }
+            })
+            .catch(e => {
+              const msg = e?.response?.data?.message ? e?.response?.data?.message : 'Something went wrong while uploading your file'
+              toast(msg, {
+                type: 'error',
+                position: toast.POSITION.TOP_CENTER
+              });
+            })
+            setCreateDialogOpen(false)
+          } else {
+            projectApi.createProject(request)
+            .then(response => {
+              let msg = response.data.error
+              let type: TypeOptions = 'error'
+              if (response.data && response.data.project_id) {
+                msg = 'Your project is now being processed'
+                type = 'success'
+              }
+              toast(msg, {
+                type: type,
+                position: toast.POSITION.TOP_CENTER
+              });
+              setCreateDialogOpen(false)
+            }).catch(e => {
+              toast(e.message, {
+                type: 'error',
+                position: toast.POSITION.TOP_CENTER
+              });
+            })
           }
-        })
-        .catch(e => {
-          const msg = e?.response?.data?.message ? e?.response?.data?.message : 'Something went wrong while uploading your file'
-          toast(msg, {
-            type: 'error',
-            position: toast.POSITION.TOP_CENTER
-          });
-        })
-        setCreateDialogOpen(false)
-      } else {
-        projectApi.createProject(request)
-        .then(response => {
-          let msg = response.data.error
-          let type: TypeOptions = 'error'
-          if (response.data && response.data.project_id) {
-            msg = 'Your project is now being processed'
-            type = 'success'
-          }
-          toast(msg, {
-            type: type,
-            position: toast.POSITION.TOP_CENTER
-          });
-          setCreateDialogOpen(false)
-        }).catch(e => {
-          toast(e.message, {
-            type: 'error',
-            position: toast.POSITION.TOP_CENTER
-          });
-        })
+        }).catch(e => console.log(e))
       }
-    }).catch(e => console.log(e))
+    })
   }
 
   const onRefreshProjectList = () => {
-    props?.user?.getIdToken(false)
-    .then(tokenResult => {
-      const projectApi = new ProjectApi(headerConfig(tokenResult))
-      projectApi.getAllProjects()
-      .then(response => {
-        if (response.data && response.data && response.data.records) {
-          setProjects([...response.data.records])
-        }
-      }).catch(e => console.log(e))
-    }).catch(e => console.log(e))
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        user.getIdToken(false)
+        .then(tokenResult => {
+          const projectApi = new ProjectApi(headerConfig(tokenResult))
+          projectApi.getAllProjects()
+          .then(response => {
+            if (response.data && response.data && response.data.records) {
+              setProjects([...response.data.records])
+            }
+          }).catch(e => console.log(e))
+        }).catch(e => console.log(e))
+      }
+    })
   }
 
   const onOpenProject = (projectId: string) => {
@@ -121,18 +128,22 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
   const onCloseDeleteDialog = (doDelete: boolean) => {
     setDeleteDialogOpen(false)
     if (doDelete && pendingDeleteProjectId) {
-      props?.user?.getIdToken(false)
-      .then(tokenResult => {
-        const projectApi = new ProjectApi(headerConfig(tokenResult))
-          projectApi.deleteProject(pendingDeleteProjectId)
-          .then(response => {
-            if (response.data.status) {
-              setPendingDeleteProjectId(undefined)
-              const filteredProjects = projects.filter(it => it.project_uid !== pendingDeleteProjectId)
-              setProjects([...filteredProjects])
-            }
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          user.getIdToken(false)
+          .then(tokenResult => {
+            const projectApi = new ProjectApi(headerConfig(tokenResult))
+            projectApi.deleteProject(pendingDeleteProjectId)
+            .then(response => {
+              if (response.data.status) {
+                setPendingDeleteProjectId(undefined)
+                const filteredProjects = projects.filter(it => it.project_uid !== pendingDeleteProjectId)
+                setProjects([...filteredProjects])
+              }
+            }).catch(e => console.log(e))
           }).catch(e => console.log(e))
-      }).catch(e => console.log(e))
+        }
+      })
     } else {
       setPendingDeleteProjectId(undefined)
     }
@@ -199,7 +210,6 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
       <Grid container className="dashboard-container">
         <Grid item sm={12} md={6}>
           <CreateDialog open={createDialogOpen}
-                        user={props.user}
                         onSubmit={onSubmitProject}
                         onClose={onCloseCreateDialog}/>
           <button
@@ -215,7 +225,6 @@ const MyProjects: FC<MyProjectsProps> = observer((props) => {
           <Box className="dashboard-pending-jobs">
             <PendingJobs
                 project={projectInProgress}
-                user={props.user}
                 onRefreshProjectList={onRefreshProjectList}
             />
           </Box>
