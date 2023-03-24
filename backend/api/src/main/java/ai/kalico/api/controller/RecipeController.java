@@ -35,4 +35,9 @@ public class RecipeController implements RecipeApi {
   public ResponseEntity<RecipeFull> getFullRecipe(String slug) {
     return ResponseEntity.ok(recipeService.getFullRecipe(slug));
   }
+
+  @Override
+  public ResponseEntity<PageableRecipeResponse> getTopRecipes(Integer page, Integer size) {
+    return ResponseEntity.ok(recipeService.getTopRecipes(page, size));
+  }
 }

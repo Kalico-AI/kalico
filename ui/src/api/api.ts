@@ -2231,6 +2231,50 @@ export const RecipeApiAxiosParamCreator = function (configuration?: Configuratio
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Get top
+         * @summary Get top recipes
+         * @param {number} page 
+         * @param {number} size 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTopRecipes: async (page: number, size: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('getTopRecipes', 'page', page)
+            // verify required parameter 'size' is not null or undefined
+            assertParamExists('getTopRecipes', 'size', size)
+            const localVarPath = `/recipe/top`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -2275,6 +2319,18 @@ export const RecipeApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getFullRecipe(slug, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * Get top
+         * @summary Get top recipes
+         * @param {number} page 
+         * @param {number} size 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTopRecipes(page: number, size: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageableRecipeResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTopRecipes(page, size, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -2315,6 +2371,17 @@ export const RecipeApiFactory = function (configuration?: Configuration, basePat
          */
         getFullRecipe(slug: string, options?: any): AxiosPromise<RecipeFull> {
             return localVarFp.getFullRecipe(slug, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get top
+         * @summary Get top recipes
+         * @param {number} page 
+         * @param {number} size 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTopRecipes(page: number, size: number, options?: any): AxiosPromise<PageableRecipeResponse> {
+            return localVarFp.getTopRecipes(page, size, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2361,6 +2428,19 @@ export class RecipeApi extends BaseAPI {
      */
     public getFullRecipe(slug: string, options?: any) {
         return RecipeApiFp(this.configuration).getFullRecipe(slug, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get top
+     * @summary Get top recipes
+     * @param {number} page 
+     * @param {number} size 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RecipeApi
+     */
+    public getTopRecipes(page: number, size: number, options?: any) {
+        return RecipeApiFp(this.configuration).getTopRecipes(page, size, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

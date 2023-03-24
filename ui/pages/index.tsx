@@ -55,9 +55,9 @@ const items = [
 ]
 
 export async function getServerSideProps(context) {
-  const page = context.query.page - 1
-  const limit = 10
-  const response = await new RecipeApi().getAllRecipes(page, limit)
+  const page = 0
+  const limit = 12
+  const response = await new RecipeApi().getTopRecipes(page, limit)
   console.log("Response: ", response.data)
   return {
     props: {

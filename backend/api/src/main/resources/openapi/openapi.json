@@ -558,6 +558,48 @@
         }
       }
     },
+    "/recipe/top": {
+      "get": {
+        "tags": [
+          "recipe"
+        ],
+        "summary": "Get top recipes",
+        "description": "Get top",
+        "operationId": "getTopRecipes",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All recipe response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageableRecipeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/recipe/single/{slug}": {
       "get": {
         "tags": [

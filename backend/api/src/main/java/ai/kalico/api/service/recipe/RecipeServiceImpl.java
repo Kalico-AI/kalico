@@ -30,4 +30,9 @@ public class RecipeServiceImpl implements RecipeService {
   public RecipeFull getFullRecipe(String slug) {
     return new RecipeFull();
   }
+
+  @Override
+  public PageableRecipeResponse getTopRecipes(Integer page, Integer size) {
+    return new PageableRecipeResponse();
+  }
 }
