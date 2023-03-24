@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Grid} from "@mui/material";
+import {Box, Grid} from "@mui/material";
 
 export interface GridViewProps {
   posts: []
@@ -7,33 +7,27 @@ export interface GridViewProps {
 const GridView: FC<GridViewProps> =  (props) => {
   return (
       <main className="recipe-container">
-        <Grid container className="grid-items" spacing={3}>
+        <Grid container className="grid-items" spacing={4}>
           {
             props.posts?.map((it, index) => {
               const url = '/recipe/' + it.slug
               return (
-                  <Grid item sm={3} key={index}>
+                  <Grid item sm={4} key={index}>
                     <article
                         className="grid-item-card"
                         aria-label={it.title}>
                       <a href={url} className="alignnone" aria-hidden="true">
                         <img width="600" height="850"
                              src={it.imgUrl}
-                             alt={it.title} decoding="async"
-                             data-lazy-src={it.imgUrl}
-                             data-ll-status="loaded"/>
-                        <noscript><img width="600" height="850"
-                                       src={it.imgUrl}
-                                       alt={it.title} decoding="async"/>
-                        </noscript>
+                             alt={it.title}/>
                       </a>
-                      <header className="entry-header">
-                        <p className="entry-meta">
+                      <Box className="entry-header">
+                        <span className="entry-meta">
                           <time className="entry-time">{it.date}</time>
-                        </p>
+                        </span>
                         <h2 className="entry-title"><a
                             href={url}>{it.title}</a></h2>
-                      </header>
+                      </Box>
                     </article>
                   </Grid>
               )

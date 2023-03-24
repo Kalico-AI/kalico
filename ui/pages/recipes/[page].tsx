@@ -127,9 +127,9 @@ const RecipeList: FC<RecipeListProps> =  (props) => {
           <title>Kalico | {project?.name}</title>
         </Head>
         <main>
-          <section className="container">
+          {/*<section className="container">*/}
             <ListView posts={props.posts}/>
-          </section>
+          {/*</section>*/}
         </main>
 
       </>

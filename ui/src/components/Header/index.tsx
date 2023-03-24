@@ -39,7 +39,7 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
               <div className="right-nav">
                 <a href="/"><p>Home</p></a>
                 <a href="/recipes/1"><p>Recipes</p></a>
-                <a href="/about"><p>About</p></a>
+                {/*<a href="/about"><p>About</p></a>*/}
               </div>
             </div>
           </div>

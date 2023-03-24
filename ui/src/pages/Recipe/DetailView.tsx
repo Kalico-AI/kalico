@@ -4,6 +4,7 @@ import {TopRecipesProps} from "@/pages/Recipe/TopRecipes";
 import Link from "next/link";
 import {urls} from "@/utils/paths";
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import SummaryComponent from "@/pages/Recipe/SummaryComponent";
 
 
 export interface DetailViewProps {
@@ -23,20 +24,7 @@ const DetailView: FC<DetailViewProps> =  (props) => {
             <Box className="title">
               <h3 >{props.post.title}</h3>
             </Box>
-            <Box className="summary-item-wrapper">
-              <Box className="recipe-summary-item right-border">
-                <span className="value h2-text">22</span>
-                <span className="unit">Ingredients</span>
-              </Box>
-              <Box className="recipe-summary-item right-border">
-                <span className="value h2-text">40</span>
-                <span className="unit">Minutes</span>
-              </Box>
-              <Box className="recipe-summary-item">
-                <span className="value h2-text">12</span>
-                <span className="unit">Steps</span>
-              </Box>
-            </Box>
+            <SummaryComponent steps={12} ingredients={22} time={40}/>
           </Grid>
         </Grid>
         <Divider><RestaurantMenuIcon/></Divider>

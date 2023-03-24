@@ -35,11 +35,14 @@ input:focus, textarea:focus {
 }
 .grid-item-card img {
   max-height: 400px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 }
 .recipe-container {
   max-width: 1200px;
   margin: 0 auto;
   margin-bottom: 100px;
+  padding: 20px;
 }
 .grid-items {
   padding: 20px;
@@ -52,15 +55,17 @@ input:focus, textarea:focus {
   border-left: 1px solid #eeeae8;
   border-right: 1px solid #eeeae8;
   border-bottom: 1px solid #eeeae8;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
   padding-top: 25px;
-  margin-top: -8px;
-  /*max-width: 300px;*/
+  margin-top: -20px;
 }
 .grid-items .entry-meta {
   text-align: center;
   margin-bottom: -8px;
   color: #404963;
   font-size: 11px;
+  display: block;
 }
 .summary-item-wrapper {
   padding-top: 30px;
@@ -149,6 +154,7 @@ input:focus, textarea:focus {
 .list-item-card img {
   /*max-width: 400px;*/
   width: 100%;
+  border-radius: 15px;
 }
 .grid-items .entry-title {
   font-size: 26px;
@@ -156,6 +162,7 @@ input:focus, textarea:focus {
   margin-bottom: 15px;
   padding: 15px 10px;
   text-align: center!important;
+  display: bock;
 }
 .grid-item-card a {
   text-decoration: none;
@@ -186,11 +193,15 @@ input:focus, textarea:focus {
   color: #525252;
   width: 120px;
 }
+
+.read-more-button {
+  margin-top: 2rem;
+}
 .view-all-button:hover, .read-more-button:hover {
   background: #ce9d86;
 }
 .recipe-detail {
-  margin-top: 4rem;
+  margin-top: 6rem;
   max-width: 870px;
 }
 .recipe-detail .title {

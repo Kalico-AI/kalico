@@ -3,6 +3,7 @@ import {Box, Grid} from "@mui/material";
 import {TopRecipesProps} from "@/pages/Recipe/TopRecipes";
 import Link from "next/link";
 import {urls} from "@/utils/paths";
+import SummaryComponent from "@/pages/Recipe/SummaryComponent";
 
 
 export interface ListViewProps {
@@ -29,19 +30,20 @@ const ListView: FC<ListViewProps> =  (props) => {
                     <Grid item md={6} sm={12} key={index}>
                       <Box
                           className="list-item-card middle">
-                        <header className="entry-header">
+                        <Box className="entry-header">
                           <p className="entry-meta">
                             <time className="entry-time">{it.date}</time>
                           </p>
                           <h2 className="entry-title"><a
                               href={url}>{it.title}</a></h2>
                           <p>{it.description}</p>
-                        </header>
+                        </Box>
+                        <SummaryComponent steps={12} ingredients={22} time={40}/>
                         <Box className="list-view-read-more">
                           <Link href={url}>
                             <button
                                 className="read-more-button"
-                            >Read More</button>
+                            >View Recipe</button>
                           </Link>
                         </Box>
                       </Box>
