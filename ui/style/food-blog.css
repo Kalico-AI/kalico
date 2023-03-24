@@ -275,3 +275,16 @@ a:hover {
 header {
   width: 100%;
 }
+.search-progress {
+  justify-content: center;
+  display: grid;
+  margin-top: 5vh;
+  width: 100%;
+}
+.search-progress .text, .search-progress .progress-box {
+  text-align: center;
+  margin: 0 auto;
+}
+.search-progress .text span {
+  font-size: 14px;
+}

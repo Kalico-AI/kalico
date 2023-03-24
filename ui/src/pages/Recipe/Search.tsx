@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
-import {Box} from "@mui/material";
+import {Box, CircularProgress} from "@mui/material";
 import SearchBar from "material-ui-search-bar";
 
 
 function Search() {
   const [value, setValue] = useState("")
+  const [showProgress, setShowProgress] = useState(false)
 
   const handleSubmit = () => {
+    setShowProgress(true)
     console.log("submitting search request...: ", value)
   }
   return (
@@ -17,6 +19,16 @@ function Search() {
                 onChange={(newValue) => setValue(newValue)}
                 onRequestSearch={handleSubmit}
             />
+              {showProgress &&
+                  <Box className="search-progress">
+                    <Box className="progress-box">
+                      <CircularProgress/>
+                    </Box>
+                    <Box className="text">
+                      <span>This will take just a minute</span>
+                    </Box>
+                  </Box>
+              }
             </Box>
   );
 }

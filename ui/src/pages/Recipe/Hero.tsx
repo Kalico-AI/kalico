@@ -9,7 +9,7 @@ function Hero() {
         <Grid container>
           <Grid item sm={12}>
             <Box className="hero">
-              <h2>Recipes and Nutrition Info from YouTube Videos</h2>
+              <h2>Recipes from YouTube</h2>
               {/*<h3>Instantly get ingredients, recipe steps, and nutrition info from any YouTube food video</h3>*/}
               {/*<h4>Instantly get ingredients, recipe steps, and nutrition info from any YouTube food video</h4>*/}
             </Box>
