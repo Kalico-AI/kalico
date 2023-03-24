@@ -10,12 +10,13 @@ const GridView: FC<GridViewProps> =  (props) => {
         <Grid container className="grid-items" spacing={3}>
           {
             props.posts?.map((it, index) => {
+              const url = '/recipe/' + it.slug
               return (
                   <Grid item sm={3} key={index}>
                     <article
                         className="grid-item-card"
                         aria-label={it.title}>
-                      <a href={it.url} className="alignnone" aria-hidden="true">
+                      <a href={url} className="alignnone" aria-hidden="true">
                         <img width="600" height="850"
                              src={it.imgUrl}
                              alt={it.title} decoding="async"
@@ -31,7 +32,7 @@ const GridView: FC<GridViewProps> =  (props) => {
                           <time className="entry-time">{it.date}</time>
                         </p>
                         <h2 className="entry-title"><a
-                            href={it.url}>{it.title}</a></h2>
+                            href={url}>{it.title}</a></h2>
                       </header>
                     </article>
                   </Grid>

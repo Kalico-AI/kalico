@@ -10,7 +10,6 @@ import Script from 'next/script'
 import Footer from "@/components/Footer";
 import HeaderNav from "@/components/Header";
 import 'react-toastify/dist/ReactToastify.css';
-import "style/blog.css"
 import "style/food-blog.css"
 
 type NextPageWithLayout = NextPage & {
