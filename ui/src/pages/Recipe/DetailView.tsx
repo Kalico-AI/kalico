@@ -1,8 +1,5 @@
 import React, {FC} from 'react';
 import {Box, Divider, Grid} from "@mui/material";
-import {TopRecipesProps} from "@/pages/Recipe/TopRecipes";
-import Link from "next/link";
-import {urls} from "@/utils/paths";
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import SummaryComponent from "@/pages/Recipe/SummaryComponent";
 

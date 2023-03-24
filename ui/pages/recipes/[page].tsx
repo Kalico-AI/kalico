@@ -86,45 +86,10 @@ interface RecipeListProps {
 
 
 const RecipeList: FC<RecipeListProps> =  (props) => {
-  const [project, setProject] = useState<ProjectDetail>()
-  const [showProgress, setShowProgress] = useState(true)
-  // const router = useRouter()
-
-  // const fetchProjectById = () => {
-  //   auth.onAuthStateChanged(user => {
-  //     if (user) {
-  //       user.getIdToken(false)
-  //       .then(tokenResult => {
-  //         const projectApi = new ProjectApi(headerConfig(tokenResult))
-  //         projectApi.getProjectById(props.projectId)
-  //         .then(response => {
-  //           if (response.data && response.data) {
-  //             setProject(response.data)
-  //             setShowProgress(false)
-  //           } else {
-  //             toast("Sorry, we could not locate that project", {
-  //               type: 'error',
-  //               position: toast.POSITION.TOP_CENTER
-  //             });
-  //             router.push({
-  //               pathname: PATHS.MY_PROJECTS
-  //             }).then(_ => {
-  //               setShowProgress(false)
-  //             })
-  //             .catch(e => console.log(e))
-  //           }
-  //         }).catch(e => console.log(e))
-  //       }).catch(e => console.log(e))
-  // }})}
-  //
-  // useEffect(() => {
-  //   fetchProjectById()
-  // }, [project])
-
   return (
       <>
         <Head>
-          <title>Kalico | {project?.name}</title>
+          <title>Kalico</title>
         </Head>
         <main>
           {/*<section className="container">*/}

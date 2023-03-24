@@ -1,8 +1,6 @@
 import React, {FC} from 'react';
 import {Box, Grid} from "@mui/material";
-import {TopRecipesProps} from "@/pages/Recipe/TopRecipes";
 import Link from "next/link";
-import {urls} from "@/utils/paths";
 import SummaryComponent from "@/pages/Recipe/SummaryComponent";
 
 
