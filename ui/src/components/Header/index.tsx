@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import {observer} from "mobx-react";
-import {Box} from "@mui/material";
 import {PATHS} from "@/utils/constants";
 import Link from "next/link";
 
@@ -8,13 +7,13 @@ export interface HeaderNavProps {
 }
 
 const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
-
-  let navbarClasses = "container-fluid"
-
   return (
       <header className="header">
         <nav className="navbar navbar-expand-lg menu_three sticky-nav">
-          <div className={navbarClasses}>
+          <div className="container-fluid">
+            <Link className="navbar-brand header_logo" href={PATHS.HOME}>
+              <img className="main_logo" src="/assets/images/logo.png" alt="logo"/>
+            </Link>
             <button
                 className="navbar-toggler collapsed"
                 type="button"
@@ -37,17 +36,11 @@ const HeaderNav: FC<HeaderNavProps> = observer((_props) => {
             </span>
             </button>
             <div className="collapse navbar-collapse justify-content-end" id="navbarText">
-              <Box className="header-left">
-                <Link className="navbar-brand header_logo" href={PATHS.HOME}>
-                  <img className="main_logo" src="/assets/images/logo.png" alt="logo"/>
-                </Link>
-              </Box>
-              <Box className="header-right">
+              <div className="right-nav">
                 <a href="/"><p>Home</p></a>
                 <a href="/recipes/1"><p>Recipes</p></a>
                 <a href="/about"><p>About</p></a>
-                {/*<a href={PATHS.LOGIN}><p>Sign In</p></a>*/}
-              </Box>
+              </div>
             </div>
           </div>
         </nav>
