@@ -6,6 +6,8 @@ import com.google.firebase.auth.FirebaseToken;
 import ai.kalico.api.utils.firebase.FirebaseService;
 import ai.kalico.api.utils.security.Credentials;
 import com.kalico.model.UserProfile;
+import java.io.IOException;
+import javax.servlet.ServletException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +57,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final FirebaseService firebaseService;
 
   @Override
-  @SneakyThrows
   protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                   FilterChain filterChain){
     // All non-preflight requests must have a valid authorization token
@@ -63,12 +64,16 @@ public class SecurityFilter extends OncePerRequestFilter {
       .anyMatch(method -> httpServletRequest.getMethod().toLowerCase().contains(method));
     boolean uriExcluded = Stream.of(
         "/actuator/health",
-        "/lead")
+        "/lead", "/recipe")
       .anyMatch(uri -> httpServletRequest.getRequestURI().toLowerCase().contains(uri));
     if (!(methodExcluded || uriExcluded)) {
       verifyToken(httpServletRequest);
     }
-    filterChain.doFilter(httpServletRequest, httpServletResponse);
+    try {
+      filterChain.doFilter(httpServletRequest, httpServletResponse);
+    } catch (IOException | ServletException e) {
+      throw new RuntimeException(e);
+    }
   }
 
     private void verifyToken(HttpServletRequest httpServletRequest) {

@@ -235,6 +235,31 @@ export interface CreateProjectResponse {
 /**
  * 
  * @export
+ * @interface CreateRecipeResponse
+ */
+export interface CreateRecipeResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateRecipeResponse
+     */
+    slug?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateRecipeResponse
+     */
+    error?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateRecipeResponse
+     */
+    status?: string;
+}
+/**
+ * 
+ * @export
  * @interface EmailCampaign
  */
 export interface EmailCampaign {
@@ -472,6 +497,31 @@ export interface MediaContent {
 /**
  * 
  * @export
+ * @interface PageableRecipeResponse
+ */
+export interface PageableRecipeResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableRecipeResponse
+     */
+    total_records: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableRecipeResponse
+     */
+    num_pages: number;
+    /**
+     * 
+     * @type {Array<RecipeLite>}
+     * @memberof PageableRecipeResponse
+     */
+    records: Array<RecipeLite>;
+}
+/**
+ * 
+ * @export
  * @interface PageableResponse
  */
 export interface PageableResponse {
@@ -598,6 +648,99 @@ export interface ProjectJobStatus {
      * @memberof ProjectJobStatus
      */
     error?: string;
+}
+/**
+ * 
+ * @export
+ * @interface RecipeFull
+ */
+export interface RecipeFull {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof RecipeFull
+     */
+    ingredients?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof RecipeFull
+     */
+    instructions?: Array<string>;
+    /**
+     * 
+     * @type {RecipeLite}
+     * @memberof RecipeFull
+     */
+    recipe_lite?: RecipeLite;
+}
+/**
+ * 
+ * @export
+ * @interface RecipeLite
+ */
+export interface RecipeLite {
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeLite
+     */
+    slug?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeLite
+     */
+    created_at?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeLite
+     */
+    title?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeLite
+     */
+    description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeLite
+     */
+    thumbnail?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeLite
+     */
+    num_ingredients?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeLite
+     */
+    num_steps?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeLite
+     */
+    cooking_time?: number;
+}
+/**
+ * 
+ * @export
+ * @interface StringDto
+ */
+export interface StringDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof StringDto
+     */
+    value?: string;
 }
 /**
  * 
@@ -1964,6 +2107,260 @@ export class ProjectApi extends BaseAPI {
      */
     public updateProjectContent(updateProjectContentRequest: UpdateProjectContentRequest, options?: any) {
         return ProjectApiFp(this.configuration).updateProjectContent(updateProjectContentRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * RecipeApi - axios parameter creator
+ * @export
+ */
+export const RecipeApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Create a new recipe from a url
+         * @summary Create a new recipe
+         * @param {StringDto} stringDto Create recipe request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRecipe: async (stringDto: StringDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'stringDto' is not null or undefined
+            assertParamExists('createRecipe', 'stringDto', stringDto)
+            const localVarPath = `/recipe/create`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(stringDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get a paginated list of recipes
+         * @summary Get all recipes
+         * @param {number} page 
+         * @param {number} size 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllRecipes: async (page: number, size: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('getAllRecipes', 'page', page)
+            // verify required parameter 'size' is not null or undefined
+            assertParamExists('getAllRecipes', 'size', size)
+            const localVarPath = `/recipe/all`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get full recipe by slug
+         * @summary Get full recipe
+         * @param {string} slug 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFullRecipe: async (slug: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'slug' is not null or undefined
+            assertParamExists('getFullRecipe', 'slug', slug)
+            const localVarPath = `/recipe/single/{slug}`
+                .replace(`{${"slug"}}`, encodeURIComponent(String(slug)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * RecipeApi - functional programming interface
+ * @export
+ */
+export const RecipeApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = RecipeApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Create a new recipe from a url
+         * @summary Create a new recipe
+         * @param {StringDto} stringDto Create recipe request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createRecipe(stringDto: StringDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateRecipeResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createRecipe(stringDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Get a paginated list of recipes
+         * @summary Get all recipes
+         * @param {number} page 
+         * @param {number} size 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllRecipes(page: number, size: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageableRecipeResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllRecipes(page, size, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Get full recipe by slug
+         * @summary Get full recipe
+         * @param {string} slug 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getFullRecipe(slug: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeFull>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getFullRecipe(slug, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * RecipeApi - factory interface
+ * @export
+ */
+export const RecipeApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RecipeApiFp(configuration)
+    return {
+        /**
+         * Create a new recipe from a url
+         * @summary Create a new recipe
+         * @param {StringDto} stringDto Create recipe request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRecipe(stringDto: StringDto, options?: any): AxiosPromise<CreateRecipeResponse> {
+            return localVarFp.createRecipe(stringDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get a paginated list of recipes
+         * @summary Get all recipes
+         * @param {number} page 
+         * @param {number} size 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllRecipes(page: number, size: number, options?: any): AxiosPromise<PageableRecipeResponse> {
+            return localVarFp.getAllRecipes(page, size, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get full recipe by slug
+         * @summary Get full recipe
+         * @param {string} slug 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFullRecipe(slug: string, options?: any): AxiosPromise<RecipeFull> {
+            return localVarFp.getFullRecipe(slug, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * RecipeApi - object-oriented interface
+ * @export
+ * @class RecipeApi
+ * @extends {BaseAPI}
+ */
+export class RecipeApi extends BaseAPI {
+    /**
+     * Create a new recipe from a url
+     * @summary Create a new recipe
+     * @param {StringDto} stringDto Create recipe request
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RecipeApi
+     */
+    public createRecipe(stringDto: StringDto, options?: any) {
+        return RecipeApiFp(this.configuration).createRecipe(stringDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get a paginated list of recipes
+     * @summary Get all recipes
+     * @param {number} page 
+     * @param {number} size 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RecipeApi
+     */
+    public getAllRecipes(page: number, size: number, options?: any) {
+        return RecipeApiFp(this.configuration).getAllRecipes(page, size, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get full recipe by slug
+     * @summary Get full recipe
+     * @param {string} slug 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RecipeApi
+     */
+    public getFullRecipe(slug: string, options?: any) {
+        return RecipeApiFp(this.configuration).getFullRecipe(slug, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

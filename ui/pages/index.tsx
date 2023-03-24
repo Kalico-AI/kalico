@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import Head from "next/head";
 import RecipeLanding from "@/pages/Recipe";
+import {RecipeApi} from "@/api";
 
 const items = [
   {
@@ -56,6 +57,8 @@ const items = [
 export async function getServerSideProps(context) {
   const page = context.query.page - 1
   const limit = 10
+  const response = await new RecipeApi().getAllRecipes(page, limit)
+  console.log("Response: ", response.data)
   return {
     props: {
       posts: items

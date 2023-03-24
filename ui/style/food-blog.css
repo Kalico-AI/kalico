@@ -288,3 +288,10 @@ header {
 .search-progress .text span {
   font-size: 14px;
 }
+.search-bar-container p {
+  text-align: center;
+  color: red;
+  width: 100%;
+  font-size: 14px;
+  padding-top: 30px;
+}

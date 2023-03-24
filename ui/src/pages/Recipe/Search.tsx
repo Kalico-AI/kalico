@@ -6,6 +6,7 @@ import SearchBar from "material-ui-search-bar";
 function Search() {
   const [value, setValue] = useState("")
   const [showProgress, setShowProgress] = useState(false)
+  const [error, setError] = useState('d')
 
   const handleSubmit = () => {
     setShowProgress(true)
@@ -29,6 +30,7 @@ function Search() {
                     </Box>
                   </Box>
               }
+              {error && <p className="error">Sorry, that link that does not contain a food recipe</p>}
             </Box>
   );
 }

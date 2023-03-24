@@ -482,6 +482,113 @@
           }
         }
       }
+    },
+    "/recipe/create": {
+      "post": {
+        "tags": [
+          "recipe"
+        ],
+        "summary": "Create a new recipe",
+        "description":"Create a new recipe from a url",
+        "operationId": "createRecipe",
+        "requestBody": {
+          "required": true,
+          "description": "Create recipe request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StringDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateRecipeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipe/all": {
+      "get": {
+        "tags": [
+          "recipe"
+        ],
+        "summary": "Get all recipes",
+        "description": "Get a paginated list of recipes",
+        "operationId": "getAllRecipes",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All recipe response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageableRecipeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipe/single/{slug}": {
+      "get": {
+        "tags": [
+          "recipe"
+        ],
+        "summary": "Get full recipe",
+        "description": "Get full recipe by slug",
+        "operationId": "getFullRecipe",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full recipe response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeFull"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1111,6 +1218,105 @@
           },
           "pinterest": {
             "type": "string"
+          }
+        }
+      },
+      "CreateRecipeResponse": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "StringDto": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "PageableRecipeResponse": {
+        "type": "object",
+        "required": [
+          "total_records",
+          "num_pages",
+          "records"
+        ],
+        "properties": {
+          "total_records": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "num_pages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecipeLite"
+            }
+          }
+        }
+      },
+      "RecipeLite": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "num_ingredients": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "num_steps": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cooking_time": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RecipeFull": {
+        "type": "object",
+        "properties": {
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "instructions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recipe_lite": {
+            "$ref": "#/components/schemas/RecipeLite"
           }
         }
       }
