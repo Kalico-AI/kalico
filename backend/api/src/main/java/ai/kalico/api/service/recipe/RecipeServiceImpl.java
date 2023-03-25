@@ -1,5 +1,7 @@
 package ai.kalico.api.service.recipe;
 
+import ai.kalico.api.data.postgres.entity.RecipeEntity;
+import ai.kalico.api.data.postgres.repo.RecipeRepo;
 import com.kalico.model.CreateRecipeResponse;
 import com.kalico.model.PageableRecipeResponse;
 import com.kalico.model.RecipeFull;
@@ -15,9 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
-
+  private final RecipeRepo recipeRepo;
   @Override
   public CreateRecipeResponse createRecipe(StringDto stringDto) {
+    RecipeEntity recipeEntity = new RecipeEntity();
+    recipeEntity.setTitle("Untitled");
+    recipeEntity.setCanonicalUrl(stringDto.getValue());
+    recipeRepo.save(recipeEntity);
     return new CreateRecipeResponse().status(stringDto.getValue());
   }
 

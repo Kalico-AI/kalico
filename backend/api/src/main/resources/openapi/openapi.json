@@ -1345,6 +1345,9 @@
       "RecipeFull": {
         "type": "object",
         "properties": {
+          "summary": {
+            "type": "string"
+          },
           "ingredients": {
             "type": "array",
             "items": {
