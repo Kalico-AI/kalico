@@ -1295,7 +1295,7 @@
         "properties": {
           "total_records": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "num_pages": {
             "type": "integer",

@@ -21,38 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface RecipeRepo extends JpaRepository<RecipeEntity, Long> {
 
-//  @Query(value = "SELECT * " +
-//      "FROM project " +
-//      "WHERE user_id = ?1 AND processed = true "
-//      + "ORDER BY created_at DESC ",
-//      nativeQuery = true)
-//  List<ProjectEntity> findAllProjectsByUserId(String userId);
-//
-//  @Query(value = "SELECT * " +
-//      "FROM project " +
-//      "WHERE user_id = ?1 AND project_uid = ?2 AND processed = true ",
-//      nativeQuery = true)
-//  Optional<ProjectEntity> findProjectByUserIdAndProjectUid(String userId, String projectId);
-//
-//  @Query(value = "SELECT * " +
-//      "FROM project " +
-//      "WHERE user_id = ?1 AND processed = false "
-//      + "ORDER BY created_at DESC "
-//      + "LIMIT 1 ",
-//      nativeQuery = true)
-//  Optional<ProjectEntity> findPendingJob(String userId);
-//
-//  @Query(value = "SELECT "
-//      + "p.project_uid as projectUid, "
-//      + "p.project_name as projectName, "
-//      + "p.created_at as projectCreatedAt, "
-//      + "mc.permalink as contentUrl, "
-//      + "u.email as email, "
-//      + "u.full_name as fullName, "
-//      + "u.created_at as registeredOn " +
-//      "FROM public.project p "
-//      + "JOIN public.user u ON u.firebase_id = p.user_id "
-//      + "INNER JOIN public.media_content mc ON mc.project_id = p.id ",
-//      nativeQuery = true)
-//  Page<UserProjectProjection> findAllUserProjects(Pageable pageable);
+  Optional<RecipeEntity> findBySlug(String slug);
+  @Query(value = "SELECT * FROM public.recipe",
+      nativeQuery = true)
+  Page<RecipeEntity> findAllRecipes(Pageable pageable);
 }

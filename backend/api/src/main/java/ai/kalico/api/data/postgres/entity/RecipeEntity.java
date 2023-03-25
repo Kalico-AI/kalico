@@ -11,7 +11,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 /**
  * @author Bizuwork Melesse
@@ -68,13 +67,11 @@ public class RecipeEntity {
     @Column(name = "cooking_time_minutes")
     private Integer cookingTimeMinutes;
 
-    @Type(type = "ai.kalico.api.data.type.ArrayUserType")
-    @Column(name = "ingredients", columnDefinition = "text[]")
-    Object[] ingredients;
+    @Column(name = "ingredients")
+    String ingredients;
 
-    @Type(type = "ai.kalico.api.data.type.ArrayUserType")
-    @Column(name = "instructions", columnDefinition = "text[]")
-    Object[] instructions;
+    @Column(name = "instructions")
+    String instructions;
 
     @Basic
     @Column(name = "processed")
