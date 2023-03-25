@@ -12,5 +12,5 @@ public interface RecipeService {
   CreateRecipeResponse createRecipe(StringDto stringDto);
   PageableRecipeResponse getAllRecipes(Integer page, Integer size);
   RecipeFull getFullRecipe(String slug);
-  PageableRecipeResponse getTopRecipes(Integer page, Integer size);
+  PageableRecipeResponse getMostRecentRecipes(Integer page, Integer size);
 }

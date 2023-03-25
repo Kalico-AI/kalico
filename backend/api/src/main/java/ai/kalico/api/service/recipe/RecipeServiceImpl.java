@@ -38,7 +38,7 @@ public class RecipeServiceImpl implements RecipeService {
   }
 
   @Override
-  public PageableRecipeResponse getTopRecipes(Integer page, Integer size) {
+  public PageableRecipeResponse getMostRecentRecipes(Integer page, Integer size) {
     return new PageableRecipeResponse();
   }
 }

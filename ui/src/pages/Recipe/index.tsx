@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import Hero from "@/pages/Recipe/Hero";
 import Search from "@/pages/Recipe/Search";
-import TopRecipes from "@/pages/Recipe/TopRecipes";
+import MostRecentRecipes from "@/pages/Recipe/MostRecentRecipes";
 import {IndexProps} from "../../../pages";
 
 
@@ -11,7 +11,7 @@ const RecipeLanding: FC<IndexProps> =  (props) => {
         <main>
           <Hero/>
           <Search/>
-          <TopRecipes posts={props.posts}/>
+          <MostRecentRecipes posts={props.posts}/>
           {/*<VideoDemo/>*/}
           {/*<WhyKalico/>*/}
           {/*<HowItWorks/>*/}

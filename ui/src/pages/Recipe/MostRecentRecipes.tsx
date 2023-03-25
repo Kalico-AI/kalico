@@ -5,10 +5,10 @@ import GridView from "@/pages/Recipe/GridView";
 import {urls} from "@/utils/paths";
 import Link from "next/link";
 
-export interface TopRecipesProps {
+export interface MostRecentRecipesProps {
   posts: []
 }
-const TopRecipes: FC<TopRecipesProps> =  (props) => {
+const MostRecentRecipes: FC<MostRecentRecipesProps> =  (props) => {
   // const router = useRouter()
   //
   // const onViewAll = () => {
@@ -18,7 +18,7 @@ const TopRecipes: FC<TopRecipesProps> =  (props) => {
   return (
   <Container className="top-recipes">
     <Box className="top-recipes-title">
-      <h4>Top Recipes</h4>
+      <h4>Most Recent Recipes</h4>
     </Box>
     <GridView posts={props.posts}/>
     <Box className="top-recipes-view-all">
@@ -33,4 +33,4 @@ const TopRecipes: FC<TopRecipesProps> =  (props) => {
   );
 }
 
-export default TopRecipes;
+export default MostRecentRecipes;

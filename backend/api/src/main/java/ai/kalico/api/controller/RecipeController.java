@@ -37,7 +37,7 @@ public class RecipeController implements RecipeApi {
   }
 
   @Override
-  public ResponseEntity<PageableRecipeResponse> getTopRecipes(Integer page, Integer size) {
-    return ResponseEntity.ok(recipeService.getTopRecipes(page, size));
+  public ResponseEntity<PageableRecipeResponse> getMostRecentRecipes(Integer page, Integer size) {
+    return ResponseEntity.ok(recipeService.getMostRecentRecipes(page, size));
   }
 }

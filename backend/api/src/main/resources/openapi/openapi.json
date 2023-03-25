@@ -558,14 +558,14 @@
         }
       }
     },
-    "/recipe/top": {
+    "/recipe/most-recent": {
       "get": {
         "tags": [
           "recipe"
         ],
-        "summary": "Get top recipes",
-        "description": "Get top",
-        "operationId": "getTopRecipes",
+        "summary": "Get most recent recipes",
+        "description": "Get get most recent recipes",
+        "operationId": "getMostRecentRecipes",
         "parameters": [
           {
             "in": "query",
@@ -588,7 +588,7 @@
         ],
         "responses": {
           "200": {
-            "description": "All recipe response",
+            "description": "Most recent response",
             "content": {
               "application/json": {
                 "schema": {

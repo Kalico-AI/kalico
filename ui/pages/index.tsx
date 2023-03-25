@@ -54,7 +54,7 @@ const items = [
   }
 ]
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(_context) {
   const page = 0
   const limit = 12
   const response = await new RecipeApi().getTopRecipes(page, limit)
