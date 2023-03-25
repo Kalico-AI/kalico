@@ -93,6 +93,14 @@ public class RecipeServiceIntegrationTest extends AbstractTestNGSpringContextTes
     }
 
     @Test
+    public void createRecipeFullWorkflowTest() {
+        StringDto stringDto = new StringDto().value("https://www.youtube.com/watch?v=U-0JCdjkREU");
+        CreateRecipeResponse response = recipeService.createRecipe(stringDto);
+        assertNotNull(response);
+        assertTrue(response.getStatus().contains("processing"));
+    }
+
+    @Test
     public void getMostRecentRecipesTest() {
         recipeRepo.deleteAll();
         createRecipes();

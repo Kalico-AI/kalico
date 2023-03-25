@@ -5,6 +5,7 @@ package ai.kalico.api.service.download;
  */
 public interface DownloadService {
   void instagramReelDownload(String contentId, String permalink, String url, String path);
+  void downloadImage(String url, String path);
 
   /**
    * Generate HTTP Live Streaming (HLS) files and upload them to S3.
@@ -15,4 +16,6 @@ public interface DownloadService {
    * @param hlsPath
    */
   void generateHlsManifest(String mp4Path, String hlsPath);
+
+
 }

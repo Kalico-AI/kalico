@@ -49,6 +49,18 @@ public class S3ServiceImpl implements S3Service {
         }
     }
 
+    @Override
+    public void uploadImageAsync(String bucket, String key, String path, String contentType) {
+        AsyncTask.submit(() -> {
+                try (InputStream in = new FileInputStream(path)) {
+                    uploadImage(bucket, key, in, contentType);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            },
+            null);
+    }
+
     private String getCdnUrl(String key) {
         return awsProps.getCdn() + "/" + key;
     }

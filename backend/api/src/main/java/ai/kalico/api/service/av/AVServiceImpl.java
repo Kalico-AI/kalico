@@ -97,7 +97,7 @@ public class AVServiceImpl implements AVService {
         recipeRepo.save(entity);
       }
     }
-    startAsyncMediaProcessing(dto, null, true);
+//    startAsyncMediaProcessing(dto, null, true);
   }
 
   @Async

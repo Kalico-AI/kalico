@@ -38,9 +38,18 @@ public class DownloadServiceImpl implements DownloadService {
 
   @Override
   public void instagramReelDownload(String contentId, String permalink, String url, String path) {
+    log.info("Downloading content for content ID {}: permalink={} mediaUrl={}",
+        contentId, permalink, url);
+    download(url, path);
+  }
+
+  @Override
+  public void downloadImage(String url, String path) {
+    download(url, path);
+  }
+
+  private void download(String url, String path) {
     try {
-      log.info("Downloading content for content ID {}: permalink={} mediaUrl={}",
-          contentId, permalink, url);
       final CloseableHttpClient httpClient = HttpClients.createDefault();
       HttpGet httpGet = new HttpGet(new URI(url));
       HttpEntity httpEntity = httpClient.execute(httpGet).getEntity();
@@ -56,7 +65,6 @@ public class DownloadServiceImpl implements DownloadService {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
   }
 
   @SneakyThrows

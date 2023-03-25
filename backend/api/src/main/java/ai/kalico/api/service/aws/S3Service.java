@@ -28,6 +28,7 @@ public interface S3Service {
      * @return
      */
     void uploadImage(String bucket, String key, InputStream stream, String contentType);
+    void uploadImageAsync(String bucket, String key, String path, String contentType);
 
     void uploadImagesAsync(String bucket, List<Pair<String, String>> fileNameKeyList, String contentType);
 

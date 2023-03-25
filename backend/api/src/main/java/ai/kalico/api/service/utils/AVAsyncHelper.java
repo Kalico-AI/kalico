@@ -49,6 +49,7 @@ public class AVAsyncHelper {
   private final LanguageService languageService;
   private final ProjectProps projectProps;
 
+
   @Async
   public void uploadImages(OcrRequest ocrRequest, Long projectId) {
     List<String> fileNames;
@@ -242,7 +243,10 @@ public class AVAsyncHelper {
 
   @Async
   public void uploadRemoteImage(String url, String contentId) {
-
+    String path = getJpgPath(contentId);
+    downloadService.downloadImage(url, path);
+    String key = awsProps.getImageFolder() + "/" + contentId;
+    s3Service.uploadImageAsync(awsProps.getBucket(), key, path, S3Service.IMAGE_TYPE);
   }
 
   private String getOCrModifiedImagePath(String ocrPath) {
@@ -255,6 +259,10 @@ public class AVAsyncHelper {
 
   public String getTranscriptPath(String mediaId) {
     return getParentPath(mediaId) + "/" + mediaId + ".wav.txt";
+  }
+
+  public String getJpgPath(String mediaId) {
+    return getParentPath(mediaId) + "/" + mediaId + ".jpg";
   }
 
   public String getAudioPath(String mediaId) {
