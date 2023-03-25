@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface RecipeRepo extends JpaRepository<RecipeEntity, Long> {
 
   Optional<RecipeEntity> findBySlug(String slug);
+  Optional<RecipeEntity> findByContentId(String contentId);
   @Query(value = "SELECT * FROM public.recipe",
       nativeQuery = true)
   Page<RecipeEntity> findAllRecipes(Pageable pageable);

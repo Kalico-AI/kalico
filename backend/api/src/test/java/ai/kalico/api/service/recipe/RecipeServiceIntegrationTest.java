@@ -2,6 +2,7 @@ package ai.kalico.api.service.recipe;
 
 import ai.kalico.api.data.postgres.entity.RecipeEntity;
 import ai.kalico.api.data.postgres.repo.RecipeRepo;
+import ai.kalico.api.props.AWSProps;
 import ai.kalico.api.service.ServiceTestConfiguration;
 import ai.kalico.api.utils.migration.FlywayMigration;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +13,7 @@ import com.kalico.model.StringDto;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * @author Bizuwork Melesse
@@ -47,6 +50,9 @@ public class RecipeServiceIntegrationTest extends AbstractTestNGSpringContextTes
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private AWSProps awsProps;
 
     private final int numRecipes = 10;
 
@@ -70,11 +76,20 @@ public class RecipeServiceIntegrationTest extends AbstractTestNGSpringContextTes
     }
 
     @Test
-    public void createRecipe() {
-      StringDto stringDto = new StringDto().value("https://www.youtube.com/watch?v=U-0JCdjkREU");
-      CreateRecipeResponse response = recipeService.createRecipe(stringDto);
-      assertNotNull(response);
-      assertNotNull(response.getStatus());
+    public void createRecipeDirectTest() {
+        RecipeEntity entity = new RecipeEntity();
+        entity.setContentId("U-0JCdjkREU-" + UUID.randomUUID());
+        entity.setCanonicalUrl("https://www.youtube.com/watch?v=U-0JCdjkREU");
+        entity.setThumbnail(String.format("%s/%s/%s.jpg",
+            awsProps.getCdn(),
+            awsProps.getImageFolder(),
+            entity.getContentId()));
+        recipeRepo.save(entity);
+        Optional<RecipeEntity> entityOpt = recipeRepo.findByContentId(entity.getContentId());
+        assertTrue(entityOpt.isPresent());
+        RecipeEntity savedEntity = entityOpt.get();
+        assertThat(savedEntity.getThumbnail(),
+            startsWith("https://d229njkjc1dgnt.cloudfront.net/image/" + entity.getContentId() + ".jpg"));
     }
 
     @Test

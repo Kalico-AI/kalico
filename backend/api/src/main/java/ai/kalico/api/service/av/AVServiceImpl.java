@@ -4,9 +4,11 @@ import static com.amazonaws.util.StringUtils.UTF8;
 
 import ai.kalico.api.data.postgres.entity.MediaContentEntity;
 import ai.kalico.api.data.postgres.entity.ProjectEntity;
+import ai.kalico.api.data.postgres.entity.RecipeEntity;
 import ai.kalico.api.data.postgres.entity.UserEntity;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.data.postgres.repo.ProjectRepo;
+import ai.kalico.api.data.postgres.repo.RecipeRepo;
 import ai.kalico.api.data.postgres.repo.UserRepo;
 import ai.kalico.api.dto.VideoInfoDto;
 import ai.kalico.api.props.ProjectProps;
@@ -27,19 +29,13 @@ import ai.kalico.api.service.utils.Platform;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.kalico.model.ContentPreviewResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -51,8 +47,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import org.springframework.util.MultiValueMap;
@@ -76,6 +70,7 @@ public class AVServiceImpl implements AVService {
   private final ProjectRepo projectRepo;
   private final UserRepo userRepo;
   private final ObjectMapper objectMapper;
+  private final RecipeRepo recipeRepo;
 
 
   // Refer to https://gist.github.com/sidneys/7095afe4da4ae58694d128b1034e01e2 for YouTube
@@ -88,31 +83,33 @@ public class AVServiceImpl implements AVService {
 
   @Async
   @Override
+  public void processRecipeContent(String url, VideoInfoDto dto, String contentId) {
+    log.info("Starting video processing for url {}", url);
+    ContentPreviewResponse preview = parseContentMetadata(dto);
+    if (preview.getThumbnail() != null) {
+      asyncHelper.uploadRemoteImage(preview.getThumbnail(), contentId);
+    } else {
+      // Thumbnail not found so override with a default placeholder
+      Optional<RecipeEntity> entityOpt = recipeRepo.findByContentId(contentId);
+      if (entityOpt.isPresent()) {
+        RecipeEntity entity = entityOpt.get();
+        entity.setThumbnail(projectProps.getDefaultRecipeThumbnail());
+        recipeRepo.save(entity);
+      }
+    }
+    startAsyncMediaProcessing(dto, null, true);
+  }
+
+  @Async
+  @Override
   public void processMedia(String url, Long projectId, String file, String fileExtension) {
     log.info("Starting video processing for url {}", url);
     if (url != null) {
-      url = normalizeUrl(url);
+      url = KALUtils.normalizeUrl(url);
       VideoInfoDto dto = getContent(url);
       if (dto != null) {
         createMediaContentFromUrl(dto, projectId);
-        try {
-          if (dto.getPlatform() == Platform.YOUTUBE) {
-            youtubeDownloader
-                .getConfig()
-                .getExecutorService()
-                .submit(() -> processYouTubeVideo(dto, projectId))
-                .get();
-          } else if (dto.getPlatform() == Platform.INSTAGRAM) {
-            youtubeDownloader
-                .getConfig()
-                .getExecutorService()
-                .submit(() -> processInstagramVideo(dto, projectId))
-                .get();
-          }
-        } catch (InterruptedException | ExecutionException e) {
-          log.error("AVServiceImpl.startVideoProcessing: {}", e.getLocalizedMessage());
-          e.printStackTrace();
-        }
+        startAsyncMediaProcessing(dto, projectId, false);
       } else {
        log.error("AVServiceImpl.processMedia Failed to fetch video info for url={}", url);
       }
@@ -128,14 +125,27 @@ public class AVServiceImpl implements AVService {
     }
   }
 
-  @Override
-  public String normalizeUrl(String url) {
-    if (url.toLowerCase().contains("youtube")) {
-      // Turn youtube mobile url into regular url
-      return url.replace("m.youtube", "www.youtube");
+  void startAsyncMediaProcessing(VideoInfoDto dto, Long projectId, boolean recipeContent) {
+    try {
+      if (dto.getPlatform() == Platform.YOUTUBE) {
+        youtubeDownloader
+            .getConfig()
+            .getExecutorService()
+            .submit(() -> processYouTubeVideo(dto, projectId, recipeContent))
+            .get();
+      } else if (dto.getPlatform() == Platform.INSTAGRAM) {
+        youtubeDownloader
+            .getConfig()
+            .getExecutorService()
+            .submit(() -> processInstagramVideo(dto, projectId, recipeContent))
+            .get();
+      }
+    } catch (InterruptedException | ExecutionException e) {
+      log.error("AVServiceImpl.startVideoProcessing: {}", e.getLocalizedMessage());
+      e.printStackTrace();
     }
-    return url;
   }
+
 
   private boolean isAudio(String fileExtension) {
     return projectProps.getSupportedAudioFormats().contains(fileExtension.toLowerCase());
@@ -185,8 +195,9 @@ public class AVServiceImpl implements AVService {
    * @param url
    * @return
    */
-  private VideoInfoDto getContent(String url) {
-      Platform platform = getPlatform(url);
+  @Override
+  public VideoInfoDto getContent(String url) {
+      Platform platform = KALUtils.getPlatform(url);
       log.info("Fetching content metadata for {}", url);
       VideoInfoDto videoInfoDto  = null;
       if (platform == Platform.YOUTUBE) {
@@ -205,7 +216,7 @@ public class AVServiceImpl implements AVService {
   }
 
   @Override
-  public void processYouTubeVideo(VideoInfoDto videoInfoDto, Long projectId) {
+  public void processYouTubeVideo(VideoInfoDto videoInfoDto, Long projectId, boolean recipeContent) {
       String mediaId = videoInfoDto.getVideoInfo().details().videoId();
       RequestVideoFileDownload request = new RequestVideoFileDownload(videoInfoDto.getFormat())
           .saveTo(new File(asyncHelper.getParentPath(mediaId)))
@@ -217,7 +228,7 @@ public class AVServiceImpl implements AVService {
       }
     // Download the transcript, if available
     downloadYouTubeTranscript(mediaId, videoInfoDto);
-    submitAsyncTasks(path, mediaId, true, projectId);
+    submitAsyncTasks(path, mediaId, true, projectId, recipeContent);
   }
 
   private void downloadYouTubeTranscript(String mediaId, VideoInfoDto videoInfoDto) {
@@ -279,7 +290,7 @@ public class AVServiceImpl implements AVService {
     if (!Files.exists(Path.of(path))) {
       saveFile(file, path);
     }
-    submitAsyncTasks(path, mediaId, true, projectId);
+    submitAsyncTasks(path, mediaId, true, projectId, false);
   }
 
   @Override
@@ -288,12 +299,16 @@ public class AVServiceImpl implements AVService {
     if (!Files.exists(Path.of(path))) {
       saveFile(file, path);
     }
-    submitAsyncTasks(path, mediaId, false, projectId);
+    submitAsyncTasks(path, mediaId, false, projectId, false);
   }
 
   @Override
   public ContentPreviewResponse downloadContentMetadata(String url) {
     VideoInfoDto dto = getContent(url);
+    return parseContentMetadata(dto);
+  }
+
+  private ContentPreviewResponse parseContentMetadata(VideoInfoDto dto) {
     if (dto != null) {
       ContentPreviewResponse response = new ContentPreviewResponse();
       try {
@@ -324,12 +339,6 @@ public class AVServiceImpl implements AVService {
           }
           response.setThumbnail(thumbnail); // The biggest thumbnail
         }
-//        else {
-//           Instagram thumbnails require same origin
-//          if (dto.getImageUrl() != null)  {
-//            response.setThumbnail(dto.getImageUrl());
-//          }
-//        }
 
       } catch (NullPointerException e) {
         // pass
@@ -350,7 +359,6 @@ public class AVServiceImpl implements AVService {
       }
       return response;
     }
-
     return new ContentPreviewResponse();
   }
 
@@ -389,7 +397,7 @@ public class AVServiceImpl implements AVService {
   }
 
   @Override
-  public void processInstagramVideo(VideoInfoDto videoInfoDto, Long projectId) {
+  public void processInstagramVideo(VideoInfoDto videoInfoDto, Long projectId, boolean recipeContent) {
     String mediaId = videoInfoDto.getMediaIdOverride();
     String path = asyncHelper.getVideoPath(mediaId);
     if (!Files.exists(Path.of(path))) {
@@ -399,10 +407,11 @@ public class AVServiceImpl implements AVService {
           videoInfoDto.getUrl(),
           asyncHelper.getVideoPath(mediaId));
     }
-    submitAsyncTasks(path, mediaId, true, projectId);
+    submitAsyncTasks(path, mediaId, true, projectId, recipeContent);
   }
 
-  private void submitAsyncTasks(String path, String mediaId, boolean isVideo, Long projectId) {
+  private void submitAsyncTasks(String path, String mediaId, boolean isVideo, Long projectId,
+      boolean recipeContent) {
     // Generate audio file for transcoding and perform audio to text
     asyncHelper.processAudio(mediaId, projectId);
 
@@ -475,21 +484,5 @@ public class AVServiceImpl implements AVService {
     return vId;
   }
 
-  private Platform getPlatform(String url) {
-    URL parsedUrl = null;
-    try {
-      parsedUrl = new URL(url);
-    } catch (MalformedURLException e) {
-      log.error(e.getLocalizedMessage());
-    }
-    if (parsedUrl != null) {
-      if (parsedUrl.getHost().toLowerCase().contains("youtube")) {
-        return Platform.YOUTUBE;
-      }
-      else if (parsedUrl.getHost().toLowerCase().contains("instagram")) {
-        return Platform.INSTAGRAM;
-      }
-    }
-    return Platform.INVALID;
-  }
+
 }

@@ -91,7 +91,7 @@ public class ProjectServiceImpl implements ProjectService {
      if (!ObjectUtils.isEmpty(file) &&  !ObjectUtils.isEmpty(ext)) {
         url = null;
       }  else if (!ObjectUtils.isEmpty(url)) {
-       url = avService.normalizeUrl(url);
+       url = KALUtils.normalizeUrl(url);
        if (!isSupportedUrl(url)) {
          return new CreateProjectResponse().error("The link provided is not yet supported");
        }
@@ -309,7 +309,7 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public ContentPreviewResponse getContentPreview(String url) {
-    return avService.downloadContentMetadata(avService.normalizeUrl(url));
+    return avService.downloadContentMetadata(KALUtils.normalizeUrl(url));
   }
 
   @Override

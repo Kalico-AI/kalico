@@ -5,10 +5,10 @@ CREATE SEQUENCE IF NOT EXISTS pk_sequence_recipe
 
 CREATE TABLE IF NOT EXISTS public.recipe (
     id BIGSERIAL NOT NULL constraint recipe_id_fk primary key,
-    content_id varchar(256),
+    content_id varchar(256) not null,
+    canonical_url varchar(256) not null,
     slug varchar(256),
-    canonical_url varchar(256),
-    title varchar not null default 'Untitled',
+    title varchar(256),
     description varchar(256),
     summary varchar,
     thumbnail varchar(256),

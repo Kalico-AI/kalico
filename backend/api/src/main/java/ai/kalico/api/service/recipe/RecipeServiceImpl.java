@@ -3,6 +3,11 @@ package ai.kalico.api.service.recipe;
 import ai.kalico.api.data.postgres.entity.RecipeEntity;
 import ai.kalico.api.data.postgres.projection.UserProjectProjection;
 import ai.kalico.api.data.postgres.repo.RecipeRepo;
+import ai.kalico.api.dto.VideoInfoDto;
+import ai.kalico.api.props.AWSProps;
+import ai.kalico.api.service.av.AVService;
+import ai.kalico.api.service.utils.KALUtils;
+import ai.kalico.api.service.utils.Platform;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,6 +32,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author Biz Melesse created on 3/24/23
@@ -37,14 +43,61 @@ import org.springframework.stereotype.Service;
 public class RecipeServiceImpl implements RecipeService {
   private final RecipeRepo recipeRepo;
   private final ObjectMapper objectMapper;
+  private final AVService avService;
+  private final AWSProps awsProps;
   
   @Override
   public CreateRecipeResponse createRecipe(StringDto stringDto) {
-    RecipeEntity recipeEntity = new RecipeEntity();
-    recipeEntity.setTitle("Untitled");
-    recipeEntity.setCanonicalUrl(stringDto.getValue());
-    recipeRepo.save(recipeEntity);
-    return new CreateRecipeResponse().status(stringDto.getValue());
+    var url = stringDto.getValue();
+    if (ObjectUtils.isEmpty(url)) {
+      return new CreateRecipeResponse().error("URL must not be empty");
+    }
+    url = KALUtils.normalizeUrl(url);
+    if (KALUtils.getPlatform(url) == Platform.INVALID) {
+      return new CreateRecipeResponse().error("Platform not yet supported. Please try with a YouTube link");
+    }
+    VideoInfoDto dto = avService.getContent(url);
+    if (dto == null) {
+      return new CreateRecipeResponse().error("Unable to process the provided url");
+    }
+
+    var canonicalUrl = dto.getPermalink();
+    var contentId = dto.getMediaIdOverride();
+    if (dto.getVideoInfo() != null && dto.getVideoInfo().details() != null) {
+      contentId = dto.getVideoInfo().details().videoId();
+      canonicalUrl = "https://www.youtube.com/watch?v=" + contentId;
+    }
+    if (contentId != null) {
+      var inProgressMsg = "We're currently processing this url. Please check again in a few minutes.";
+      Optional<RecipeEntity> entityOpt = recipeRepo.findByContentId(contentId);
+      if (entityOpt.isPresent()) {
+        RecipeEntity entity = entityOpt.get();
+        if (entity.getProcessed() && entity.getFailed()) {
+          // Failed to process
+          return new CreateRecipeResponse().error(entity.getReasonFailed());
+        } else if (entity.getProcessed() && entity.getSlug() != null) {
+          // Successfully processed
+          return new CreateRecipeResponse().slug(entity.getSlug()).status("OK");
+        } else {
+          // In progress
+          return new CreateRecipeResponse().status(inProgressMsg);
+        }
+      } else {
+        RecipeEntity entity = new RecipeEntity();
+        entity.setContentId(contentId);
+        entity.setCanonicalUrl(canonicalUrl);
+        entity.setThumbnail(String.format("%s/%s/%s.jpg",
+            awsProps.getCdn(),
+            awsProps.getImageFolder(),
+            contentId));
+        recipeRepo.save(entity);
+        avService.processRecipeContent(canonicalUrl, dto, contentId);
+        return new CreateRecipeResponse().status(inProgressMsg);
+      }
+    }
+    log.warn("Failed to process url because contentId is not found: {}", url);
+    // Should never reach here
+    return new CreateRecipeResponse().error("Unable to process this url");
   }
 
   @Override

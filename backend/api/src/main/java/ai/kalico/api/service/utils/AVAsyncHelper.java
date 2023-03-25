@@ -240,6 +240,11 @@ public class AVAsyncHelper {
     }
   }
 
+  @Async
+  public void uploadRemoteImage(String url, String contentId) {
+
+  }
+
   private String getOCrModifiedImagePath(String ocrPath) {
     return ocrPath + "/tesseract";
   }

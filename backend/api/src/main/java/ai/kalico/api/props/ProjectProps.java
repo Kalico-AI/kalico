@@ -28,5 +28,6 @@ public class ProjectProps {
     private String baseImageCdnUrl;
     private Double fps;
     private String urlNotSupportedMessage;
+    private String defaultRecipeThumbnail;
 
 }
