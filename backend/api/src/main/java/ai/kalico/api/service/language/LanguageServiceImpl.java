@@ -206,11 +206,11 @@ public class LanguageServiceImpl implements LanguageService {
   }
 
   private List<String> extractIngredients(List<String> lines) {
-    List<String> ingredients = new ArrayList();
+    List<String> ingredients = new ArrayList<>();
     boolean ingredientHeaderFound = false;
     for (int i = 0; i < lines.size(); i++) {
       var lower = lines.get(i).toLowerCase();
-      if (lower.contains("ingredient")) {
+      if (lower.startsWith("ingredient")) {
         ingredientHeaderFound = true;
         var text = cleanup(lines.get(i));
         if (!ObjectUtils.isEmpty(text)) {
@@ -229,11 +229,13 @@ public class LanguageServiceImpl implements LanguageService {
   }
 
   private List<String> extractInstructions(List<String> lines) {
-    List<String> instructions = new ArrayList();
+    List<String> instructions = new ArrayList<>();
     boolean instructionHeaderFound = false;
     for (int i = 0; i < lines.size(); i++) {
       var lower = lines.get(i).toLowerCase();
-      if (lower.contains("instruction") || lower.contains("step")) {
+      if (lower.startsWith("instruction") ||
+          lower.startsWith("step") ||
+          lower.startsWith("recipe step")) {
         instructionHeaderFound = true;
       } else if (instructionHeaderFound && startsWithNumber(lower)) {
         instructions.add(cleanup(lines.get(i)));
@@ -248,7 +250,7 @@ public class LanguageServiceImpl implements LanguageService {
     var body = "";
     for (int i = 0; i< lines.size(); i++) {
       var lower = lines.get(i).toLowerCase();
-      if (lower.contains("summary")) {
+      if (lower.startsWith("summary")) {
         summaryHeaderFound = true;
 
         // The summary may appear on the same line as the header itself
@@ -270,7 +272,7 @@ public class LanguageServiceImpl implements LanguageService {
     for (int i = 0; i< lines.size(); i++) {
       var lower = lines.get(i).toLowerCase();
       if (lower.contains("title")) {
-        return extractTitle(lines.get(i));
+        return cleanup(lines.get(i));
       }
     }
     return "";
@@ -712,9 +714,9 @@ public class LanguageServiceImpl implements LanguageService {
     if (!ObjectUtils.isEmpty(input)) {
       return input
           .replace("\"", "")
-          .replaceFirst("^(\\w+\\s*\\d*:\\s*)", "")
+          .replaceFirst("^([\\w+\\s*\\d*\s]+:\\s*)", "")
           .replace("\n", " ")
-          .replaceAll("[^A-Za-z0-9\s\'\\.]", "")
+          .replaceAll("[^A-Za-z0-9\s\'\\.-]", "")
           .trim();
     }
     return input;
