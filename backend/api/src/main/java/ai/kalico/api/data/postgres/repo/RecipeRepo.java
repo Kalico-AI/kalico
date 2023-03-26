@@ -23,7 +23,7 @@ public interface RecipeRepo extends JpaRepository<RecipeEntity, Long> {
 
   Optional<RecipeEntity> findBySlug(String slug);
   Optional<RecipeEntity> findByContentId(String contentId);
-  @Query(value = "SELECT * FROM public.recipe",
+  @Query(value = "SELECT * FROM public.recipe WHERE processed = true",
       nativeQuery = true)
   Page<RecipeEntity> findAllRecipes(Pageable pageable);
 }

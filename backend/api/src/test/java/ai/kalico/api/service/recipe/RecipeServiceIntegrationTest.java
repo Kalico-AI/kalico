@@ -99,7 +99,6 @@ public class RecipeServiceIntegrationTest extends AbstractTestNGSpringContextTes
         CreateRecipeResponse response = recipeService.createRecipe(stringDto);
         assertNotNull(response);
         assertTrue(response.getStatus().contains("processing"));
-        Thread.sleep(60000);
     }
 
     @Test
@@ -150,6 +149,7 @@ public class RecipeServiceIntegrationTest extends AbstractTestNGSpringContextTes
             entity.setSummary(entity.getDescription());
             entity.setNumIngredients(20);
             entity.setNumSteps(12);
+            entity.setProcessed(true);
             entity.setSlug("how-to-cook-chicken-well-" + UUID.randomUUID());
             entity.setThumbnail("https://picsum.photos/800/800");
             entity.setIngredients(objectMapper.writeValueAsString(List.of(
