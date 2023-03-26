@@ -18,7 +18,7 @@ interface RecipeDetailProps {
 
 
 const RecipeDetailIndex: FC<RecipeDetailProps> =  (props) => {
-
+  console.log("post: ", props.post)
   return (
       <>
         <Head>

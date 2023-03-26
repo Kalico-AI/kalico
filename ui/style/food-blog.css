@@ -197,6 +197,10 @@ input:focus, textarea:focus {
   text-align: center;
   margin: 30px auto 0;
 }
+.list-view-read-more {
+  margin: 0 auto;
+  text-align: center;
+}
 .view-all-button, .read-more-button {
   background: #e7bfac;
   padding: 2px 0px;

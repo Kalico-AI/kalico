@@ -663,12 +663,6 @@ export interface ProjectJobStatus {
 export interface RecipeFull {
     /**
      * 
-     * @type {string}
-     * @memberof RecipeFull
-     */
-    summary?: string;
-    /**
-     * 
      * @type {Array<string>}
      * @memberof RecipeFull
      */
@@ -715,7 +709,7 @@ export interface RecipeLite {
      * @type {string}
      * @memberof RecipeLite
      */
-    description?: string;
+    summary?: string;
     /**
      * 
      * @type {string}

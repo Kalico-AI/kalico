@@ -34,7 +34,7 @@ const ListView: FC<ListViewProps> =  (props) => {
                           </p>
                           <h3 className="entry-title"><a
                               href={url}>{it.title}</a></h3>
-                          <p>{truncatedDescription(it.description)}</p>
+                          <p>{truncatedDescription(it.summary)}</p>
                         </Box>
                         <SummaryComponent steps={it.num_steps}
                                           ingredients={it.num_ingredients}

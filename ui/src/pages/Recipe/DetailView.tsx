@@ -30,7 +30,7 @@ const DetailView: FC<DetailViewProps> =  (props) => {
         <Divider><RestaurantMenuIcon/></Divider>
         <Box className="recipe-detail-bottom">
           <Box className="summary">
-            <p>{props.post.summary}</p>
+            <p>{props.post.recipe_lite.summary}</p>
           </Box>
           <Box className="ingredients">
             <h3>Ingredients</h3>
