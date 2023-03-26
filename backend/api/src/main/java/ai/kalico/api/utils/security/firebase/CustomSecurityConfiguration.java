@@ -51,7 +51,7 @@ import java.util.Map;
         ReactiveManagementWebSecurityAutoConfiguration.class,
         ReactiveSecurityAutoConfiguration.class
 })
-@ConditionalOnProperty(value = "security.firebaseEnabled")
+@ConditionalOnProperty(value = "security.firebase-enabled")
 @Import(FirewallConfiguration.class)
 @ComponentScan(basePackages = {"ai.kalico.api.utils.security.firebase"})
 @RequiredArgsConstructor
@@ -81,8 +81,9 @@ public class CustomSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(
-                        "/actuator/health**",
-                        "/lead/**",
+                    "/actuator/health**",
+                    "/lead/**",
+                    "/project/content/preview/**",
                     "/recipe/**")
           .permitAll()
                 .anyRequest().authenticated()
