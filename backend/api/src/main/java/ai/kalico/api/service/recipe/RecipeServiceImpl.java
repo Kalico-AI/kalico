@@ -59,7 +59,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
     VideoInfoDto dto = avService.getContent(url);
     if (dto == null) {
-      return new CreateRecipeResponse().error("Unable to process the provided url");
+      return new CreateRecipeResponse().error("Unable to process the url provided");
     }
 
     var canonicalUrl = dto.getPermalink();
