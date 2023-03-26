@@ -42,8 +42,8 @@ configure(subprojects.findAll(it ->
 )) {
   group = 'com.kalico'
   version = '1.0.0'
-  sourceCompatibility = '11'
-  targetCompatibility = '11'
+  sourceCompatibility = '16'
+  targetCompatibility = '16'
 
   apply plugin: 'io.spring.dependency-management'
   apply plugin: 'org.springframework.boot'
