@@ -3,8 +3,10 @@ package ai.kalico.api.service.language;
 import ai.kalico.api.RootConfiguration;
 import ai.kalico.api.data.postgres.entity.MediaContentEntity;
 import ai.kalico.api.data.postgres.entity.ProjectEntity;
+import ai.kalico.api.data.postgres.entity.RecipeEntity;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.data.postgres.repo.ProjectRepo;
+import ai.kalico.api.data.postgres.repo.RecipeRepo;
 import ai.kalico.api.props.OpenAiProps;
 import ai.kalico.api.service.openai.OpenAiService;
 import ai.kalico.api.service.openai.completion.CompletionChoice;
@@ -26,6 +28,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -51,6 +54,7 @@ public class LanguageServiceImpl implements LanguageService {
   private final OpenAiProps openAiProps;
   private OpenAiService openAiService;
   private final ObjectMapper objectMapper;
+  private final RecipeRepo recipeRepo;
 
   @PostConstruct
   public void onStart() {
@@ -59,7 +63,11 @@ public class LanguageServiceImpl implements LanguageService {
   }
 
   @Override
-  public List<ContentItem> generateContent(Long projectId) {
+  public List<ContentItem> generateContent(Long projectId, String mediaId, boolean recipeContent) {
+    if (recipeContent) {
+      generateRecipeContent(mediaId);
+      return new ArrayList<>();
+    }
     MediaContentEntity contentEntity = mediaContentRepo.findByProjectId(projectId);
     long then = Instant.now().toEpochMilli();
     if (contentEntity != null) {
@@ -151,6 +159,55 @@ public class LanguageServiceImpl implements LanguageService {
 
     log.info("LanguageServiceImpl.generateContent Failed to start content generation for projectId={}", projectId);
     return new ArrayList<>();
+  }
+
+  private void generateRecipeContent(String contentId) {
+    Optional<RecipeEntity> recipeEntityOpt = recipeRepo.findByContentId(contentId);
+    if (recipeEntityOpt.isPresent()) {
+      RecipeEntity recipeEntity = recipeEntityOpt.get();
+      log.info("LanguageServiceImpl.generateRecipeContent Starting content generation for contentId={}",
+          contentId);
+      List<String> chunkedTranscript = chunkTranscript(
+          cleanup(recipeEntity.getTranscript()),
+          openAiProps.getRecipe().getChunkSize());
+      // Use just the first chunk of the recipe transcript. Chunks are about 2048 words long,
+      // which is a lot for any food recipe. It's also hard to consolidate technical recipe
+      // information contained across several chunks. Therefore, using just the first chunk
+      // will ensure that the final content is self-consistent. GPT-4 has an 8K token window,
+      // which we can use it becomes necessary. For now, the 4K token window in GPT-3 is
+      // sufficient.
+      var chunk = chunkedTranscript.get(0);
+      ConcurrentHashMap<String, GptResponse> asyncResponse = new ConcurrentHashMap<>();
+      List<CompletableFuture<Void>> tasks = new ArrayList<>(List.of(
+          CompletableFuture.runAsync(() -> generateRecipeTitle(chunk, asyncResponse), RootConfiguration.executor),
+          CompletableFuture.runAsync(() -> generateRecipeSummary(chunk, asyncResponse), RootConfiguration.executor),
+          CompletableFuture.runAsync(() -> generateRecipeDescription(chunk, asyncResponse), RootConfiguration.executor),
+          CompletableFuture.runAsync(() -> generateRecipeIngredients(chunk, asyncResponse), RootConfiguration.executor),
+          CompletableFuture.runAsync(() -> generateRecipeInstructions(chunk, asyncResponse), RootConfiguration.executor)
+      ));
+      awaitVoid(tasks);
+
+    }
+  }
+
+  private void generateRecipeTitle(String context, ConcurrentHashMap<String, GptResponse> asyncResponse) {
+    asyncResponse.put(RecipePartName.TITLE, recipeGptCompletion(openAiProps.getRecipe().getTitle(), context));
+  }
+
+  private void generateRecipeSummary(String context, ConcurrentHashMap<String, GptResponse> asyncResponse) {
+    asyncResponse.put(RecipePartName.SUMMARY, recipeGptCompletion(openAiProps.getRecipe().getSummary(), context));
+  }
+
+  private void generateRecipeDescription(String context, ConcurrentHashMap<String, GptResponse> asyncResponse) {
+    asyncResponse.put(RecipePartName.DESCRIPTION, recipeGptCompletion(openAiProps.getRecipe().getDescription(), context));
+  }
+
+  private void generateRecipeIngredients(String context, ConcurrentHashMap<String, GptResponse> asyncResponse) {
+    asyncResponse.put(RecipePartName.INGREDIENTS, recipeGptCompletion(openAiProps.getRecipe().getIngredients(), context));
+  }
+
+  private void generateRecipeInstructions(String context, ConcurrentHashMap<String, GptResponse> asyncResponse) {
+    asyncResponse.put(RecipePartName.INSTRUCTIONS, recipeGptCompletion(openAiProps.getRecipe().getInstructions(), context));
   }
 
   private List<ClusterItem> getClustersWithHeadings(List<GptResponse> clusters) {
@@ -414,11 +471,49 @@ public class LanguageServiceImpl implements LanguageService {
     return new GptResponse(0, new ArrayList<>(), null);
   }
 
+  private  GptResponse recipeGptCompletion(String prompt, String context) {
+    String query = String.format("%s\n%s", prompt, cleanup(context));
+    CompletionRequest completionRequest = CompletionRequest.builder()
+        .model(openAiProps.getModel())
+        .prompt(query)
+        .echo(false)
+        .temperature(openAiProps.getRecipe().getTemp())
+        .n(1)
+        .maxTokens(openAiProps.getRecipe().getMaxTokens())
+        .user(openAiProps.getUser())
+        .logitBias(new HashMap<>())
+        .build();
+    int retried = 0;
+    while (retried < openAiProps.getNumRetries()) {
+      try {
+        return new GptResponse(0, openAiService.createCompletion(completionRequest).getChoices(), null);
+      } catch (Exception e) {
+        // Catch network timeout errors and retry
+        try {
+          // Sleep for 5 seconds
+          Thread.sleep(5000L);
+        } catch (InterruptedException ex) {
+          // ignore
+        }
+        retried++;
+        log.error("LanguageServiceImpl.recipeGptCompletion {}", e.getLocalizedMessage());
+      }
+    }
+    return new GptResponse(0, new ArrayList<>(), null);
+  }
+
   private List<GptResponse> await(List<CompletableFuture<GptResponse>> tasks) {
     return tasks
         .stream()
         .map(CompletableFuture::join)
         .sorted(Comparator.comparing(GptResponse::getSortOrder))
+        .collect(Collectors.toList());
+  }
+
+  private List<Void> awaitVoid(List<CompletableFuture<Void>> tasks) {
+    return tasks
+        .stream()
+        .map(CompletableFuture::join)
         .collect(Collectors.toList());
   }
 
@@ -520,5 +615,13 @@ public class LanguageServiceImpl implements LanguageService {
     private String rawText;
     private List<String> paragraphs;
     private int sortOrder;
+  }
+
+  private static class RecipePartName {
+    public static final String TITLE = "title";
+    public static final String SUMMARY = "summary";
+    public static final String DESCRIPTION = "description";
+    public static final String INGREDIENTS = "ingredients";
+    public static final String INSTRUCTIONS = "instructions";
   }
 }

@@ -1,7 +1,9 @@
 package ai.kalico.api.service.utils;
 
+import ai.kalico.api.data.postgres.entity.RecipeEntity;
 import ai.kalico.api.data.postgres.entity.SampledImageEntity;
 import ai.kalico.api.data.postgres.entity.MediaContentEntity;
+import ai.kalico.api.data.postgres.repo.RecipeRepo;
 import ai.kalico.api.data.postgres.repo.SampledImageRepo;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.dto.Pair;
@@ -21,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -43,6 +46,7 @@ public class AVAsyncHelper {
   private final AWSProps awsProps;
   private final S3Service s3Service;
   private final MediaContentRepo mediaContentRepo;
+  private final RecipeRepo recipeRepo;
   private final SampledImageRepo sampledImageRepo;
   private final DockerImageProps dockerImageProps;
   private final DownloadService downloadService;
@@ -150,7 +154,7 @@ public class AVAsyncHelper {
 
   @SneakyThrows
   @Async
-  public void processAudio(String mediaId, Long projectId) {
+  public void processAudio(String mediaId, Long projectId, boolean recipeContent) {
     String videoPath = getVideoPath(mediaId);
     String audioPath = getAudioPath(mediaId);
     log.info("Starting audio processing for mediaId={} projectId={}", mediaId, projectId);
@@ -193,10 +197,10 @@ public class AVAsyncHelper {
     else {
       log.trace("Failed to locate video file at {}", videoPath);
     }
-    runStt(mediaId, audioPath, projectId);
+    runStt(mediaId, audioPath, projectId, recipeContent);
   }
 
-  private void runStt(String mediaId, String audioPath, Long projectId) {
+  private void runStt(String mediaId, String audioPath, Long projectId, boolean recipeContent) {
     log.info("Starting STT service for mediaId={} projectId={}", mediaId, projectId);
     if (!Files.exists(Path.of(getTranscriptPath(mediaId)))) {
       SttRequest sttRequest = new SttRequest();
@@ -207,8 +211,8 @@ public class AVAsyncHelper {
     } else {
       log.info("Skipping STT for mediaId={} projectId={}. Audio transcript already exists.", mediaId, projectId);
     }
-    saveTranscriptToDb(mediaId, projectId);
-    languageService.generateContent(projectId);
+    saveTranscriptToDb(mediaId, projectId, recipeContent);
+    languageService.generateContent(projectId, mediaId, recipeContent);
   }
 
   @Async
@@ -224,16 +228,25 @@ public class AVAsyncHelper {
     uploadImages(ocrRequest, projectId);
   }
 
-  private void saveTranscriptToDb(String mediaId, Long projectId) {
+  private void saveTranscriptToDb(String mediaId, Long projectId, boolean recipeContent) {
     String transcriptPath = getTranscriptPath(mediaId);
     if (Files.exists(Path.of(transcriptPath))) {
       File file = new File(transcriptPath);
       try {
         String transcript = new String(Files.readAllBytes(file.toPath()));
-        MediaContentEntity entity = mediaContentRepo.findByProjectId(projectId);
-        if (entity != null) {
-          entity.setRawTranscript(transcript);
-          mediaContentRepo.save(entity);
+        if (recipeContent) {
+          Optional<RecipeEntity> recipeEntityOpt = recipeRepo.findByContentId(mediaId);
+          if (recipeEntityOpt.isPresent()) {
+            RecipeEntity recipeEntity = recipeEntityOpt.get();
+            recipeEntity.setTranscript(transcript);
+            recipeRepo.save(recipeEntity);
+          }
+        } else {
+          MediaContentEntity entity = mediaContentRepo.findByProjectId(projectId);
+          if (entity != null) {
+            entity.setRawTranscript(transcript);
+            mediaContentRepo.save(entity);
+          }
         }
       } catch (IOException e) {
         e.printStackTrace();

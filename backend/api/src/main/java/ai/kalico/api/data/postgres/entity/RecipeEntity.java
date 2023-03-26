@@ -52,6 +52,10 @@ public class RecipeEntity {
     private String summary;
 
     @Basic
+    @Column(name = "transcript")
+    private String transcript;
+
+    @Basic
     @Column(name = "thumbnail")
     private String thumbnail;
 

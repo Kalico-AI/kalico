@@ -100,7 +100,7 @@ public class LanguageServiceIntegrationTest extends AbstractTestNGSpringContextT
     @Test
     public void generateContentTest() {
         Long projectId = createProject();
-        List<ContentItem> response = languageService.generateContent(projectId);
+        List<ContentItem> response = languageService.generateContent(projectId, null, false);
         assertNotNull(response);
     }
 

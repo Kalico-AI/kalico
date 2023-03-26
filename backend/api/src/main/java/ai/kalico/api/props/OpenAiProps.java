@@ -1,5 +1,6 @@
 package ai.kalico.api.props;
 
+import ai.kalico.api.dto.RecipeProps;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -29,4 +30,5 @@ public class OpenAiProps {
     private int descriptionCharacterLimit = 256;
     private int requestTimeoutSeconds = 300;
     private int paragraphThresholdCharCount = 1000;
+    private RecipeProps recipe;
 }

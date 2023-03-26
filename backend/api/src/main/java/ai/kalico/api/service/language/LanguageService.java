@@ -15,7 +15,7 @@ public interface LanguageService {
    * @param projectId
    * @return the generated content formatted for rendering in the UI
    */
-  List<ContentItem> generateContent(Long projectId);
+  List<ContentItem> generateContent(Long projectId, String mediaId, boolean recipeContent);
 
   /**
    * Cleanup text by extracting texts and number without any special characters

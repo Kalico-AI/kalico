@@ -97,7 +97,7 @@ public class AVServiceImpl implements AVService {
         recipeRepo.save(entity);
       }
     }
-//    startAsyncMediaProcessing(dto, null, true);
+    startAsyncMediaProcessing(dto, null, true);
   }
 
   @Async
@@ -413,7 +413,7 @@ public class AVServiceImpl implements AVService {
   private void submitAsyncTasks(String path, String mediaId, boolean isVideo, Long projectId,
       boolean recipeContent) {
     // Generate audio file for transcoding and perform audio to text
-    asyncHelper.processAudio(mediaId, projectId);
+    asyncHelper.processAudio(mediaId, projectId, recipeContent);
 
     if (isVideo) {
       if (isPremiumUser(projectId)) {
