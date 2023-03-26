@@ -1,16 +1,60 @@
 import React, {useState} from 'react';
 import {Box, CircularProgress} from "@mui/material";
 import SearchBar from "material-ui-search-bar";
-import {RecipeApi} from "@/api";
+import {ProjectApi, RecipeApi} from "@/api";
 import {useRouter} from "next/router";
-
 
 function Search() {
   const [value, setValue] = useState("")
   const [showProgress, setShowProgress] = useState(false)
   const [error, setError] = useState('')
   const [status, setStatus] = useState('')
+  const [contentThumbnail, setContentThumbnail] = useState<string | undefined>(undefined)
+  const [contentTitle, setContentTitle] = useState<string | undefined>(undefined)
+  const [contentDuration, setContentDuration] = useState<string | undefined>(undefined)
   const router = useRouter()
+
+  const resetState = (newValue: string, oldValue: string) => {
+    if (newValue !== oldValue) {
+      setContentTitle(undefined)
+      setContentDuration(undefined)
+      setContentThumbnail(undefined)
+      setError('')
+      setStatus('')
+    }
+  }
+
+  const getContentPreview = (url: string) => {
+    if (url && url.includes("http")) {
+      new ProjectApi().getContentPreview(url)
+      .then(response => {
+        console.log("response.data: ", response.data)
+        if (response.data.title) {
+          let shortTitle = response.data.title.substring(0, 200) + "..."
+          setContentTitle(shortTitle)
+        } else {
+          setContentTitle('')
+        }
+        if (response.data.thumbnail) {
+          setContentThumbnail(response.data.thumbnail)
+        } else {
+          setContentThumbnail('')
+        }
+        if (response.data.duration) {
+          setContentDuration(response.data.duration)
+        } else {
+          setContentDuration('')
+        }
+      })
+      .catch(e => console.log(e))
+    }
+  }
+
+  const handleValue = (newValue: string) => {
+    resetState(newValue, value)
+    setValue(newValue)
+    getContentPreview(newValue)
+  }
 
   const handleSubmit = () => {
     setShowProgress(true)
@@ -41,9 +85,22 @@ function Search() {
             <SearchBar
                 value={value}
                 placeholder="https://www.youtube.com/watch?v=mCNH9rn2OS0"
-                onChange={(newValue) => setValue(newValue)}
+                onChange={handleValue}
                 onRequestSearch={handleSubmit}
             />
+              {contentTitle &&
+                  <Box className="search-content-preview">
+                    {contentThumbnail &&
+                        <Box className="content-link-preview">
+                          <img src={contentThumbnail} alt={''}/>
+                        </Box>
+                    }
+                    <Box className="content-link-preview">
+                      {contentTitle && <h6>{contentTitle}</h6>}
+                      {contentDuration && <span>{contentDuration}</span>}
+                    </Box>
+                  </Box>
+              }
               {showProgress &&
                   <Box className="search-progress">
                     <Box className="progress-box">
@@ -54,8 +111,8 @@ function Search() {
                     </Box>
                   </Box>
               }
-              {error && <p className="error">{error}</p>}
-              {status && <p className="success">{status}</p>}
+              {!status && error && <p className="error">{error}</p>}
+              {!error && status && <p className="success">{status}</p>}
             </Box>
   );
 }

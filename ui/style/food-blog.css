@@ -160,6 +160,14 @@ input:focus, textarea:focus {
   width: 100%;
   border-radius: 15px;
 }
+.search-content-preview {
+  display: inline-flex;
+  margin-top: 3rem;
+  border: 1px solid #e8e8e8;
+  border-radius: 15px;
+  padding: 20px;
+
+}
 .grid-items .entry-title {
   font-size: 26px;
   line-height: 1.3;

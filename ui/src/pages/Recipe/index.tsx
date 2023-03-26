@@ -11,7 +11,7 @@ const RecipeLanding: FC<IndexProps> =  (props) => {
         <main>
           <Hero/>
           <Search/>
-          <MostRecentRecipes posts={props.posts}/>
+          {props.posts.length > 0 && <MostRecentRecipes posts={props.posts}/>}
         </main>
       </>
   );
