@@ -202,7 +202,7 @@ public class LanguageServiceImpl implements LanguageService {
       var instructions = extractInstructions(lines);
       return new RecipeGptResponse(title, summary, ingredients, instructions);
     }
-    return new RecipeGptResponse("", "", new ArrayList(), new ArrayList());
+    return new RecipeGptResponse("", "", new ArrayList<>(), new ArrayList<>());
   }
 
   private List<String> extractIngredients(List<String> lines) {
@@ -270,7 +270,7 @@ public class LanguageServiceImpl implements LanguageService {
     for (int i = 0; i< lines.size(); i++) {
       var lower = lines.get(i).toLowerCase();
       if (lower.contains("title")) {
-        return lines.get(i);
+        return extractTitle(lines.get(i));
       }
     }
     return "";
@@ -714,6 +714,7 @@ public class LanguageServiceImpl implements LanguageService {
           .replace("\"", "")
           .replaceFirst("^(\\w+\\s*\\d*:\\s*)", "")
           .replace("\n", " ")
+          .replaceAll("[^A-Za-z0-9\s\'\\.]", "")
           .trim();
     }
     return input;
