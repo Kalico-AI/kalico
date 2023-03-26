@@ -83,11 +83,10 @@ public class AVServiceImpl implements AVService {
 
   @Async
   @Override
-  public void processRecipeContent(String url, VideoInfoDto dto, String contentId) {
+  public void processRecipeContent(String url, VideoInfoDto dto, String contentId, String thumbnailUrl) {
     log.info("Starting video processing for url {}", url);
-    ContentPreviewResponse preview = parseContentMetadata(dto);
-    if (preview.getThumbnail() != null) {
-      asyncHelper.uploadRemoteImage(preview.getThumbnail(), contentId);
+    if (thumbnailUrl != null) {
+      asyncHelper.uploadRemoteImage(thumbnailUrl, contentId);
     } else {
       // Thumbnail not found so override with a default placeholder
       Optional<RecipeEntity> entityOpt = recipeRepo.findByContentId(contentId);
@@ -308,7 +307,8 @@ public class AVServiceImpl implements AVService {
     return parseContentMetadata(dto);
   }
 
-  private ContentPreviewResponse parseContentMetadata(VideoInfoDto dto) {
+  @Override
+  public ContentPreviewResponse parseContentMetadata(VideoInfoDto dto) {
     if (dto != null) {
       ContentPreviewResponse response = new ContentPreviewResponse();
       try {
@@ -353,6 +353,7 @@ public class AVServiceImpl implements AVService {
           long seconds = Math.round((minutes % Math.floor(minutes) * 60));
           String durationStr = String.format("Duration: %s minutes %s seconds", Math.round(minutes), seconds);
           response.setDuration(durationStr);
+          response.setDurationMinutes((int)Math.round(minutes));
         }
       } catch (NullPointerException e) {
         // pass
@@ -430,11 +431,13 @@ public class AVServiceImpl implements AVService {
 
   private boolean isPremiumUser(Long projectId) {
     // TODO: Avoid making multiple queries
-    Optional<ProjectEntity> projectEntity = projectRepo.findById(projectId);
-    if (projectEntity.isPresent()) {
-      UserEntity userEntity = userRepo.findByFirebaseId(projectEntity.get().getUserId());
-      if (userEntity != null) {
-        return userEntity.getIsPremiumUser();
+    if (projectId != null) {
+      Optional<ProjectEntity> projectEntity = projectRepo.findById(projectId);
+      if (projectEntity.isPresent()) {
+        UserEntity userEntity = userRepo.findByFirebaseId(projectEntity.get().getUserId());
+        if (userEntity != null) {
+          return userEntity.getIsPremiumUser();
+        }
       }
     }
     return false;

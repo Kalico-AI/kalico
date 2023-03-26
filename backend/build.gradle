@@ -55,6 +55,7 @@ configure(subprojects.findAll(it ->
 
   dependencies {
     api 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.ibm.icu:icu4j:57.1'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
     implementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.1.1'
@@ -76,7 +77,7 @@ configure(subprojects.findAll(it ->
     implementation 'org.postgresql:postgresql:42.2.23'
     implementation 'com.google.firebase:firebase-admin:8.0.1'
     implementation platform("com.amazonaws:aws-java-sdk-bom:${awsSDKVersion}")
-    compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation 'org.mapstruct:mapstruct:1.4.2.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
@@ -87,8 +88,8 @@ configure(subprojects.findAll(it ->
     // Test dependencies
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')
-    testCompileOnly 'org.projectlombok:lombok:1.18.20'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
     testImplementation 'org.testng:testng:7.4.0'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
       exclude module: "org.junit.vintage:junit-vintage-engine"

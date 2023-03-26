@@ -736,6 +736,10 @@
           "duration": {
             "type": "string"
           },
+          "duration_minutes": {
+            "type": "integer",
+            "format": "int32"
+          },
           "thumbnail": {
             "type": "string"
           }

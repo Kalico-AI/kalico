@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS public.recipe (
     canonical_url varchar(256) not null,
     slug varchar(256),
     title varchar(256),
-    description varchar(256),
+    description varchar(1024),
     thumbnail varchar(256),
     summary varchar,
     transcript varchar,

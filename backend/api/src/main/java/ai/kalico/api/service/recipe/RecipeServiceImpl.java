@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ContentItem;
+import com.kalico.model.ContentPreviewResponse;
 import com.kalico.model.CreateRecipeResponse;
 import com.kalico.model.PageableRecipeResponse;
 import com.kalico.model.RecipeFull;
@@ -83,7 +84,9 @@ public class RecipeServiceImpl implements RecipeService {
           return new CreateRecipeResponse().status(inProgressMsg);
         }
       } else {
+        ContentPreviewResponse preview = avService.parseContentMetadata(dto);
         RecipeEntity entity = new RecipeEntity();
+        entity.setCookingTimeMinutes(preview.getDurationMinutes());
         entity.setContentId(contentId);
         entity.setCanonicalUrl(canonicalUrl);
         entity.setThumbnail(String.format("%s/%s/%s.jpg",
@@ -91,7 +94,7 @@ public class RecipeServiceImpl implements RecipeService {
             awsProps.getImageFolder(),
             contentId));
         recipeRepo.save(entity);
-        avService.processRecipeContent(canonicalUrl, dto, contentId);
+        avService.processRecipeContent(canonicalUrl, dto, contentId, preview.getThumbnail());
         return new CreateRecipeResponse().status(inProgressMsg);
       }
     }

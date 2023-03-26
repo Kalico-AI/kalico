@@ -11,6 +11,7 @@ import ai.kalico.api.props.OpenAiProps;
 import ai.kalico.api.service.openai.OpenAiService;
 import ai.kalico.api.service.openai.completion.CompletionChoice;
 import ai.kalico.api.service.openai.completion.CompletionRequest;
+import ai.kalico.api.service.utils.Slugify;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ContentItem;
@@ -186,8 +187,73 @@ public class LanguageServiceImpl implements LanguageService {
           CompletableFuture.runAsync(() -> generateRecipeInstructions(chunk, asyncResponse), RootConfiguration.executor)
       ));
       awaitVoid(tasks);
-
+      saveRecipeContent(asyncResponse, contentId);
     }
+  }
+
+  private void saveRecipeContent(ConcurrentHashMap<String, GptResponse> asyncResponse, String contentId) {
+    GptResponse titleResponse = asyncResponse.get(RecipePartName.TITLE);
+    GptResponse summaryResponse = asyncResponse.get(RecipePartName.SUMMARY);
+    GptResponse descriptionResponse = asyncResponse.get(RecipePartName.DESCRIPTION);
+    GptResponse ingredientResponse = asyncResponse.get(RecipePartName.INGREDIENTS);
+    GptResponse instructionResponse = asyncResponse.get(RecipePartName.INSTRUCTIONS);
+
+    var title = cleanup(extractTitle(titleResponse.getCompletionChoices().get(0).getText()));
+    var summary = cleanup(summaryResponse.getCompletionChoices().get(0).getText());
+    var description = cleanup(descriptionResponse.getCompletionChoices().get(0).getText());
+    var ingredientsText = ingredientResponse.getCompletionChoices().get(0).getText();
+    var instructionsText = instructionResponse.getCompletionChoices().get(0).getText();
+
+    Optional<RecipeEntity> recipeEntityOpt = recipeRepo.findByContentId(contentId);
+    if (recipeEntityOpt.isPresent()) {
+      RecipeEntity recipeEntity = recipeEntityOpt.get();
+      recipeEntity.setTitle(title);
+      recipeEntity.setSlug(Slugify.builder().build().slugify(title));
+      recipeEntity.setSummary(summary);
+      recipeEntity.setDescription(description);
+      try {
+        List<String> ingredients = extractIngredients(ingredientsText);
+        recipeEntity.setNumIngredients(ingredients.size());
+        recipeEntity.setIngredients(objectMapper.writeValueAsString(ingredients));
+      } catch (JsonProcessingException e) {
+        log.error("LanguageServiceImpl.saveRecipeContent {}", e.getLocalizedMessage());
+      }
+      try {
+        List<String> instructions = extractInstructions(instructionsText);
+        recipeEntity.setNumSteps(instructions.size());
+        recipeEntity.setInstructions(objectMapper.writeValueAsString(instructions));
+      } catch (JsonProcessingException e) {
+        log.error("LanguageServiceImpl.saveRecipeContent {}", e.getLocalizedMessage());
+      }
+      recipeEntity.setInstructions(instructionsText);
+      recipeEntity.setProcessed(true);
+      recipeEntity.setUpdatedAt(LocalDateTime.now());
+      recipeRepo.save(recipeEntity);
+    }
+  }
+
+  private List<String> extractIngredients(String text) {
+    List<String> lines = List.of(text.split("\n"));
+    List<String> result = new ArrayList<>();
+    for (String line : lines) {
+      var cleanLine = cleanup(line).replace("-", "");
+      if (!ObjectUtils.isEmpty(cleanLine)) {
+        result.add(cleanLine);
+      }
+    }
+    return result;
+  }
+
+  private List<String> extractInstructions(String text) {
+    List<String> lines = List.of(text.split("\n"));
+    List<String> result = new ArrayList<>();
+    for (String line : lines) {
+      var cleanLine = cleanup(line);
+      if (!ObjectUtils.isEmpty(cleanLine)) {
+        result.add(cleanLine);
+      }
+    }
+    return result;
   }
 
   private void generateRecipeTitle(String context, ConcurrentHashMap<String, GptResponse> asyncResponse) {
