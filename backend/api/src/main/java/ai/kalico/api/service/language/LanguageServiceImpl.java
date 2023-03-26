@@ -7,6 +7,10 @@ import ai.kalico.api.data.postgres.entity.RecipeEntity;
 import ai.kalico.api.data.postgres.repo.MediaContentRepo;
 import ai.kalico.api.data.postgres.repo.ProjectRepo;
 import ai.kalico.api.data.postgres.repo.RecipeRepo;
+import ai.kalico.api.dto.ClusterItem;
+import ai.kalico.api.dto.GptResponse;
+import ai.kalico.api.dto.Pair;
+import ai.kalico.api.dto.RecipeGptResponse;
 import ai.kalico.api.props.OpenAiProps;
 import ai.kalico.api.service.openai.OpenAiService;
 import ai.kalico.api.service.openai.completion.CompletionChoice;
@@ -17,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kalico.model.ContentItem;
 import com.kalico.model.ContentItemChildren;
 import com.kalico.model.KalicoContentType;
-import java.text.BreakIterator;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,7 +28,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
@@ -178,55 +180,181 @@ public class LanguageServiceImpl implements LanguageService {
       // which we can use it becomes necessary. For now, the 4K token window in GPT-3 is
       // sufficient.
       var chunk = chunkedTranscript.get(0);
-      ConcurrentHashMap<String, GptResponse> asyncResponse = new ConcurrentHashMap<>();
-      List<CompletableFuture<Void>> tasks = new ArrayList<>(List.of(
-          CompletableFuture.runAsync(() -> generateRecipeTitle(chunk, asyncResponse), RootConfiguration.executor),
-          CompletableFuture.runAsync(() -> generateRecipeSummary(chunk, asyncResponse), RootConfiguration.executor),
-          CompletableFuture.runAsync(() -> generateRecipeDescription(chunk, asyncResponse), RootConfiguration.executor),
-          CompletableFuture.runAsync(() -> generateRecipeIngredients(chunk, asyncResponse), RootConfiguration.executor),
-          CompletableFuture.runAsync(() -> generateRecipeInstructions(chunk, asyncResponse), RootConfiguration.executor)
-      ));
-      awaitVoid(tasks);
-      saveRecipeContent(asyncResponse, contentId);
+      if (openAiProps.getRecipe().getConsolidatedPrompt() != null) {
+        save(extractRecipeGptResponse(
+            recipeGptCompletion(
+                openAiProps.getRecipe().getConsolidatedPrompt(), chunk)), 
+            contentId);
+      } else {
+        asyncRecipeRequests(chunk, contentId);
+      }
     }
+  }
+
+  @Override
+  public RecipeGptResponse extractRecipeGptResponse(GptResponse recipeGptCompletion) {
+    String text = recipeGptCompletion.getCompletionChoices().get(0).getText();
+    if (text != null) {
+      var lines = new ArrayList<>(List.of(text.split("\n")));
+      var title = extractTitle(lines);
+      var summary = extractSummary(lines);
+      var ingredients = extractIngredients(lines);
+      var instructions = extractInstructions(lines);
+      return new RecipeGptResponse(title, summary, ingredients, instructions);
+    }
+    return new RecipeGptResponse("", "", new ArrayList(), new ArrayList());
+  }
+
+  private List<String> extractIngredients(List<String> lines) {
+    List<String> ingredients = new ArrayList();
+    boolean ingredientHeaderFound = false;
+    for (int i = 0; i < lines.size(); i++) {
+      var lower = lines.get(i).toLowerCase();
+      if (lower.contains("ingredient")) {
+        ingredientHeaderFound = true;
+        var text = cleanup(lines.get(i));
+        if (!ObjectUtils.isEmpty(text)) {
+          // The ingredients are on the same line so break them apart
+          return new ArrayList<>(List.of(text.split(",")))
+              .stream()
+              .map(this::cleanup)
+              .filter(it -> !ObjectUtils.isEmpty(it))
+              .collect(Collectors.toList());
+        }
+      } else if (ingredientHeaderFound && lower.startsWith("-")) {
+        ingredients.add(cleanup(lines.get(i).replace("-", "")));
+      }
+    }
+    return ingredients;
+  }
+
+  private List<String> extractInstructions(List<String> lines) {
+    List<String> instructions = new ArrayList();
+    boolean instructionHeaderFound = false;
+    for (int i = 0; i < lines.size(); i++) {
+      var lower = lines.get(i).toLowerCase();
+      if (lower.contains("instruction") || lower.contains("step")) {
+        instructionHeaderFound = true;
+      } else if (instructionHeaderFound && startsWithNumber(lower)) {
+        instructions.add(cleanup(lines.get(i)));
+      }
+    }
+    return instructions;
+  }
+
+
+  private String extractSummary(List<String> lines) {
+    boolean summaryHeaderFound = false;
+    var body = "";
+    for (int i = 0; i< lines.size(); i++) {
+      var lower = lines.get(i).toLowerCase();
+      if (lower.contains("summary")) {
+        summaryHeaderFound = true;
+
+        // The summary may appear on the same line as the header itself
+        body = cleanup(lines.get(i));
+        if (!ObjectUtils.isEmpty(body)) {
+          break;
+        }
+      } else if (summaryHeaderFound && !ObjectUtils.isEmpty(cleanup(lower))) {
+        // Consider the next non-empty line that comes after the summary header to be
+        // the summary itself.
+        body = cleanup(lines.get(i));
+        break;
+      }
+    }
+    return body;
+  }
+
+  private String extractTitle(List<String> lines) {
+    for (int i = 0; i< lines.size(); i++) {
+      var lower = lines.get(i).toLowerCase();
+      if (lower.contains("title")) {
+        return lines.get(i);
+      }
+    }
+    return "";
+  }
+
+  private void asyncRecipeRequests(String context, String contentId) {
+    ConcurrentHashMap<String, GptResponse> asyncResponse = new ConcurrentHashMap<>();
+    List<CompletableFuture<Void>> tasks = new ArrayList<>(List.of(
+        CompletableFuture.runAsync(() -> generateRecipeTitle(context, asyncResponse), RootConfiguration.executor),
+        CompletableFuture.runAsync(() -> generateRecipeSummary(context, asyncResponse), RootConfiguration.executor),
+        CompletableFuture.runAsync(() -> generateRecipeIngredients(context, asyncResponse), RootConfiguration.executor),
+        CompletableFuture.runAsync(() -> generateRecipeInstructions(context, asyncResponse), RootConfiguration.executor)
+    ));
+    awaitVoid(tasks);
+    saveRecipeContent(asyncResponse, contentId);
   }
 
   private void saveRecipeContent(ConcurrentHashMap<String, GptResponse> asyncResponse, String contentId) {
     GptResponse titleResponse = asyncResponse.get(RecipePartName.TITLE);
     GptResponse summaryResponse = asyncResponse.get(RecipePartName.SUMMARY);
-    GptResponse descriptionResponse = asyncResponse.get(RecipePartName.DESCRIPTION);
     GptResponse ingredientResponse = asyncResponse.get(RecipePartName.INGREDIENTS);
     GptResponse instructionResponse = asyncResponse.get(RecipePartName.INSTRUCTIONS);
 
     var title = cleanup(extractTitle(titleResponse.getCompletionChoices().get(0).getText()));
     var summary = cleanup(summaryResponse.getCompletionChoices().get(0).getText());
-    var description = cleanup(descriptionResponse.getCompletionChoices().get(0).getText());
     var ingredientsText = ingredientResponse.getCompletionChoices().get(0).getText();
     var instructionsText = instructionResponse.getCompletionChoices().get(0).getText();
+    List<String> ingredients = extractIngredients(ingredientsText);
+    List<String> instructions = extractInstructions(instructionsText);
+    save(new RecipeGptResponse(
+        title,
+        summary,
+        ingredients,
+        instructions), contentId);
+  }
 
+  private void save(RecipeGptResponse recipeGptResponse, String contentId) {
     Optional<RecipeEntity> recipeEntityOpt = recipeRepo.findByContentId(contentId);
     if (recipeEntityOpt.isPresent()) {
       RecipeEntity recipeEntity = recipeEntityOpt.get();
-      recipeEntity.setTitle(title);
-      recipeEntity.setSlug(Slugify.builder().build().slugify(title));
-      recipeEntity.setSummary(summary);
-      recipeEntity.setDescription(description);
+
+      recipeEntity.setSummary(recipeGptResponse.getSummary());
+      boolean processed = true;
+      var reasonFailed = ";";
+      if (ObjectUtils.isEmpty(recipeGptResponse.getTitle())) {
+        processed = false;
+        reasonFailed = "Unable to generate a title";
+      } else {
+        recipeEntity.setTitle(recipeGptResponse.getTitle());
+        recipeEntity.setSlug(Slugify.builder().build().slugify(recipeGptResponse.getTitle()));
+      }
       try {
-        List<String> ingredients = extractIngredients(ingredientsText);
+        var ingredients = recipeGptResponse.getIngredients();
         recipeEntity.setNumIngredients(ingredients.size());
+        if (ingredients.size() == 0) {
+          processed = false;
+          reasonFailed = "There are no ingredients in the video submitted";
+        }
         recipeEntity.setIngredients(objectMapper.writeValueAsString(ingredients));
       } catch (JsonProcessingException e) {
         log.error("LanguageServiceImpl.saveRecipeContent {}", e.getLocalizedMessage());
+        processed = false;
+        reasonFailed = "Failed to extract ingredients";
       }
       try {
-        List<String> instructions = extractInstructions(instructionsText);
+        var instructions = recipeGptResponse.getInstructions();
         recipeEntity.setNumSteps(instructions.size());
+        if (instructions.size() == 0) {
+          processed = false;
+          reasonFailed = "There are no recipe instructions in the video submitted";
+        }
         recipeEntity.setInstructions(objectMapper.writeValueAsString(instructions));
       } catch (JsonProcessingException e) {
         log.error("LanguageServiceImpl.saveRecipeContent {}", e.getLocalizedMessage());
+        processed = false;
+        reasonFailed = "Failed to extract recipe instructions";
       }
-
-      recipeEntity.setProcessed(true);
+      if (!processed) {
+        recipeEntity.setProcessed(false);
+        recipeEntity.setFailed(true);
+        recipeEntity.setReasonFailed(reasonFailed);
+      } else {
+        recipeEntity.setProcessed(true);
+      }
       recipeEntity.setUpdatedAt(LocalDateTime.now());
       recipeRepo.save(recipeEntity);
     }
@@ -262,10 +390,6 @@ public class LanguageServiceImpl implements LanguageService {
 
   private void generateRecipeSummary(String context, ConcurrentHashMap<String, GptResponse> asyncResponse) {
     asyncResponse.put(RecipePartName.SUMMARY, recipeGptCompletion(openAiProps.getRecipe().getSummary(), context));
-  }
-
-  private void generateRecipeDescription(String context, ConcurrentHashMap<String, GptResponse> asyncResponse) {
-    asyncResponse.put(RecipePartName.DESCRIPTION, recipeGptCompletion(openAiProps.getRecipe().getDescription(), context));
   }
 
   private void generateRecipeIngredients(String context, ConcurrentHashMap<String, GptResponse> asyncResponse) {
@@ -662,31 +786,9 @@ public class LanguageServiceImpl implements LanguageService {
     }
   }
 
-  @Getter
-  @Setter
-  @AllArgsConstructor
-  @RequiredArgsConstructor
-  private static class GptResponse {
-    private int sortOrder;
-    private List<CompletionChoice> completionChoices;
-    private final ClusterItem clusterItem;
-  }
-
-  @Getter
-  @Setter
-  @AllArgsConstructor
-  @RequiredArgsConstructor
-  private static class ClusterItem {
-    private String title;
-    private String rawText;
-    private List<String> paragraphs;
-    private int sortOrder;
-  }
-
   private static class RecipePartName {
     public static final String TITLE = "title";
     public static final String SUMMARY = "summary";
-    public static final String DESCRIPTION = "description";
     public static final String INGREDIENTS = "ingredients";
     public static final String INSTRUCTIONS = "instructions";
   }

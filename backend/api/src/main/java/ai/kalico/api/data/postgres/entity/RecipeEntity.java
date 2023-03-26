@@ -42,11 +42,6 @@ public class RecipeEntity {
     @Basic
     @Column(name = "title")
     private String title;
-
-    @Basic
-    @Column(name = "description")
-    private String description;
-
     @Basic
     @Column(name = "summary")
     private String summary;

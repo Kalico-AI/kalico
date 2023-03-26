@@ -1326,7 +1326,7 @@
           "title": {
             "type": "string"
           },
-          "description": {
+          "summary": {
             "type": "string"
           },
           "thumbnail": {
@@ -1349,9 +1349,6 @@
       "RecipeFull": {
         "type": "object",
         "properties": {
-          "summary": {
-            "type": "string"
-          },
           "ingredients": {
             "type": "array",
             "items": {

@@ -17,4 +17,5 @@ public class RecipeProps {
   private int chunkSize;
   private int maxTokens;
   private double temp;
+  private String consolidatedPrompt;
 }

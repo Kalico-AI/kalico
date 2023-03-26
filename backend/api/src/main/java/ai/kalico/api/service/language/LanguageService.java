@@ -1,5 +1,7 @@
 package ai.kalico.api.service.language;
 
+import ai.kalico.api.dto.GptResponse;
+import ai.kalico.api.dto.RecipeGptResponse;
 import ai.kalico.api.service.openai.completion.CompletionChoice;
 import com.kalico.model.ContentItem;
 import java.util.List;
@@ -39,5 +41,7 @@ public interface LanguageService {
    * @return
    */
   String extractGptResponse(List<CompletionChoice> completionChoices);
+
+  RecipeGptResponse extractRecipeGptResponse(GptResponse recipeGptCompletion);
 
 }

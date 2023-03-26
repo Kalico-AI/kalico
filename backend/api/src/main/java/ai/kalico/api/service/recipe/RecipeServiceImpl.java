@@ -125,7 +125,6 @@ public class RecipeServiceImpl implements RecipeService {
     if (entityOpt.isPresent()) {
       RecipeEntity entity = entityOpt.get();
       return new RecipeFull()
-          .summary(entity.getSummary())
           .ingredients(stringToList(entity.getIngredients()))
           .instructions(stringToList(entity.getInstructions()))
           .recipeLite(getLiteRecipe(entity));
@@ -151,7 +150,7 @@ public class RecipeServiceImpl implements RecipeService {
   private RecipeLite getLiteRecipe(RecipeEntity entity) {
     return new RecipeLite()
         .cookingTime(entity.getCookingTimeMinutes())
-        .description(entity.getDescription())
+        .summary(entity.getSummary())
         .slug(entity.getSlug())
         .numIngredients(entity.getNumIngredients())
         .numSteps(entity.getNumSteps())
