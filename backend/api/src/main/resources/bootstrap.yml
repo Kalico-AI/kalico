@@ -31,3 +31,5 @@ management:
     web:
       exposure:
         include: health,refresh
+encrypt:
+  key: ${MR_GH_TOKEN}
