@@ -2,7 +2,7 @@ body {
   margin: 0;
   background-color: #fff;
   color: #333;
-  font: 15px;
+  font-size: 15px;
   font-family: Mulish,sans-serif;
   letter-spacing: .75px;
   line-height: 2.8rem;
@@ -69,7 +69,7 @@ input:focus, textarea:focus {
 }
 .summary-item-wrapper {
   padding-top: 30px;
-  padding-left: 10px;
+  padding-left: 20px;
   padding-right: 10px;
   margin: 20px -40px;
   display: flex;
@@ -106,6 +106,7 @@ input:focus, textarea:focus {
 }
 .ingredients ul li {
   margin-left: 10px;
+  font-size: 18px;
   list-style: circle;
 }
 .ingredients ol li span {
@@ -113,6 +114,7 @@ input:focus, textarea:focus {
 }
 .instructions {
   margin-top: 30px;
+  font-size: 16px;
 }
 .ingredients ol li::before {
   counter-increment: orderedlist;
@@ -143,7 +145,9 @@ input:focus, textarea:focus {
 }
 .list-item-card {
   margin: 0 auto;
-  padding-bottom: 60px;
+  margin-bottom: 60px;
+  /*border: 1px solid #ececec;*/
+  /*border-radius: 15px;*/
 }
 .list-item-card.center {
   text-align: center;
@@ -162,7 +166,7 @@ input:focus, textarea:focus {
   margin-bottom: 15px;
   padding: 15px 10px;
   text-align: center!important;
-  display: bock;
+  display: block;
 }
 .grid-item-card a {
   text-decoration: none;
@@ -192,11 +196,9 @@ input:focus, textarea:focus {
   text-transform: uppercase !important;
   color: #525252;
   width: 120px;
+  margin-bottom: 40px;
 }
 
-.read-more-button {
-  margin-top: 2rem;
-}
 .view-all-button:hover, .read-more-button:hover {
   background: #ce9d86;
 }
@@ -220,7 +222,7 @@ footer {
   display: inline-flex;
   width: 100%;
   text-transform: uppercase;
-  font: 10.5px;
+  font-size: 10.5px;
   letter-spacing: 2px;
   padding: 28px 0 25px;
   padding-left: 40px;
@@ -235,7 +237,7 @@ header {
   display: inline-flex;
   width: 100%;
   text-transform: uppercase;
-  font: 14px;
+  font-size: 14px;
 }
 .navbar-toggler {
   margin-right: 20px;
@@ -290,8 +292,13 @@ header {
 }
 .search-bar-container p {
   text-align: center;
-  color: red;
   width: 100%;
   font-size: 14px;
   padding-top: 30px;
+}
+.search-bar-container .error {
+  color: red;
+}
+.search-bar-container .success {
+  color: green;
 }

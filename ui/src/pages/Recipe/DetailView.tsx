@@ -2,10 +2,11 @@ import React, {FC} from 'react';
 import {Box, Divider, Grid} from "@mui/material";
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import SummaryComponent from "@/pages/Recipe/SummaryComponent";
+import {RecipeFull} from "@/api";
 
 
 export interface DetailViewProps {
-  post: object
+  post: RecipeFull
 }
 
 const DetailView: FC<DetailViewProps> =  (props) => {
@@ -14,14 +15,16 @@ const DetailView: FC<DetailViewProps> =  (props) => {
         <Grid container className="recipe-detail-top">
           <Grid item md={6} sm={12}>
             <Box className="primary-thumbnail">
-              <img src={props.post.imgUrl} alt={props.post.title}/>
+              <img src={props.post.recipe_lite.thumbnail} alt={props.post.recipe_lite.title}/>
             </Box>
           </Grid>
           <Grid item md={6} sm={12} sx={{p: 3}}>
             <Box className="title">
-              <h3 >{props.post.title}</h3>
+              <h3 >{props.post.recipe_lite.title}</h3>
             </Box>
-            <SummaryComponent steps={12} ingredients={22} time={40}/>
+            <SummaryComponent steps={props.post.recipe_lite.num_steps}
+                              ingredients={props.post.recipe_lite.num_ingredients}
+                              time={props.post.recipe_lite.cooking_time}/>
           </Grid>
         </Grid>
         <Divider><RestaurantMenuIcon/></Divider>

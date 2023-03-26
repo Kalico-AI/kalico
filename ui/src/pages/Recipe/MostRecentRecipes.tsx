@@ -4,17 +4,12 @@ import {Box} from "@mui/material";
 import GridView from "@/pages/Recipe/GridView";
 import {urls} from "@/utils/paths";
 import Link from "next/link";
+import {RecipeLite} from "@/api";
 
 export interface MostRecentRecipesProps {
-  posts: []
+  posts: RecipeLite[]
 }
 const MostRecentRecipes: FC<MostRecentRecipesProps> =  (props) => {
-  // const router = useRouter()
-  //
-  // const onViewAll = () => {
-  //   router.push(urls.getAllRecipes)
-  //   .catch(e => console.log(e))
-  // }
   return (
   <Container className="top-recipes">
     <Box className="top-recipes-title">

@@ -225,7 +225,6 @@ public class LanguageServiceImpl implements LanguageService {
       } catch (JsonProcessingException e) {
         log.error("LanguageServiceImpl.saveRecipeContent {}", e.getLocalizedMessage());
       }
-      recipeEntity.setInstructions(instructionsText);
       recipeEntity.setProcessed(true);
       recipeEntity.setUpdatedAt(LocalDateTime.now());
       recipeRepo.save(recipeEntity);

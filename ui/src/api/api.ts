@@ -104,6 +104,12 @@ export interface ContentPreviewResponse {
     duration?: string;
     /**
      * 
+     * @type {number}
+     * @memberof ContentPreviewResponse
+     */
+    duration_minutes?: number;
+    /**
+     * 
      * @type {string}
      * @memberof ContentPreviewResponse
      */
@@ -655,6 +661,12 @@ export interface ProjectJobStatus {
  * @interface RecipeFull
  */
 export interface RecipeFull {
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeFull
+     */
+    summary?: string;
     /**
      * 
      * @type {Array<string>}
@@ -2232,19 +2244,19 @@ export const RecipeApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
-         * Get top
-         * @summary Get top recipes
+         * Get get most recent recipes
+         * @summary Get most recent recipes
          * @param {number} page 
          * @param {number} size 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTopRecipes: async (page: number, size: number, options: any = {}): Promise<RequestArgs> => {
+        getMostRecentRecipes: async (page: number, size: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'page' is not null or undefined
-            assertParamExists('getTopRecipes', 'page', page)
+            assertParamExists('getMostRecentRecipes', 'page', page)
             // verify required parameter 'size' is not null or undefined
-            assertParamExists('getTopRecipes', 'size', size)
-            const localVarPath = `/recipe/top`;
+            assertParamExists('getMostRecentRecipes', 'size', size)
+            const localVarPath = `/recipe/most-recent`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2320,15 +2332,15 @@ export const RecipeApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Get top
-         * @summary Get top recipes
+         * Get get most recent recipes
+         * @summary Get most recent recipes
          * @param {number} page 
          * @param {number} size 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTopRecipes(page: number, size: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageableRecipeResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getTopRecipes(page, size, options);
+        async getMostRecentRecipes(page: number, size: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageableRecipeResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMostRecentRecipes(page, size, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -2373,15 +2385,15 @@ export const RecipeApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.getFullRecipe(slug, options).then((request) => request(axios, basePath));
         },
         /**
-         * Get top
-         * @summary Get top recipes
+         * Get get most recent recipes
+         * @summary Get most recent recipes
          * @param {number} page 
          * @param {number} size 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTopRecipes(page: number, size: number, options?: any): AxiosPromise<PageableRecipeResponse> {
-            return localVarFp.getTopRecipes(page, size, options).then((request) => request(axios, basePath));
+        getMostRecentRecipes(page: number, size: number, options?: any): AxiosPromise<PageableRecipeResponse> {
+            return localVarFp.getMostRecentRecipes(page, size, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2431,16 +2443,16 @@ export class RecipeApi extends BaseAPI {
     }
 
     /**
-     * Get top
-     * @summary Get top recipes
+     * Get get most recent recipes
+     * @summary Get most recent recipes
      * @param {number} page 
      * @param {number} size 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RecipeApi
      */
-    public getTopRecipes(page: number, size: number, options?: any) {
-        return RecipeApiFp(this.configuration).getTopRecipes(page, size, options).then((request) => request(this.axios, this.basePath));
+    public getMostRecentRecipes(page: number, size: number, options?: any) {
+        return RecipeApiFp(this.configuration).getMostRecentRecipes(page, size, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

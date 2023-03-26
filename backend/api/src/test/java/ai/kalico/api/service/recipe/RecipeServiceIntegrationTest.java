@@ -152,7 +152,7 @@ public class RecipeServiceIntegrationTest extends AbstractTestNGSpringContextTes
             entity.setNumSteps(12);
             entity.setSlug("how-to-cook-chicken-well-" + UUID.randomUUID());
             entity.setThumbnail("https://picsum.photos/800/800");
-            entity.setInstructions(objectMapper.writeValueAsString(List.of(
+            entity.setIngredients(objectMapper.writeValueAsString(List.of(
             "2 lbs boneless, skinless chicken chunks",
                 "2 tablespoons freshly grated ginger root",
                 "2 cloves garlic, finely minced",
@@ -166,7 +166,7 @@ public class RecipeServiceIntegrationTest extends AbstractTestNGSpringContextTes
                 "1/4 cup roasted peanuts",
                 "2 peppers (green jalapeno and red Jimmy dolo), sliced",
                 "1 tablespoon vegetable oil")));
-            entity.setIngredients(objectMapper.writeValueAsString(List.of("1. In a mixing bowl, combine grated ginger root, minced garlic, light brown sugar, rice vinegar, fish sauce, soy sauce and hot sauce. Whisk until combined.",
+            entity.setInstructions(objectMapper.writeValueAsString(List.of("1. In a mixing bowl, combine grated ginger root, minced garlic, light brown sugar, rice vinegar, fish sauce, soy sauce and hot sauce. Whisk until combined.",
                 "2. Place chicken chunks in a bowl and add 1/4 cup of the sauce mixture. Mix until all the chicken chunks are coated. Let sit for 15 minutes.",
                 "3. Heat a heavy, large cast iron skillet over high heat. Add vegetable oil and let it smoke.",
                 "4. Carefully add the chicken chunks to the skillet, spreading them out so they are in contact with the pan. Cook, stirring, until the chicken is caramelized.",

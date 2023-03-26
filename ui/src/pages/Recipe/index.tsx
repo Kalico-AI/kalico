@@ -12,9 +12,6 @@ const RecipeLanding: FC<IndexProps> =  (props) => {
           <Hero/>
           <Search/>
           <MostRecentRecipes posts={props.posts}/>
-          {/*<VideoDemo/>*/}
-          {/*<WhyKalico/>*/}
-          {/*<HowItWorks/>*/}
         </main>
       </>
   );

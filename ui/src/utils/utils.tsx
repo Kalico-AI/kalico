@@ -7,7 +7,15 @@ import {UserApi} from "@/api";
 import {headerConfig} from "@/api/headerConfig";
 
 export const getFormattedDate = (date: number) => {
-  return moment.unix(date).format("llll")
+  return moment.unix(date).format("ll")
+}
+
+export const truncatedDescription = (text: string) => {
+  const MAX_LENGTH = 215
+  if (text.length > 215) {
+    return text.slice(0, MAX_LENGTH) + "..."
+  }
+  return text
 }
 
 export const sessionIdSet = (req): boolean => {

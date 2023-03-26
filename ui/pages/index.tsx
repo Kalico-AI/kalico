@@ -1,79 +1,28 @@
 import React, {FC} from 'react';
 import Head from "next/head";
 import RecipeLanding from "@/pages/Recipe";
-import {RecipeApi} from "@/api";
+import {RecipeApi, RecipeLite} from "@/api";
 
-const items = [
-  {
-    date: 'March 1, 2023',
-    title: 'How to Cook Frozen Pork Chops in the Oven',
-    url: 'https://getonmyplate.com/how-to-cook-frozen-pork-chops-in-the-oven/',
-    imgUrl: 'https://getonmyplate.com/wp-content/uploads/2023/02/frozen-pork-chops-in-the-oven-1-8-600x850.jpg',
-    description: 'This Ground Beef Stir Fry Recipe is one you’ll add to your dinner rotation over and over! It uses simple ingredients and there are so many ways to customize it! Ground beef and veggies are coated in a delicious sweet…'
-  },
-  {    description: 'This Ground Beef Stir Fry Recipe is one you’ll add to your dinner rotation over and over! It uses simple ingredients and there are so many ways to customize it! Ground beef and veggies are coated in a delicious sweet…',
-    date: 'March 1, 2023',
-    title: 'Velveeta Hamburger Helper {One Pot!}',
-    url: 'https://getonmyplate.com/how-to-cook-frozen-pork-chops-in-the-oven/',
-    imgUrl: 'https://getonmyplate.com/wp-content/uploads/2023/02/frozen-pork-chops-in-the-oven-1-8-600x850.jpg'
-  },
-  {
-    description: 'This Ground Beef Stir Fry Recipe is one you’ll add to your dinner rotation over and over! It uses simple ingredients and there are so many ways to customize it! Ground beef and veggies are coated in a delicious sweet…',
-    date: 'March 1, 2023',
-    title: 'Homemade Spaghetti Sauce with Ground Beef',
-    url: 'https://getonmyplate.com/how-to-cook-frozen-pork-chops-in-the-oven/',
-    imgUrl: 'https://getonmyplate.com/wp-content/uploads/2023/02/frozen-pork-chops-in-the-oven-1-8-600x850.jpg'
-  },
-  {
-    description: 'This Ground Beef Stir Fry Recipe is one you’ll add to your dinner rotation over and over! It uses simple ingredients and there are so many ways to customize it! Ground beef and veggies are coated in a delicious sweet…',
-    date: 'March 1, 2023',
-    title: 'How to Cook Frozen Pork Chops in the Oven',
-    url: 'https://getonmyplate.com/how-to-cook-frozen-pork-chops-in-the-oven/',
-    imgUrl: 'https://getonmyplate.com/wp-content/uploads/2023/02/frozen-pork-chops-in-the-oven-1-8-600x850.jpg'
-  },
-  {
-    description: 'This Ground Beef Stir Fry Recipe is one you’ll add to your dinner rotation over and over! It uses simple ingredients and there are so many ways to customize it! Ground beef and veggies are coated in a delicious sweet…',
-    date: 'March 1, 2023',
-    title: 'How to Cook Frozen Pork Chops in the Oven',
-    url: 'https://getonmyplate.com/how-to-cook-frozen-pork-chops-in-the-oven/',
-    imgUrl: 'https://getonmyplate.com/wp-content/uploads/2023/02/frozen-pork-chops-in-the-oven-1-8-600x850.jpg'
-  },
-  {
-    description: 'This Ground Beef Stir Fry Recipe is one you’ll add to your dinner rotation over and over! It uses simple ingredients and there are so many ways to customize it! Ground beef and veggies are coated in a delicious sweet…',
-    date: 'March 1, 2023',
-    title: 'How to Cook Frozen Pork Chops in the Oven',
-    url: 'https://getonmyplate.com/how-to-cook-frozen-pork-chops-in-the-oven/',
-    imgUrl: 'https://getonmyplate.com/wp-content/uploads/2023/02/frozen-pork-chops-in-the-oven-1-8-600x850.jpg'
-  },
-  {
-    description: 'This Ground Beef Stir Fry Recipe is one you’ll add to your dinner rotation over and over! It uses simple ingredients and there are so many ways to customize it! Ground beef and veggies are coated in a delicious sweet…',
-    date: 'March 1, 2023',
-    title: 'How to Cook Frozen Pork Chops in the Oven',
-    url: 'https://getonmyplate.com/how-to-cook-frozen-pork-chops-in-the-oven/',
-    imgUrl: 'https://getonmyplate.com/wp-content/uploads/2023/02/frozen-pork-chops-in-the-oven-1-8-600x850.jpg'
-  }
-]
 
 export async function getServerSideProps(_context) {
   const page = 0
-  const limit = 12
-  const response = await new RecipeApi().getTopRecipes(page, limit)
-  console.log("Response: ", response.data)
+  const limit = 9
+  const response = await new RecipeApi().getMostRecentRecipes(page, limit)
   return {
     props: {
-      posts: items
+      posts: response.data.records
     }
   }
 }
 
 export interface IndexProps {
-  posts: []
+  posts: RecipeLite[]
 }
 const Index: FC<IndexProps> =  (props) => {
   return (
     <>
       <Head>
-        <title>Kalico | Best Recipes</title>
+        <title>Kalico | Recipe from YouTube</title>
       </Head>
       <RecipeLanding posts={props.posts}/>
     </>

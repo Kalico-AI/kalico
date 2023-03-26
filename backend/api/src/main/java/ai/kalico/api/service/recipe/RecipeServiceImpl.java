@@ -55,7 +55,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
     url = KALUtils.normalizeUrl(url);
     if (KALUtils.getPlatform(url) == Platform.INVALID) {
-      return new CreateRecipeResponse().error("Platform not yet supported. Please try with a YouTube link");
+      return new CreateRecipeResponse().error("Please try again with a YouTube link");
     }
     VideoInfoDto dto = avService.getContent(url);
     if (dto == null) {
@@ -89,7 +89,7 @@ public class RecipeServiceImpl implements RecipeService {
         entity.setCookingTimeMinutes(preview.getDurationMinutes());
         entity.setContentId(contentId);
         entity.setCanonicalUrl(canonicalUrl);
-        entity.setThumbnail(String.format("%s/%s/%s.jpg",
+        entity.setThumbnail(String.format("%s/%s/%s",
             awsProps.getCdn(),
             awsProps.getImageFolder(),
             contentId));
